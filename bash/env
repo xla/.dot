@@ -10,11 +10,11 @@ export PATH=~/development/bin:$PATH
 export MANPATH=/opt/local/share/man:$MANPATH
 
 # PTHONPATH addition for own site-packages
-export PYTHONPATH="~/development/python/site-packages":$PYTHONPATH
+export PYTHONPATH='~/development/python/site-packages':$PYTHONPATH
 export ERL_LIBS=/Users/alx/development/erlang/externals/
 
-export EDITOR="mate -w"
-export VIM_APP_DIR="/Applications/MacPorts/"
+export EDITOR='mate -w'
+export VIM_APP_DIR='/Applications/MacPorts/'
 
 # bash completion support
 if [ -f `brew --prefix`/etc/bash_completion ]; then

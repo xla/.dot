@@ -1,2 +1,18 @@
+alias h='history'
 alias ll='ls -lah'
+
+alias hu='htop --sort-key cpu'
+alias hm='htop --sort-key memory'
 alias nr='rlwrap node-repl'
+
+# Git
+alias g='git status'
+alias gpul='git pull'
+alias gpus='git push'
+alias gpull='git pull'
+alias gpush='git push'
+alias gc='git commit -va'
+
+function gg () {
+  git commit -vam "$*"
+}
