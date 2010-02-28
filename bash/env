@@ -3,8 +3,8 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # PATH additions for own bin dir and macports
-export PATH=~/development/bin:$PATH
 export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/bin:$PATH
+export PATH=~/development/bin:$PATH
 
 # MacPorts Installer addition for man
 export MANPATH=/opt/local/share/man:$MANPATH
