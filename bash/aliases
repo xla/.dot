@@ -1,5 +1,5 @@
 alias h='history'
-alias ll='ls -lah'
+alias ll='ls -lhAG'
 
 alias hu='htop --sort-key cpu'
 alias hm='htop --sort-key memory'
