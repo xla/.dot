@@ -1,0 +1,2 @@
+alias ll='ls -lah'
+alias nr='rlwrap node-repl'
