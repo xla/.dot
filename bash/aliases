@@ -1,5 +1,5 @@
 alias h='history'
-alias ll='ls -lhAG'
+alias ll='ls -lhaG'
 
 alias hu='htop --sort-key cpu'
 alias hm='htop --sort-key memory'
@@ -7,8 +7,9 @@ alias nr='rlwrap node-repl'
 
 # Git
 alias g='git status'
-alias gpul='git pull'
-alias gpus='git push'
+alias gd='git diff'
+alias gpl='git pull'
+alias gps='git push'
 alias gpull='git pull'
 alias gpush='git push'
 alias gc='git commit -va'
