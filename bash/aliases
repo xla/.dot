@@ -7,12 +7,13 @@ alias nr='rlwrap node-repl'
 
 # Git
 alias g='git status'
+alias ga='git add'
+alias gc='git commit -va'
 alias gd='git diff'
 alias gpl='git pull'
 alias gps='git push'
 alias gpull='git pull'
 alias gpush='git push'
-alias gc='git commit -va'
 
 function gg () {
   git commit -vam "$*"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# From http://freelancing-gods.com/posts/script_nginx
+
+echo "Starting Phusion Passenger via Nginx in `pwd`:"
+
+# Make directories if needed
+[ ! -d `pwd`/tmp ] && mkdir `pwd`/tmp
+[ ! -d `pwd`/log ] && mkdir `pwd`/log
+
+/usr/local/sbin/nginx -p `pwd`/ -c ~/development/workspace/dotfiles/nginx/nginx-dir.conf -g "error_log `pwd`/log/nginx.error.log; pid `pwd`/tmp/nginx.pid;";
