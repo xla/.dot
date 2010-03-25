@@ -1,4 +1,3 @@
 *.netrwhist*
-vim/backup
-vim/backup
-vim/viminfo*
+vim/backup/*
+vim/viminfo
