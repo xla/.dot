@@ -1,3 +1,3 @@
-source ~/development/workspace/dotfiles/bash/env
-source ~/development/workspace/dotfiles/bash/config
-source ~/development/workspace/dotfiles/bash/aliases
+source ~/development/dotfiles/bash/env
+source ~/development/dotfiles/bash/config
+source ~/development/dotfiles/bash/aliases
