@@ -1,0 +1,135 @@
+(function($) {
+  $.scAjax = function(callerSettings) {
+    var settings = $.extend({
+        url:      undefined,
+        type:     'show',
+        data:     {},
+        dataType: null,
+        async:    true,
+        accept:  'application/json, text/javascript, soundcloud/json',
+        callback: null,
+        error:    null
+      }, callerSettings || {});
+    
+    var showErrors = true;
+    
+    // supress errors from broken ajax requests, when navigating from the page
+    $(document).bind('onBeforeUnload', function() {
+      showErrors = false;
+    });
+    
+    // TODO: check if this REST balett here's still needed when we drop 'internal API'
+    // define the HTTP method
+    var allMethods = {show: 'GET', update: 'PUT', destroy: 'DELETE', create: 'POST'};
+    var method = allMethods[settings.type];
+    
+    // To circumvent proxies that suck, send post instead with additional method param
+    if (method === 'PUT' || method === 'DELETE') {
+      settings.data._method = method;
+      method = allMethods.create;
+    }
+    
+    // important: before submitting, check that we have the url, otherwise the browser takes the current window.loaction
+    // which could lead to horrible results
+    if(!settings.url){
+      throw 'the AJAX url has to be explicitly set, ignoring request';
+    }
+    
+    return $.ajax({
+        url:  settings.url,
+        type: method,
+        data: settings.data,
+        dataType: settings.dataType,
+        complete: function (xhr, message) {
+          // stop the throbber
+          $(document).trigger('throbberStop');
+          // protect the ajax from still executing callback on HTTP error, the error callback does his work
+          if (xhr.status < 400 && $.isFunction(settings.callback)) {
+            // NOTICE: in IE the xhr.responseXML will be always non-null, no matter what headers are you using
+            // so check for responseText first, and default to responseXML if failed
+            settings.callback(xhr.responseText || xhr.responseXML, xhr, message);
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          if (showErrors) {
+            // Possible values for the textStatus (besides null) are
+            //   "timeout", "error", "notmodified" and "parsererror". 
+            // execute error callback
+            if ($.isFunction(settings.error)) {
+              settings.error(XMLHttpRequest, textStatus, errorThrown);
+            }else{
+              $.helpers.notice("Oops, something went wrong, please try again or reload this page.");
+            }
+          }
+        },
+        beforeSend: function (xhr, s) {
+          // RAILS CROSS SITE REQUEST FORGERY PROTECTION
+          // See: http://henrik.nyh.se/2008/05/rails-authenticity-token-with-jquery
+          if ((/POST|PUT|DELETE/).test(s.type) && !s.data.match(/authenticity_token=/)) {
+            s.data = s.data || "";
+            
+            s.data += (s.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(SC.CURRENT_USER["authenticity_token"]);
+          }
+          
+          xhr.setRequestHeader('Accept', settings.accept);
+        }
+      });
+  };
+  
+  // Replace the jquery.form with the custom form methods
+  // Submit the ajax from through scAjax method
+  $.fn.scAjaxSubmit = function(callerSettings) {
+    return this.each(function() {
+      var $form = $(this),
+          settings = $.extend({
+            url:      $form.attr('action').trim(),
+            type:     'update',
+            data:     $form.serializeArray(),
+            dataType: null,
+            reset:    false,
+            accept:  'application/json, text/javascript, soundcloud/json',
+            beforeSubmit: null,
+            error:    null
+          }, callerSettings || {}),
+          stopThrobber = function() {
+            // disable the throbber
+            $('.loading', $form).throb(false);
+          };
+      
+      // give pre-submit callback an opportunity to abort the submit
+      if ($.isFunction(settings.beforeSubmit) && settings.beforeSubmit(settings.data, this, settings) === false) {
+        stopThrobber();
+        return this;
+      }
+      
+      // extend the callback with additional features
+      settings.callback = function(response, xhr, message) {
+        stopThrobber();
+        // reset the form fields if needed
+        if(settings.reset){
+          $form.clearForm();
+        }
+        // execute the success callback
+        if ($.isFunction(callerSettings.callback)) {
+          callerSettings.callback(response, xhr, message);
+        }
+      };
+      
+      $.scAjax(settings);
+      return this;
+    });
+  };
+  
+  // SC form wrapper, using our central scAjax method
+  $.fn.scAjaxForm = function(callerSettings) {
+    return this.each(function() {
+      var $form = $(this);
+      $form.submit(function() {
+        $form.scAjaxSubmit(callerSettings);
+        return false;
+      });
+    });
+  };
+  
+})(jQuery);
+

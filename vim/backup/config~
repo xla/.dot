@@ -1,0 +1,27 @@
+Host *
+  ServerAliveInterval 240
+
+Host uvm00
+  HostName 192.168.203.133
+  User alx
+
+Host admin01
+  HostName admin01.soundcloud.everycity.co.uk
+  Port 2201
+  User alx
+
+Host stage01
+  HostName stage01.soundcloud.everycity.co.uk
+  Port 2201
+  User alx
+
+Host varnish01
+  HostName varnish01.soundcloud.everycity.co.uk
+  Port 2201
+  User alx
+
+Host cassandra01
+  HostName cassandra01.soundcloud.everycity.co.uk
+  Port 2201
+  User alx
+

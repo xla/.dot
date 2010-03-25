@@ -1,0 +1,11 @@
+var
+  sys = require('sys'),
+  fs = require('fs'),
+  Haml = require('haml');
+
+
+fs.readFile('./template.haml', 'utf8', function (err, file) {
+
+  sys.puts(Haml.optimize(Haml.compile(file)));
+});
+

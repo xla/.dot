@@ -1,0 +1,50 @@
+module QuotasHelper
+
+  def milliseconds_to_string(milliseconds)
+    return "0&thinsp;mins" if milliseconds <= 0
+    
+    hrs = milliseconds / (1.hours * 1000)
+    milliseconds = milliseconds - (hrs * 1.hours * 1000)
+    
+    mins = milliseconds / (1.minutes * 1000)
+    "#{"#{hrs}&thinsp;hr#{"s" if hrs>1}" if hrs>0}#{" #{mins}&thinsp;min#{"s" if mins>1}" if mins>0 || hrs<=0}"
+  end
+  
+  def current_user_has_quota(quota_name)
+    logged_in? ? current_user.quota.send(quota_name) : Quota::Free.send(quota_name)
+  end
+  
+  def quota_for_frontend(quota)
+    {
+      :uploads                  => quota.uploads,
+      :playlists                => quota.playlists,
+      :sharings_per_track       => quota.sharings_per_track,
+      :contributions_per_track  => quota.contributions_per_track,
+      :contact_groupings        => quota.class.contact_groupings,
+      :groups                   => quota.groups
+    }
+  end
+  
+  def upload_enabled_for?(user)
+    user.activated_at? && user.primary_email && user.primary_email.confirmed? && user.quota.allowed_to_upload?
+  end
+  
+  def quota_upload_hints
+    if logged_in? && current_user.quota.duration_total_is_very_critical?
+      render :partial => 'accounts/warning_tracks_upload'
+    elsif  !logged_in? || current_user.plan == Plan::FREE
+      render :partial => 'accounts/hint_tracks_upload'
+    end
+  end
+  
+  def support_level_to_string(support_level=nil)
+    case support_level
+    when :premium
+      "Premium Support"
+    when :pro
+      "Pro Support"
+    else
+      "Support"
+    end
+  end
+end

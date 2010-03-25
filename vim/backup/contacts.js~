@@ -1,0 +1,594 @@
+$(function() {
+  $('#contact-groups-list').each(function(){
+    // common list methods
+    var $listNodes = function(node) {
+          var id = $(node).metadata().groupId;
+          if(id){
+            return $('#group-badge-' + id).add('#group-list-' + id);
+          }else{
+            console.error('couldn\'t parse out the id of the list');
+            return false;
+          }
+        },
+        groupsQuota = SC.CURRENT_USER.quota.groups || Infinity,
+        contactsQuota = SC.CURRENT_USER.quota.contact_groupings || Infinity,
+        switchList = function(node) {
+          $(node).each(function() {
+            var $item = $(this).closest('li');
+            // show the selected list
+            $listNodes($item).addClass('active').siblings().removeClass('active');
+            // anounce the switch
+            $item.trigger('onSwitchList');
+          });
+        },
+        addNewBadge = function(data) {
+          var title = data.name,
+              uri = data.uri,
+              id = data.id;
+      
+          // create new group badge
+          var $newBadge = $('#contact-groups-list ul.template').find('li').clone();
+          $newBadge
+            .each(function() {
+              // update the metadata stuff
+              $(this).metadata().groupId = id;
+              // fill the template with the new data
+              $(this)
+              .attr('id', 'group-badge-' + id)
+              .find('a')
+                .attr('href', uri)
+                .filter('.group-link')
+                  .each(function() {
+                    this.innerHTML = title;
+                  });
+            })
+            .hide()
+            .appendTo('#contact-groups-list ul:first')
+            .slideDown(800);
+          
+          return $newBadge;
+        },
+        getActiveGroupId = function() {
+          return $('#contact-groups-list li.active').metadata().groupId;
+        },
+        groupMemberUri = function(node){
+          return $(".active a.group-link").attr("href") + "/members/" + $.contactPicker.getId(node);
+        };
+    
+    // Switching between lists
+    $('#contact-groups-list li').live('click', function(event) {
+      switchList(this);
+    });
+    
+    // init editable on only mouse over the playlist item, the list is dynamic, we wait with init
+    $('#contacts-list h3').live('mouseover', function() {
+      var $node = $('strong', this).not('.editable');
+      $node
+        .addClass('editable')
+        .editableField({
+          path: $node.closest('h3').siblings('a').attr('href'),
+          name: 'contact_group[name]',
+          maxLength: 50,
+          callback: function() {
+            // update the badge
+            $('#contact-groups-list').find('.active .contact-group-info a').text($node.text());
+          },
+          title: 'Click to change the list title'
+        });
+    });
+    
+    // Creating new lists
+    $('#contact-groups-list form').each(function() {
+      var $form = $(this),
+          $input = $form.find('input:text'),
+          $submit = $form.find('input:submit'),
+          defaultListName = $input.val(),
+          $newBtn = $('#add-contact-group'),
+          toggleForm = function(status) {
+            $form.toggle(status);
+            $newBtn.toggle(!status);
+            // important: stop the throbber, otherwise performance probs!
+            $submit.throb(false);
+            if(status){
+              // auto-select the new list title
+              $input.selectNow();
+            }else{
+              // reset the text value
+              $input.val(defaultListName);
+            }
+          },
+          resetForm = function() {
+            // reset the form state
+            $submit.throb(false);
+            $input.selectNow();
+          },
+          createNewList = function(data) {
+            var title = data.name,
+                uri = data.uri,
+                id = data.id;
+            
+            // create a new badge
+            var $newBadge = addNewBadge(data);
+                  
+            // create a new list
+            var $newList = $('#contacts-list ul.template').find('li').clone();
+            $newList
+              .each(function() {
+                // fill the template with the new data
+                $(this)
+                .attr('id', 'group-list-' + id)
+                .find('h3')
+                  .html(title + ' (<abbr class="contacts-count">0</abbr>)')
+                  .end()
+                .find('a')
+                  .attr('href', uri)
+                  .filter('.group-link')
+                    .each(function() {
+                      this.innerHTML = title;
+                    });
+              })
+              .appendTo('#contacts-list ul:first');
+            // anounce the creation of the new list
+            $newList.trigger({
+              type: 'onCreateList',
+              listData: $.extend(data, {members: []})
+            });
+            // switch to the new list
+            switchList($newBadge);
+          };
+      
+      // show the form
+      $newBtn.bind('click', function(event) {
+        // check the user quota if user is allowed to create new lists
+        var totalGroups = $('#contact-groups-list ul:first li').size();
+        if(totalGroups < groupsQuota){
+          toggleForm(true);
+          $(this).throb(false);
+        }else{
+          $('#restriction').show();
+          $.helpers.notice('Please upgrade to premium to create more contact lists');
+        }
+        return false;
+      });
+      // hide the form
+      $('a.cancel', this).bind('click', function(event) {
+        toggleForm(false);
+        return false;
+      });
+      // submit form
+      $form.submit(function(){
+        var newTitle = $.helpers.cleanScripts($input.val());
+        // don't submit if title is default
+        if(newTitle === defaultListName){
+          resetForm();
+          return false;
+        }
+        // create the new list
+        $.scAjax({
+          url:    '/people/contact_groups',
+          type:   'create',
+          data:   {'contact_group[name]': newTitle},
+          accept: 'application/json',
+          callback: function (response, xhr, message) {
+            var data = $.parseJSON(response);
+            createNewList(data);
+            toggleForm(false);
+          },
+          error: function (response, xhr, message) {
+            // evaluate the errors
+            $.helpers.notice("There is already a list with the name " + newTitle + ".");
+            resetForm();
+            return;
+          }
+        });
+        return false;
+      })
+      .keydown(function(ev) {
+        if (ev.keyCode === 27) {
+          toggleForm(false);
+        }
+      })
+      .validate({
+        success: "", // don't show positive validation
+        rules: {
+         "contact_group[name]": {
+           required: true
+          }
+        },
+        messages: {
+         "contact_group[name]": {
+           required: "Please enter the title"
+          }
+        }
+      });
+    });
+    
+    
+    
+    // Creating new lists based on suggestions (the first list)
+    $("#create-suggested").each(function() {
+      
+      $("#create-suggested").submit(function(){
+        var $form = $(this),
+            $submit = $form.find('input:submit'),
+            members = $.map($('input[name*=member_ids]'), function(input){ return parseInt(input.value, 10); });
+            
+        $submit.throb(true);
+        $.scAjax({
+          url:    $form.attr('action'),
+          type:   'create',
+          data:   $form.find('input').serializeArray(),
+          accept: 'application/json',
+          callback: function (response, xhr, message) {
+            var data = $.parseJSON(response),
+                title = data.name,
+                uri = data.uri,
+                id = data.id;
+            // create new group badge
+            var $newBadge = addNewBadge(data),
+                $list = $('li.suggested'),
+                listSize = $list.find('li').size();
+            
+            // update the list info
+            $list.each(function() {
+              $list
+              .attr('id', 'group-list-' + id)
+              .find('h3')
+                .html(title + ' (<abbr class="contacts-count">' + listSize +'</abbr>)')
+                .end()
+              .find('a')
+                .attr('href', uri)
+                .filter('.group-link')
+                  .each(function() {
+                    this.innerHTML = title;
+                  });
+            });
+            // update the badge info
+            $newBadge.each(function(index) {
+              var avatars = $.map($list.find('li a.user-image-tiny[style]:lt(4)'), function(node){ 
+                return '<span style=\'background-image:' + node.style.backgroundImage + ';\'></span>';
+              }).join('');
+              $(this)
+                // update the count
+                .find('abbr')
+                  .increment(listSize)
+                  .end()
+                // update the avatars
+                .find('a.group-image-badge')
+                  .append(avatars);
+            });
+            // stop throbbing
+            $submit.throb(false);
+            // remove the form
+            $('#suggested-group-name').remove();
+            // remove the hint
+            $('div.hint').remove();
+            // show the picker
+            $('#contacts-add').show();
+            
+            // anounce the creation of the new list
+            $list.trigger({
+              type: 'onCreateList',
+              listData: $.extend(data, {members: members})
+            });
+            // switch to the new list
+            switchList($newBadge);
+          }
+        });
+        return false;
+      })
+      .keydown(function(ev) {
+        // ajax submit on enter
+        if (ev.keyCode === 13) {
+          $(this).submit();
+          return false;
+        }
+      });
+    
+      $("#create-suggested button").click(function() {
+        $("#suggested-group-name")
+          .show()
+          .find('input:text')
+          .selectNow();
+        $(this).hide();
+        return false;
+      });
+    
+      $("#create-suggested a.cancel").click(function() {
+        $("#suggested-group-name").hide();
+        $('#create-suggested button').show();
+      });
+    });
+
+    // Removing lists
+    $('#contact-groups-list a.remove').live('click', function(event) {
+      var $badge = $(this).closest('li'),
+          uri = this.href,
+          title = $badge.find('a.group-link').text();
+      $.dialog(event, {
+        headline: "Do you really want to delete the contact list '" + title + "'?",
+        copy:     "This will only remove the list, it won't affect who you follow or who's following you",
+        center:   true,
+        ok: function(){
+          $.dialogRemove();
+          
+          // if group is active switch to first group
+          $badge
+            .filter('.active')
+              .each(function(){
+                // if group is active switch to first group
+                switchList($badge.siblings().eq(0));
+              });
+          
+          // remove the lists from DOM
+          $listNodes($badge)
+            .hide('fast', function(){
+              $(this).remove();
+            });
+          
+          // remove it on backend
+          $.scAjax({
+            url:  uri,
+            type: 'destroy'
+          });
+        }
+      });
+      return false;
+    });
+    
+    // adding contacts to the active list
+    $('.pane li').live('click', function(event) {
+      var $original = $(this),
+          $item = $original,
+          id = $.contactPicker.getId(this),
+          groupId = getActiveGroupId();
+      // TODO check the user quota if user is allowed to add more contacts to the list
+      var totalContacts = $('#contacts-list').find('.active li').size();
+      if(totalContacts >= contactsQuota){
+        $('#contacts-add, #restriction').addClass('disabled');
+        
+        if (totalContacts >= contactsQuota) {
+          $.helpers.notice('Please upgrade to premium to add more contacts to the list');
+          
+          return false;
+        }
+      }
+      
+      // modify it's id
+      $item.attr('id', '');
+      // add the contact to the list
+      $('.active ul.list').prepend($item);
+      // update the count
+      $('.active abbr').increment(1);
+      // make the backend call
+      $.scAjax({
+        url:    groupMemberUri($item),
+        type:   'update',
+        accept: 'application/json',
+        error: function (xhr, text, message){
+          var status = xhr.status;
+          if (status === 403) { // 403 Forbidden
+            // Disable adding users and show part of warning text.
+            $("#contacts-add, #restriction").addClass("disabled");
+          } else if (status === 422) { // 422 Unprocessable entity
+            // show notice if the user already in the group
+            $.helpers.notice($item.find('a.user-link').text().trim() + " is already in the list " + $('.active a.group-link').text().trim());
+          }else{
+            $.helpers.notice("Oops, something went wrong, please try again or reload this page. (" + status +")");
+          }
+          // something went wrong, take the contact back!
+          $('.active abbr').increment(-1);
+          $item.remove();
+          $('#contacts-list').trigger({type: 'onContactRemoved', itemData: {id: id}, listData : {id: groupId}});
+        }
+      });
+      $('#contacts-list').trigger({type: 'onContactAdded', itemData: {id: id}, listData : {id: groupId}});
+      return false;
+    });
+    
+    // removing contacts from the active list
+    $('.group li:not(.suggested)').live('click', function(event) {
+      var $item = $(this),
+          id = $.contactPicker.getId(this),
+          groupId = getActiveGroupId();
+          
+      // remove the contact from the list
+      $item.remove();
+      // update the count
+      $('.active abbr').increment(-1);
+      var totalContacts = $('#contacts-list').find('.active li').size();
+
+      if(totalContacts < contactsQuota){
+        $('#contacts-add, #restriction').removeClass('disabled');
+      }
+      // make the backend call
+      $.scAjax({
+        url: groupMemberUri($item),
+        type: 'destroy'
+      });
+      $('#contacts-list').trigger({type: 'onContactRemoved', itemData: {id: id}, listData : {id: groupId}});
+      return false;
+    });
+    
+    // TODO merge iwth picker event listener
+    // contact lists get generated dynamically with pagers
+    $(document).bind('listsDataReady', function(event) {
+      var listsData = event.listsData,
+          db = listsData.users, // all the users contacts and all their properties
+          groups = listsData.contact_groups, // all the contact groups
+          $lists = $('#contacts-list').find('ul:first li:not(.suggested) ul'),
+          generateList = function(ul, page) {
+            var $ul = $(ul),
+                groupId = $ul.parents('li').metadata().groupId,
+                groupObj = groups[groupId],
+                members = groupObj.members,
+                perPage = 120,
+                totalPages = Math.ceil(members.length / perPage),
+                listHtml = '';
+            // generate list html
+            for (var i = Math.max(0, page * perPage), l = Math.min(members.length, (page + 1) * perPage), tmp, id, username, name, avatar_url; i < l; i = i + 1) {
+              id = members[i];
+              tmp = db[id];
+              name = tmp ? tmp.name : id;
+              username = tmp ? tmp.username : id;
+              avatar_url = tmp ? tmp.avatar_url : '';
+              // TODO replace this mess with a nicer templating solution
+              listHtml = listHtml.concat('<li title="Click to remove ', name, '" data-contact-id="', id ,'"><a class="user-image-tiny', avatar_url ? ' avatar' : '','"' , avatar_url ? ' style="background-image: url(' + avatar_url  +');"' : '' ,'>', username, '</a><div class="user-info">', '<a href="#" class="user-link" onclick="return false;">', username, '</a>','</div></li>');
+            }
+            // generate pager html
+            var pagerHtml = function() {
+              var str = '<div class="pagination">';
+              if(page > 0){
+                str = str.concat('<a href="#',  page - 1,'" class="prev_page">Prev</a>');
+              }
+              for(var i = 0, l = totalPages; i < l; i = i + 1){
+                str = str.concat('<a href="#', i ,'"', i === page ?  ' class="current"' : '', '>', i + 1 ,'</a>');
+              }
+              if(page < totalPages - 1){
+                str = str.concat('<a href="#',  page + 1,'" class="next_page">Next</a>');
+              }
+              return str.concat('</div>');
+            }();
+            // generate list items
+            $ul.each(function() {
+              this.innerHTML = listHtml;
+              $ul.siblings('.pagination').remove();
+              if(totalPages > 1){
+                $ul.after(pagerHtml);
+              }
+            });
+            
+          };
+      // redraw on pagination click
+      $('.pagination a').live('click', function(event) {
+        generateList($(this).parents('li').find('ul'), parseInt(this.href.replace(/.*#/, ''), 10));
+        return false;
+      });
+      
+      $(document)
+        // creating a new list
+        .bind('onCreateList', function(event) {
+          var data  = event.listData;
+          groups[data.id] = {
+            members : data.members,
+            name : data.name,
+            url: data.uri
+          };
+        })
+        .bind('onContactAdded', function(event) {
+          var id = event.itemData.id,
+              groupId = event.listData.id;
+            // add item to the data
+            groups[groupId].members.unshift(id);
+        })
+        .bind('onContactRemoved', function(event) {
+          var id = event.itemData.id,
+              groupId = event.listData.id;
+              
+            // remove item from the data
+            groups[groupId].members.splice(groups[groupId].members.indexOf(id), 1);
+        });
+      // generate first pages
+      $lists.each(function() {
+        generateList(this, 0);
+      });
+    });
+    
+    // contact picker controller
+    $(document).bind('listsDataReady', function(event) {
+      // when the lists data is loaded, initiate the picker lists
+      var listsData = event.listsData,
+          db = listsData.users, // all the users contacts and all their properties
+          groups = listsData.contact_groups, // all the contact groups
+          $panes = function() {
+            // associate the data with the DOM element, so we don't have to keep a separate state
+            $('#following').data('available', listsData.followings);
+            $('#followers').data('available', listsData.followers);
+            return $('#following, #followers');
+          }(),
+          // type-ahead-search box
+          $search = $('#type-ahead-search-contacts'),
+          // type-ahead-search value
+          searchString = $search.not('.blank').val() || '',
+          // get the current list ids, so we can hide them from the picker
+          getActiveList = function() {
+            var $activeList = $('#contact-groups-list li.active'),
+                members = $activeList.length && groups[$activeList.metadata().groupId].members || [];
+            return members;
+          },
+          filteredList,
+          // filter the picker contacts depending on the selected list and the type-ahead-search value
+          updatePicker = function(event) {
+            // the active pane we are generating
+            $panes.filter(':visible').each(function() {
+              var $active = $(this);
+              filteredList = $.contactPicker.filter($active.data('available'), getActiveList(), db, searchString);
+              // let the GUI know about the new filtered picker list
+              $active.trigger({type: 'onListChange', list: filteredList, db: db});
+            });
+          };
+        
+    // type ahead search box setup
+    $search.typeahead();
+  
+    // contact picker GUI setup
+    $('div.access-box').contactPicker();
+  
+    // Re-Draw the contact picker on following events:
+    $(document)
+      // when switching follower/following tabs
+      .bind('onTabChange', updatePicker)
+      // switching to different list
+      .bind('onSwitchList', updatePicker)
+      // adding a contact to the list
+      .bind('onContactAdded', function(event) {
+        var id = event.itemData.id,
+            activeList = getActiveList();
+        // TODO update the picker list by removing the item from the visible list
+        var index = filteredList.indexOf(id);
+        if(index >= 0){
+          filteredList.splice(index, 1);
+        }
+        // refresh the list
+        //updatePicker(event);
+      })
+      // removing a contact from the list
+      .bind('onContactRemoved', function(event) {
+        var id = event.itemData.id,
+            activeList = getActiveList();
+        // remove the contact from the list
+        // activeList.splice(activeList.indexOf(id), 1);
+        // TODO: do we need a full refresh here?
+        updatePicker(event);
+      });
+  
+      // when searching in the lists
+      $search.bind('onTypeAheadChange', function(event) {
+        // update the search state
+        searchString  = event.val;
+        // // reseting the list every time we search in the list
+        // getActiveList().trigger('onListReset');
+        // filter the list
+        updatePicker(event);
+      });
+    
+      updatePicker();
+    });
+    // ---------   end dynamic contact picker
+
+    $('#contacts-path').each(function() {
+      var $link = $(this),
+          $lists = $('.viewport ul, #contacts-list ul ul').filter(':visible');
+      // throb lists
+      $lists.throb(true);
+      // load the contacts data for the pickers
+      $.getJSON(this.href, function (json) {
+        $lists.throb(false);
+        $(document).trigger({type: 'listsDataReady', listsData: json});
+        $link.remove();
+      });
+    });
+    
+  });
+
+});

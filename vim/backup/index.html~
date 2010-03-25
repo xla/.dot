@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>TweetCloud</title>
+    <link rel="stylesheet" type="text/css" media="all"    charset="utf-8" href="/css/baseline.compress.css" />
+  </head>
+  <body>
+    <div id="page">
+      <h2>TweetCloud</h2>
+      <dialog></dialog>
+    </div>
+    <script type="application/javascript" charset="utf-8" src="/js/jquery.js"></script>
+    <script type="application/javascript" charset="utf-8" src="/js/jquery.mustache.js"></script>
+    <script type="application/javascript" charset="utf-8" src="/js/wswrapper.js"></script>
+    <script type="application/javascript" charset="utf-8" src="/js/cloud.js"></script>
+  </body>
+</html>

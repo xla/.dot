@@ -1,0 +1,157 @@
+$(function() {
+  
+  // Avatar management, used in user settings and on the second signup page
+  $('#pictures-container').each(function() {
+    
+    var $current = $('.current-picture', this);
+
+    // Sets the current-picture and hides the crop button depending
+    // on whether or not there are actual pictures
+    var update = function($large) {
+      $current
+        .find('span')
+          .replaceWith($large)
+        .end()
+        .find('a')
+          .removeClass('hidden')[($('#pictures-container li:visible').exists() ? 'show' : 'hide')]()
+        .end();
+    };
+
+    // Activate a previous picture to the current picture
+    var activate = function($badge) {
+      var $large = $badge
+        .closest('li')
+          .addClass('avatar-active')
+          .siblings()
+            .removeClass('avatar-active')
+          .end()
+        .end()
+        .siblings('span.avatar-large')
+          .clone()
+          .show();
+
+      update($large);
+    };
+    // This is the crop button for the current_picture - it loads the dependent library
+    // then opens the window.  Waiting on multiple callback support for zoomable to 
+    // be able to dynamically load the library *after* the zoomable loading window
+    // is displayed.
+    $('#crop-link').live('click', function(event) {
+      console.log(event);
+      $.cropper(event, function() {
+        $('#crop-box form')
+        .throbberform()
+        .scAjaxForm({
+          accept: "text/html+partial",
+          beforeSend: function() {
+            $('span.avatar-large, li.avatar-active span.avatar-badge').throb(true);
+            return SC.xhr.partial;
+          },
+          callback: function(partial, status) {
+            var $li = $(partial),
+                $preview = $li.find('span.avatar-badge'),
+                $large = $li.find('span.avatar-large'),
+                id = $preview.attr('id');
+
+            if (id) {
+              // The badge image may not be processed yet, wait for it
+              $.helpers.waitForBgImage($preview, function() {
+                $.helpers.waitForBgImage($large, function() {
+                  $('#'+id).parents('li').replaceWith($li);
+                  $preview.click(); // Activate the new badge
+                });
+              });
+            }
+            $.closeZoomScreen();
+          }
+        });
+      });
+    });
+    
+    // if ($.trim(partial)) {
+    //   var $large = $(partial).find('span.avatar-large');
+    //   $.helpers.waitForBgImage($large, function() {
+    //     $large.replaceAll($current.find('span')).removeClass('hidden').show();
+    //   });
+    // }
+    // Avatar selection - update the current image with the selected image
+    $('span.avatar-badge').live('click', function(ev) {
+      var $avatar = $(ev.target);
+
+      activate($avatar);
+
+      // Do the client-side change then let the server know about the change
+      // instead of only updating the client after the server responds.
+      $.scAjax({
+        type: 'update',
+        url: '/' + SC.CURRENT_USER.permalink,
+        data: { 'user[avatar_id]':  + $.helpers.getIdNumber($avatar) }
+      });
+    });
+
+    // Avatar removal - remove the image and update the current image with the 
+    // partial returned by the server
+    $('a.avatar-remove').live('click', function(ev) {
+      var $target = $(ev.target);
+      if (!$target.is('.loading')) {
+        $target.addClass('loading');
+        $.scAjax({
+          url: $target.attr('href'),
+          type: 'destroy',
+          accept: 'text/html+partial',
+          callback: function(response) {
+            if ($.trim(response)) {
+              var $next = $(response).find('span.avatar-badge');
+              activate($('#' + $next.attr('id')));
+            } else {
+              $current
+                .find('span').hide().end()
+                .find('a').hide().end();
+            }
+            $target.parents('li').fadeOut(function() {
+              // let the uploader overlay know about the form changes
+              $(this).trigger('onFormSizeChanged');
+            });
+          }
+        });
+      }
+    });
+    
+    // Avatar upload
+    var $uploadButton = $('#upload-image-btn');
+    $uploadButton
+      .uploader({
+        multiple:    false,
+        typeFilter:  $.uploader.fileFilters.images,
+        maxFileSize: 5 * 1024 * 1024 // 5 Mebi
+      })
+      .bind('onAllSelect', function(e, f, u) {
+        f.upload({url: "/users/" + SC.CURRENT_USER.permalink + "/avatars?security_token=" + security_token});
+      })
+      .bind('onOpen', function() {
+        $("#previous-pictures").removeClass('hidden').show();
+        // aad a placeholder to the previous pictures list
+        $("<li id='avatar-loader' class='picture-preview'><div><span></span></div><a href='#'>X</a></li>").prependTo("#previous-pictures-list");
+        // throb the placeholders
+        $('span.avatar-large, #avatar-loader span').throb(true);
+      })
+      .bind('onComplete', function(e, f, u) {
+        var $preview = $(u[1]);
+        var $badge = $preview.find('span.avatar-badge');
+        // keep on throbbing
+        $uploadButton.throb(true);
+        // wait till the pics are processed
+        $.helpers.waitForBgImage($badge, function() {
+          $.helpers.waitForBgImage($badge.siblings('span.avatar-large'), function() {
+            $preview.replaceAll($('#avatar-loader'));
+            // activate the current badge
+            $badge.click();
+            $uploadButton.throb(false);
+          });
+        });
+      })
+      .bind('onError', function(ev, flash, upload) {
+        $.helpers.notice("Could not upload the avatar, please try again");
+      });
+  });
+});

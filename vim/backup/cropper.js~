@@ -1,0 +1,67 @@
+(function($) {
+  // This is the crop button for the current_picture - it loads the dependent library
+  // then opens the window.  Waiting on multiple callback support for zoomable to 
+  // be able to dynamically load the library *after* the zoomable loading window
+  // is displayed.
+  $.cropper = function(ev, onLoad) {
+    $.helpers.require(SC.asset_url('/javascripts/vendor/jquery.Jcrop.js'), function() { return !!$.Jcrop; }, function() {
+      $.zoomable(ev, {
+        width: 450,
+        height: 500,
+        src: $.zoomable.content.loadHtml,
+        callback: function() {
+        console.log('foo')
+          var i = parseInt, // shortcut for brevity
+              $extent = $('#extent'), 
+              $img = $('#crop-img'),
+              width = i($('#original-width').val(), 10),
+              height = i($('#original-height').val(), 10);
+
+          function setExtent(dim) {
+            $extent.val(dim.w + 'x' + dim.h + '+' + dim.x + '+' + dim.y);
+          }
+
+          function getSelect() {
+            var w = $img.width(), 
+                h = $img.height(),
+                dx = w/width,
+                dy = h/height,
+                m = $extent.val().match(/(\d+)x(\d+)\+(\d+)\+(\d+)/);
+
+            if (m) {
+              // Extent is in the form of WIDTHxHEIGHT+X+Y 
+              // but needs to be in the form of [ x1, y1, x2, y2 ]
+              // 
+              // Scale here with dx/dy to image size because setSelect in Jcrop
+              // doesn't take in account of the original size.
+              var x1 = i(m[3], 10)*dx,
+                  y1 = i(m[4], 10)*dy;
+
+              var x2 = x1 + i(m[1], 10)*dx,
+                  y2 = y1 + i(m[2], 10)*dy;
+                  
+              return [ x1, y1, x2, y2 ];
+            } else {
+              // Default slightly offset from the top left corner
+              return [ w/10, h/10, w/10+w/2, h/10+h/2 ];
+            }
+          }
+
+          // Set the initial selection to be slightly offset from the upper right corner
+          // and scale coordinates relative to the orig-width, orig-height
+          $img.Jcrop({
+            aspectRatio: 1,
+            onChange: setExtent,
+            onSelect: setExtent,
+            setSelect: getSelect(),
+            trueSize:  [ width, height ]
+          });
+
+          if ($.isFunction(onLoad)) {
+            onLoad();
+          }
+        }
+      });
+    });
+  };
+})(jQuery);

@@ -1,0 +1,72 @@
+(function ($, window, undefined) {
+
+  var WSWrapper = function (options) {
+    var 
+      self = this,
+      options = options || {},
+      opts = $.extend({
+        host: 'localhost',
+        port: null,
+        path: '/'
+      }, options),
+      connection,
+      url = 'ws://' + opts.host + 
+            (opts.port ? (':' + opts.port) : '') + opts.path;
+  
+    this.opts = opts;
+    this.callbacks = {};
+    this.connection = connection = new WebSocket(url);
+
+    // dispatch the handlers
+    connection.onopen = function (event) {
+      self._dispatch('open', null);
+    };
+    connection.onclose = function (event) {
+      self._dispatch('close', null);
+    };
+    connection.onerror = function (event) {
+      self._dispatch('error', null);
+    };
+    connection.onmessage = function (event) {
+      self._dispatch('message', event.data);
+    };
+    
+  };
+
+  $.extend(WSWrapper.prototype, {
+    _dispatch: function (name, payload) {
+      var list = this.callbacks[name] || [];
+
+      if (!list.length) {return;}
+
+      $.each(list, function (idx, fn) {
+        fn(payload);
+      });
+    },
+    close: function () {
+      this.connection.close();
+
+      return true;
+    },
+    bind: function (name, callback) {
+      var cbs = this.callbacks;
+
+      cbs[name] = cbs[name] || [];
+      cbs[name].push(callback);
+
+      return this;
+    },
+    trigger: function (name, payload) {
+      var stanza = JSON.stringify([name, payload]);
+
+      this.connection.send(stanza);
+
+      return this;
+    }
+  });
+  
+  // expose WSWrapper to global scope
+  window.WSWrapper = WSWrapper;
+  
+})(jQuery, window, undefined);
+
