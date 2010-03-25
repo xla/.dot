@@ -14,7 +14,7 @@ export PYTHONPATH='/Users/alx/development/python/site-packages':$PYTHONPATH
 export ERL_LIBS=/Users/alx/development/erlang/externals/
 
 # editor enhanced
-exporち VIM_APP_DIR=/Applications/MacVim
+export VIM_APP_DIR=/Applications/MacVim
 export EDITOR='mvim -f -c "au VimLeave * opendiff -a Terminal"'
 
 # bash completion support

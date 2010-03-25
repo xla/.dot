@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/Users/alx/development/workspace/sc/soundcloud/public/javascripts'
 let g:netrw_dirhist_2='/Users/alx/development/workspace/sc/soundcloud/public/javascripts/classes'
 let g:netrw_dirhist_3='/Users/alx/development/workspace/tweetcloud'
@@ -7,3 +7,5 @@ let g:netrw_dirhist_4='/Users/alx/development/workspace/tweetcloud/static'
 let g:netrw_dirhist_5='/Users/alx/development/workspace/tweetcloud/static/js'
 let g:netrw_dirhist_6='/Users/alx/development/workspace/sc/soundcloud/public/javascripts'
 let g:netrw_dirhist_7='/Users/alx/development/workspace/sc/soundcloud/public/javascripts/controllers'
+let g:netrw_dirhist_8='/Users/alx/development/dotfiles'
+let g:netrw_dirhist_9='/Users/alx/development/dotfiles/bash'
