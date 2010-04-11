@@ -1,8 +1,0 @@
-[github]
-	user = goldjunge
-	token = 55c59ce41dbcdfc3b9d192cf0391f7a9
-[user]
-	email = a.simmerl@googlemail.com
-	name = Alexander Simmerl
-[core]
-	editor = mvim -f -c
