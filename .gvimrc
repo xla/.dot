@@ -9,7 +9,8 @@ syntax sync fromstart
 
 set guifont=Bitstream\ Vera\ Sans\ Mono:h13
 
-set ts=2 sw=2 et
+" indentation
+set ts=2 sw=2 sts=2 et
 
 set autowriteall
 set noai nocindent
@@ -21,7 +22,7 @@ set directory=/tmp
 set ttyfast
 set number ruler
 set backspace=2     " allow backspacing over everything in insert mode
-set mouse=a " allows marking/pasting with the mouse also on 'not gui vim'
+set mouse=a         " allows marking/pasting with the mouse also on 'not gui vim'
 
 set go-=T
 
@@ -43,6 +44,12 @@ set columns=100
 " side scrolling from :h wrap
 set sidescroll=5
 set listchars+=precedes:<,extends:>
+" Shortcut to rapidly toggle `set list`
+nmap <leader>l :set list!<CR>
+ 
+" Use the same symbols as TextMate for tabstops and EOLs
+set listchars=tab:▸\ ,eol:¬
+
 
 :au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
