@@ -24,8 +24,6 @@ set number ruler
 set backspace=2     " allow backspacing over everything in insert mode
 set mouse=a         " allows marking/pasting with the mouse also on 'not gui vim'
 
-set go-=T
-
 " Suffixes that get lower priority when doing tab completion for filenames.
 " These are files we are not likely to want to edit or read.
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar
@@ -53,10 +51,20 @@ set listchars=tab:▸\ ,eol:¬
 
 :au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
-:colorscheme twilight
+:colorscheme railscasts
 
 if has("gui_macvim")
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
+
+  " hide toolbar
+  set go-=T
+
+  " hide scrollbars
+  set go-=r
+  set go-=R
+  set go-=l
+  set go-=L
+  set mousefocus
 endif
 
