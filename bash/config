@@ -41,3 +41,4 @@ BWHITE='\e[47m'
 PS1="\n\[$CYAN\][\[$NO_COLOR\]\u:\w\[$CYAN\]] \[$EBLACK\]\$(vcprompt)\[$NO_COLOR\] \[$CYAN\]\n→\[$NO_COLOR\] "
 
 ssh-add ~/.ssh/sc-keypair
+

@@ -1,6 +1,8 @@
 alias h='history'
 alias ll='ls -lhaG'
 
+alias vi='vim'
+
 alias hu='htop --sort-key cpu'
 alias hm='htop --sort-key memory'
 alias nr='rlwrap node-repl'

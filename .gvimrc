@@ -7,7 +7,8 @@ filetype indent on
 syntax on
 syntax sync fromstart
 
-set guifont=Bitstream\ Vera\ Sans\ Mono:h13
+set guifont=Pragmata:h15
+" set guifont=Bitstream\ Vera\ Sans\ Mono:h13
 
 " indentation
 set ts=2 sw=2 sts=2 et
@@ -49,11 +50,13 @@ nmap <leader>l :set list!<CR>
 set listchars=tab:▸\ ,eol:¬
 
 
-:au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
-:colorscheme railscasts
+:colorscheme darkdevel
 
 if has("gui_macvim")
+  :colorscheme railscasts
+
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
 
