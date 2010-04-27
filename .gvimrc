@@ -37,25 +37,25 @@ set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 set fileformat=unix history=50
 set digraph
 
-set lines=55
-set columns=100
-
-" side scrolling from :h wrap
-set sidescroll=5
-set listchars+=precedes:<,extends:>
-" Shortcut to rapidly toggle `set list`
-nmap <leader>l :set list!<CR>
+" set lines=55
+" set columns=100
  
-" Use the same symbols as TextMate for tabstops and EOLs
-set listchars=tab:▸\ ,eol:¬
-
-
 ":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 :colorscheme darkdevel
 
 if has("gui_macvim")
   :colorscheme railscasts
+
+  " side scrolling from :h wrap
+  set sidescroll=5
+  set listchars+=precedes:<,extends:>
+
+  " Shortcut to rapidly toggle `set list`
+  nmap <leader>l :set list!<CR>
+
+  " Use the same symbols as TextMate for tabstops and EOLs
+  set listchars=tab:▸\ ,eol:¬
 
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
