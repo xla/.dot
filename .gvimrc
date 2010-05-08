@@ -10,7 +10,7 @@ syntax sync fromstart
 set guifont=Pragmata:h15
 " set guifont=Bitstream\ Vera\ Sans\ Mono:h13
 
-" indentation
+"" indentation
 set ts=2 sw=2 sts=2 et
 
 set autowriteall
@@ -23,10 +23,9 @@ set directory=/tmp
 set ttyfast
 set number ruler
 set backspace=2     " allow backspacing over everything in insert mode
-set mouse=a         " allows marking/pasting with the mouse also on 'not gui vim'
 
-" Suffixes that get lower priority when doing tab completion for filenames.
-" These are files we are not likely to want to edit or read.
+"" Suffixes that get lower priority when doing tab completion for filenames.
+"" These are files we are not likely to want to edit or read.
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar
 
 set showcmd
@@ -35,8 +34,13 @@ set fileformats=unix,dos,mac
 
 set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 set fileformat=unix history=50
-set digraph
+" set digraph
 
+"" Bash out extra whitespace
+highlight CursorLine guibg=Gray20
+highlight ExtraWhitespace ctermfg=15 ctermbg=4 guifg=#CF6A4C guibg=#420E09
+match ExtraWhitespace /\s\+$\| \+\ze\t/
+ 
 " set lines=55
 " set columns=100
  

@@ -10,13 +10,22 @@ alias nr='rlwrap node-repl'
 # Git
 alias g='git status'
 alias ga='git add'
-alias gc='git commit -va'
-alias gd='git diff'
+alias gb='git branch'
+alias gc='git commit -v'
+alias gca='git commit -va'
+alias gco='git checkout'
+alias gd='git diff --no-ext-diff -w "$@" | vim -R -'
+alias gf='git fetch'
+alias gl='git log --no-ext-diff -w "$@" | vim -R -'
+alias glo='git log --pretty=oneline -w "$@" | vim -R -'
+alias glog='git log --pretty=oneline --graph --no-ext-diff -w "$@" | vim -R -'
+alias gm='git mergetool -t opendiff'
 alias gpl='git pull'
 alias gps='git push'
-alias gpull='git pull'
-alias gpush='git push'
+alias gr='git rebase'
+alias gri='git rebase -i'
 
 function gg () {
   git commit -vam "$*"
 }
+
