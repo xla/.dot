@@ -49,7 +49,7 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 :colorscheme darkdevel
 
 if has("gui_macvim")
-  :colorscheme railscasts
+  " :colorscheme railscasts
 
   " side scrolling from :h wrap
   set sidescroll=5
