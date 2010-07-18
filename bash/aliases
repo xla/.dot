@@ -26,7 +26,8 @@ alias gps='git push'
 alias gr='git rebase'
 alias gri='git rebase -i'
 
-function gg () {
+function gg() {
   git commit -vam "$*"
 }
 
+alias hgd='hg diff | vim -R -'
