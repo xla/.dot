@@ -73,5 +73,8 @@ if has("gui_macvim")
   set go-=l
   set go-=L
   set mousefocus
+
+  macmenu &File.New\ Tab key=<nop>
+  map <D-t> <Plug>PeepOpen
 endif
 
