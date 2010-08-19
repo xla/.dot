@@ -28,9 +28,6 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
 
-NVM_DIR=$HOME/.nvm
-. $NVM_DIR/nvm.sh
-
 ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/sc-keypair
 
