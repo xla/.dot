@@ -3,4 +3,4 @@ vim/backup
 vim/backup/*
 vim/viminfo
 *.*~
-
+.DS_Store

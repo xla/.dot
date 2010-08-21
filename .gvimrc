@@ -46,11 +46,9 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
  
 ":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
-:colorscheme darkdevel
+:colorscheme railscasts
 
 if has("gui_macvim")
-  " :colorscheme railscasts
-
   " side scrolling from :h wrap
   set sidescroll=5
   set listchars+=precedes:<,extends:>
@@ -58,7 +56,7 @@ if has("gui_macvim")
   " Shortcut to rapidly toggle `set list`
   nmap <leader>l :set list!<CR>
 
-  " Use the same symbols as TextMate for tabstops and EOLs
+  " Use the same symbols as TextMate for tabstops and EOL
   set listchars=tab:▸\ ,eol:¬
 
   let macvim_skip_cmd_opt_movement = 1
@@ -77,4 +75,3 @@ if has("gui_macvim")
   macmenu &File.New\ Tab key=<nop>
   map <D-t> <Plug>PeepOpen
 endif
-
