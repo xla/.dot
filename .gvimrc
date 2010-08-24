@@ -1,12 +1,15 @@
 set nocompatible
 
 filetype on
-filetype plugin indent on         " Turn on file type detection.
+filetype plugin indent on " Turn on file type detection.
 
 syntax enable
 syntax sync fromstart
 
-set guifont=Pragmata:h15
+:colorscheme darkdevel
+
+set guifont=Inconsolata:h18 " Font family and font size.
+" set guifont=Pragmata:h15
 " set guifont=Bitstream\ Vera\ Sans\ Mono:h13
 
 "" indentation
@@ -31,7 +34,7 @@ set backspace=2     " allow backspacing over everything in insert mode
 set title                         " Set the terminal's title
 
 " Useful status information at bottom of screen
-set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) 
+set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
 
 "" Suffixes that get lower priority when doing tab completion for filenames.
 "" These are files we are not likely to want to edit or read.
@@ -56,19 +59,18 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 highlight CursorLine guibg=Gray20
 highlight ExtraWhitespace ctermfg=15 ctermbg=4 guifg=#CF6A4C guibg=#420E09
 match ExtraWhitespace /\s\+$\| \+\ze\t/
- 
+
 " change working directory automatically
 " set autochdir
 
 " set lines=55
 " set columns=100
- 
+
 ":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
-:colorscheme vividchalk
-
 if has("gui_macvim")
-  set guifont=Inconsolata:h18 " Font family and font size.
+  :colorscheme vividchalk
+
   set antialias               " MacVim: smooth fonts.
   set encoding=utf-8          " Use UTF-8 everywhere.
 
@@ -85,7 +87,9 @@ if has("gui_macvim")
 
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
-  au GUIEnter * set fullscreen
+
+  " Fullscreen on start
+  " au GUIEnter * set fullscreen
 
   " hide toolbar
   set go-=T
