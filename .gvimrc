@@ -83,7 +83,7 @@ if has("gui_macvim")
 
 
   " Use the same symbols as TextMate for tabstops and EOL
-  set listchars=tab:▸\ ,eol:¬
+  set listchars=tab:▸\ ,trail:.,eol:¬
 
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
