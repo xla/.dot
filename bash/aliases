@@ -1,5 +1,6 @@
 alias h='history'
-alias ll='ls -lhaG'
+alias l='ls -lhaAFG'
+alias ll='l'
 
 alias vi='vim'
 
