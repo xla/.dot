@@ -69,11 +69,8 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 ":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 if has("gui_macvim")
-<<<<<<< HEAD
   :colorscheme vividchalk
 
-=======
->>>>>>> font changes
   set antialias               " MacVim: smooth fonts.
   set encoding=utf-8          " Use UTF-8 everywhere.
 
