@@ -1,6 +1,10 @@
+#!/bin/sh
 # prevent encoding issues
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+export CLICOLOR="true"
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
 # PATH additions for own bin dir
 export PATH=/usr/local/bin:$PATH
@@ -23,13 +27,13 @@ export VIM_APP_DIR=/Applications
 export EDITOR='vim'
 # export EDITOR='mvim -f -c "au VimLeave * opendiff -a Terminal"'
 
-# bash completion support
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-  . `brew --prefix`/etc/bash_completion
-fi
-
 ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/sc-keypair
+
+# bash completion support
+# if [ -f `brew --prefix`/etc/bash_completion ]; then
+#   . `brew --prefix`/etc/bash_completion
+# fi
 
 # rvm support
 if [[ -s ~/.rvm/scripts/rvm ]] ; then

@@ -1,6 +1,6 @@
 *.netrwhist*
-vim/backup
-vim/backup/*
-vim/viminfo
+*vim/backup*
+*vim/backup/*
+*vim/viminf*
 *.*~
 .DS_Store
