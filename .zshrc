@@ -124,7 +124,9 @@ YELLOW_BOLD=$fg_bold[yellow]
 BLUE=$fg[blue]
 PURPLE=$fg[magenta]
 CYAN=$fg[cyan]
-GREY=$'\e[0;94m'
+CYAN_BOLD=$fg_bold[cyan]
+# GREY=$'\e[0;94m'
+GREY=$fg[grey]
 
 #
 # Set prompt style
@@ -142,8 +144,8 @@ zstyle ':vcs_info:*:prompt:*'                enable git
 zstyle ':vcs_info:*:prompt:*'                check-for-changes true
 zstyle ':vcs_info:*:prompt:*'  stagedstr     "%{$YELLOW%}"
 zstyle ':vcs_info:*:prompt:*'  unstagedstr   "%{$GREEN%}"
-zstyle ':vcs_info:*:prompt:*'  actionformats "(%{$BLUE%}%u%c%b${ACTION})%{$CLEAR%} "
-zstyle ':vcs_info:*:prompt:*'  formats       "[%{$BLUE%}%b%u%{$CLEAR%}] "
+zstyle ':vcs_info:*:prompt:*'  actionformats "(%{$CYAN%}%u%c%b${ACTION})%{$CLEAR%} "
+zstyle ':vcs_info:*:prompt:*'  formats       "(%{$CYAN%}%b%u%{$CLEAR%}) "
 zstyle ':vcs_info:*:prompt:*'  nvcsformats   ""
 
 function precmd {
@@ -166,8 +168,13 @@ function precmd {
 #
 # Set Prompts
 #
-PROMPT="%{$GREY%}%n%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
-RPROMPT='%{$BLUE%}%w %T%{$CLEAR%}'
+if [[ `hostname` == 'alx-mbp01.local' ]] then
+  PROMPT="%{$CYAN%}%n%{$CLEAR%} %{$YELLOW%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
+else
+  PROMPT="%{$CYAN%}%n%{$CLEAR%}:%{$CYAN_BOLD%}%m%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
+fi
+
+RPROMPT='%{$CYAN%}%w %T%{$CLEAR%}'
 
 #
 # ls colors
