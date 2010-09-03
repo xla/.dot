@@ -39,7 +39,6 @@ alias hm='htop --sort-key memory'
 alias nr='rlwrap node-repl'
 
 # git
-alias git=hub
 alias g='git status -sb'
 alias ga='git add'
 alias gb='git branch'
@@ -77,7 +76,7 @@ alias hgd='hg diff | vim -R -'
 alias ..='cd ..'
 
 # other
-alias nginxre='sudo kill `cat /usr/local/logs/nginx.pid`;sudo nginx'
+alias nginxre='sudo kill `cat /usr/local/var/run/nginx.pid`;sudo nginx -c ~/development/dotfiles/nginx/nginx.conf'
 alias ts='thin start'
 alias src="cd $SRCPATH"
 alias vi='vim'
@@ -121,6 +120,7 @@ CLEAR=$reset_color
 RED=$fg[red]
 GREEN=$fg[green]
 YELLOW=$fg[yellow]
+YELLOW_BOLD=$fg_bold[yellow]
 BLUE=$fg[blue]
 PURPLE=$fg[magenta]
 CYAN=$fg[cyan]
@@ -129,6 +129,13 @@ GREY=$'\e[0;94m'
 #
 # Set prompt style
 #
+# %b - branchname
+# %u - unstagedstr (see below)
+# %c - stangedstr (see below)
+# %a - action (e.g. rebase-i)
+# %R - repository path
+# %S - path in the repository
+
 ACTION="%{$PURPLE%}:%a%{$CLEAR%}"
 
 zstyle ':vcs_info:*:prompt:*'                enable git
@@ -136,7 +143,7 @@ zstyle ':vcs_info:*:prompt:*'                check-for-changes true
 zstyle ':vcs_info:*:prompt:*'  stagedstr     "%{$YELLOW%}"
 zstyle ':vcs_info:*:prompt:*'  unstagedstr   "%{$GREEN%}"
 zstyle ':vcs_info:*:prompt:*'  actionformats "(%{$BLUE%}%u%c%b${ACTION})%{$CLEAR%} "
-zstyle ':vcs_info:*:prompt:*'  formats       "%{$BLUE%}%c%u(%c%b%c%u)%{$CLEAR%} "
+zstyle ':vcs_info:*:prompt:*'  formats       "[%{$BLUE%}%b%u%{$CLEAR%}] "
 zstyle ':vcs_info:*:prompt:*'  nvcsformats   ""
 
 function precmd {
@@ -159,7 +166,7 @@ function precmd {
 #
 # Set Prompts
 #
-PROMPT="%{$GREY%}%n%{$CLEAR%} %~ "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
+PROMPT="%{$GREY%}%n%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 RPROMPT='%{$BLUE%}%w %T%{$CLEAR%}'
 
 #
