@@ -123,6 +123,7 @@ YELLOW=$fg[yellow]
 YELLOW_BOLD=$fg_bold[yellow]
 BLUE=$fg[blue]
 PURPLE=$fg[magenta]
+PURPLE_BOLD=$fg_bold[magenta]
 CYAN=$fg[cyan]
 CYAN_BOLD=$fg_bold[cyan]
 # GREY=$'\e[0;94m'
@@ -171,7 +172,7 @@ function precmd {
 if [[ `hostname` == 'alx-mbp01.local' ]] then
   PROMPT="%{$CYAN%}%n%{$CLEAR%} %{$YELLOW%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 else
-  PROMPT="%{$CYAN%}%n%{$CLEAR%}:%{$CYAN_BOLD%}%m%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
+  PROMPT="%{$PURPLE%}%n%{$CLEAR%}:%{$PURPLE_BOLD%}%m%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 fi
 
 RPROMPT='%{$CYAN%}%w %T%{$CLEAR%}'
