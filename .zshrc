@@ -172,7 +172,7 @@ function precmd {
 if [[ `hostname` == 'alx-mbp01.local' ]] then
   PROMPT="%{$CYAN%}%n%{$CLEAR%} %{$YELLOW%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 else
-  PROMPT="%{$PURPLE%}%n%{$CLEAR%}:%{$PURPLE%}%m%{$CLEAR%} %{$YELLOW%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
+  PROMPT="%{$PURPLE%}%n%{$CLEAR%}:%{$PURPLE%}%m%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 fi
 
 RPROMPT='%{$CYAN%}%w %T%{$CLEAR%}'
