@@ -169,7 +169,7 @@ function precmd {
 #
 # Set Prompts
 #
-if [[ "$(hostname | grep -o -e "^alx-mbp01")" ==  "alx-mbp01" ]] then
+if [[ "$(hostname | grep -o -e "^alx-mbp")" ==  "alx-mbp" ]] then
   PROMPT="%{$CYAN%}%n%{$CLEAR%} %{$YELLOW%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
 else
   PROMPT="%{$PURPLE%}%n%{$CLEAR%}:%{$PURPLE%}%m%{$CLEAR%} %{$YELLOW_BOLD%}%c%{$CLEAR%} "'${vcs_info_msg_0_}${cursor}'" %{$CLEAR%}"
