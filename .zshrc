@@ -145,7 +145,7 @@ zstyle ':vcs_info:*:prompt:*'                enable git
 zstyle ':vcs_info:*:prompt:*'                check-for-changes true
 zstyle ':vcs_info:*:prompt:*'  stagedstr     "%{$YELLOW%}"
 zstyle ':vcs_info:*:prompt:*'  unstagedstr   "%{$GREEN%}"
-zstyle ':vcs_info:*:prompt:*'  actionformats "(%u%c%b${ACTION}) "
+zstyle ':vcs_info:*:prompt:*'  actionformats "(%u%c/%b${ACTION}) "
 zstyle ':vcs_info:*:prompt:*'  formats       "(%b%u) "
 zstyle ':vcs_info:*:prompt:*'  nvcsformats   ""
 
