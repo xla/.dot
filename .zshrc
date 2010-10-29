@@ -184,3 +184,52 @@ LS_COLORS='rs=0:di=01;36:ln=00;35:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:c
 ZLS_COLORS=$LS_COLORS
 export LS_COLORS
 export ZLS_COLORS
+
+# Experimental shell-fm support
+function ctrl-shell-fm; {
+    BIND="127.0.0.1"
+    PORT="54311"
+
+    if [[ $# -eq 0 || "$1" != (skip|love|ban|quit|play) ]]; then
+        print "Usage: $0 (skip|love|ban|quit|play) [argument]" >&2
+        exit -1
+    fi
+
+    if [[ -r "$HOME/.shell-fm/shell-fm.rc" ]]; then
+        for LINE in ${(f)"$(<$HOME/.shell-fm/shell-fm.rc)"}; do
+            LINE="${LINE%%\#*}"
+            if [[ "$LINE" == (#b)(bind|port)[\ ]#"="[\ ]#(#b)([^\ ]##)* ]]; then
+                export ${(U)match[1]}="$match[2]"
+            fi
+        done
+    fi
+
+    zmodload zsh/net/tcp
+    if ! ztcp "$BIND" "$PORT"; then
+        print "Couldn't connect to [$BIND:$PORT]." >&2
+        exit -1
+    fi
+
+    print -u $REPLY "$1" $@[2,-1]
+
+    if [[ "$REPLY" -gt 0 ]]; then
+        ztcp -c $REPLY
+    fi
+}
+
+function ctrl-shell-fm-skip; { ctrl-shell-fm skip }
+function ctrl-shell-fm-love; { ctrl-shell-fm love }
+function ctrl-shell-fm-ban; { ctrl-shell-fm ban }
+
+zle -N ctrl-shell-fm-skip
+zle -N ctrl-shell-fm-love
+zle -N ctrl-shell-fm-ban
+
+# skip: ESC s n
+bindkey "\esn" ctrl-shell-fm-skip
+
+# ban: ESC s b
+bindkey "\esb" ctrl-shell-fm-ban
+
+# love: ESC s l
+bindkey "\esl" ctrl-shell-fm-love
