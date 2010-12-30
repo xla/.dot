@@ -6,7 +6,7 @@ filetype plugin indent on " Turn on file type detection.
 syntax enable
 syntax sync fromstart
 
-:colorscheme darkdevel
+:colorscheme wombat
 
 set guifont=Inconsolata:h18 " Font family and font size.
 " set guifont=Pragmata:h15
@@ -69,7 +69,7 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 ":au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 if has("gui_macvim")
-  :colorscheme vividchalk
+  :colorscheme wombat
 
   set antialias               " MacVim: smooth fonts.
   set encoding=utf-8          " Use UTF-8 everywhere.
