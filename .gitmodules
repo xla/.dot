@@ -1,0 +1,24 @@
+[submodule ".vim/bundle/command-t"]
+	path = .vim/bundle/command-t
+	url = git://git.wincent.com/command-t.git
+[submodule ".vim/bundle/snipmate"]
+	path = .vim/bundle/snipmate
+	url = git://github.com/msanders/snipmate.vim.git
+[submodule ".vim/bundle/jade"]
+	path = .vim/bundle/jade
+	url = git://github.com/vim-scripts/jade.vim.git
+[submodule ".vim/bundle/bufkill"]
+	path = .vim/bundle/bufkill
+	url = git://github.com/vim-scripts/bufkill.vim.git
+[submodule ".vim/bundle/simple_comments"]
+	path = .vim/bundle/simple_comments
+	url = git://github.com/vim-scripts/simple_comments.vim.git
+[submodule ".vim/bundle/quickrun"]
+	path = .vim/bundle/quickrun
+	url = git://github.com/vim-scripts/quickrun.vim.git
+[submodule ".vim/bundle/delimitMate"]
+	path = .vim/bundle/delimitMate
+	url = git://github.com/vim-scripts/delimitMate.vim.git
+[submodule ".vim/bundle/html5"]
+	path = .vim/bundle/html5
+	url = git://github.com/vim-scripts/html5.vim.git

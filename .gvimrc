@@ -1,36 +1,96 @@
-set nocompatible
+" pathogen bootstrap
+filetype off
+call pathogen#runtime_append_all_bundles()
+filetype plugin indent on
 
-filetype on
-filetype plugin indent on " Turn on file type detection.
+set nocompatible
+set modelines=0
+
 syntax enable
 syntax sync fromstart
 
 colorscheme wombat
-set guifont=Inconsolata:h18 " Font family and font size.
+set guifont=Inconsolata:h18         " Font family and font size.
 set ts=2 sw=2 sts=2 et
-set backspace=2     " allow backspacing over everything in insert mode
-set showcmd                       " Display incomplete commands.
-set showmode                      " Display the mode you're in.
+
+set encoding=utf-8                  " Use UTF-8 everywhere.
+set scrolloff=3
+set autoindent
+set showmode                        " Display the mode you're in.
+set showcmd                         " Display incomplete commands.
+set hidden
+set wildmenu
+set wildmode=list:longest
+set visualbell                      " No beeping.
+set cursorline
+set ttyfast
+set ruler
+set backspace=indent,eol,start      " allow backspacing over everything in insert mode
+set laststatus=2
+
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase                      " Case-insensitive searching.
+set smartcase                       " But case-sensitive if expression contains a capital letter.
+set gdefault
+set incsearch                       " Highlight matches as you type.
+set showmatch
+set hlsearch
+nnoremap <leader><space> :noh<cr>
+
+set wrap
+set textwidth=79
+set formatoptions=qrn1
+
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+vnoremap <up> <nop>
+vnoremap <down> <nop>
+vnoremap <left> <nop>
+vnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+" inoremap <left> <nop>
+" inoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+
+nnoremap ; :
+
+nnoremap <leader>W :%s/\s\+$\| \+\ze\t//<cr>:let @/=''<CR>
+nnoremap <leader>a :Ack
+nnoremap <leader>ft Vatzf
+nnoremap <leader>v V`]
+nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
+
+inoremap jj <ESC>
+
+nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+set grepprg=ack\ -a
+
 set autowriteall
 set noai nocindent
-set incsearch                     " Highlight matches as you type.
-set hlsearch
-set laststatus=2
 set writebackup
 set backup backupdir=$HOME/.vim/backup
 set directory=/tmp
-set ttyfast
 set number
-set ruler
 set title                         " Set the terminal's title
 set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) " Useful status information at bottom of screen
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
 set fileformats=unix,dos,mac
 set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 set fileformat=unix history=50
-set visualbell                    " No beeping.
-set ignorecase                    " Case-insensitive searching.
-set smartcase                     " But case-sensitive if expression contains a capital letter.
 " set digraph
 " set lines=55
 " set columns=100
@@ -45,24 +105,30 @@ nmap <leader>l :set list!<CR> " Shortcut to rapidly toggle `set list`
 if has("gui_macvim")
   colorscheme wombat
   set antialias               " MacVim: smooth fonts.
-  set encoding=utf-8          " Use UTF-8 everywhere.
   set sidescroll=5 " side scrolling from :h wrap
   set listchars+=precedes:<,extends:>
   set listchars=tab:▸\ ,trail:.,eol:¬ " Use the same symbols as TextMate for tabstops and EOL
 
+  set colorcolumn=85
+
   let macvim_skip_cmd_opt_movement = 1
   set fuoptions=maxvert,maxhorz
   " Fullscreen on start
-  " au GUIEnter * set fullscreen
+  au GUIEnter * set fullscreen
   " hide toolbar
-  set go-=T
   " hide scrollbars
+  set go-=T
   set go-=r
   set go-=R
   set go-=l
   set go-=L
   set mousefocus
   macmenu &File.New\ Tab key=<nop>
+
+  set relativenumber
+  "set undofile
+
+  set lines=999
 
   " color of statusline changes according to mode
   function! InsertStatuslineColor(mode)
@@ -87,4 +153,6 @@ if has("gui_macvim")
   " cursor colors
   highlight Cursor guifg=black guibg=#8ac6f2
   highlight iCursor guifg=red guibg=#e5786d
+
+  au FocusLost * :wa
 endif
