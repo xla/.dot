@@ -22,3 +22,6 @@
 [submodule ".vim/bundle/coffee-script"]
 	path = .vim/bundle/coffee-script
 	url = git://github.com/kchmck/vim-coffee-script.git
+[submodule ".vim/bundle/commnad-t"]
+	path = .vim/bundle/commnad-t
+	url = git://github.com/vim-scripts/Command-T.git
