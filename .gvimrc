@@ -9,7 +9,7 @@ set modelines=0
 syntax enable
 syntax sync fromstart
 
-colorscheme wombat
+colorscheme darkdevel
 set guifont=Inconsolata:h18         " Font family and font size.
 set ts=2 sw=2 sts=2 et
 
@@ -88,6 +88,7 @@ set number
 set title                         " Set the terminal's title
 set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) " Useful status information at bottom of screen
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
+set wildignore+=.git,node_modules/**
 set fileformats=unix,dos,mac
 set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 set fileformat=unix history=50
