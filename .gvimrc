@@ -103,6 +103,9 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 nmap <leader>l :set list!<CR> " Shortcut to rapidly toggle `set list`
 
+"" filetype matches
+au! BufRead,BufNewFile *.json setfiletype json
+
 "" CoffeeScript
 " let coffee_compile_on_save = 1 " auto compile on write/save
 let coffee_no_trailing_space_error = 1
