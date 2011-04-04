@@ -16,7 +16,7 @@ export ZSH_THEME="stromlinie"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew git github gem osx ruby vagrant)
+plugins=(brew git github gem osx ruby)
 
 source $ZSH/oh-my-zsh.sh
 source ~/.profile
