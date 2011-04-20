@@ -22,9 +22,6 @@
 [submodule ".vim/bundle/commnad-t"]
 	path = .vim/bundle/commnad-t
 	url = git://github.com/vim-scripts/Command-T.git
-[submodule ".vim/bundle/snipmate"]
-	path = .vim/bundle/snipmate
-	url = git://github.com/goldjunge/snipmate.vim.git
 [submodule ".vim/bundle/javascript"]
 	path = .vim/bundle/javascript
 	url = git://github.com/pangloss/vim-javascript.git
