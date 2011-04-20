@@ -62,9 +62,7 @@ set backupdir=~/.vim/backup// " backup file directory
 set directory=~/.vim/tmp/swap// " swap file directory
 set undodir=~/.vim/tmp/undo// " undo file directory
 set writebackup " backup before overwritting
-
-set grepprg=ack\ -a
-
+set background=dark
 colorscheme solarized
 
 if &t_Co > 2 || has("gui_running")
