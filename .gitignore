@@ -3,5 +3,6 @@
 *vim/backup/*
 *vim/snippets
 *vim/viminf*
+*vim/doc/*
 *.*~
 .DS_Store
