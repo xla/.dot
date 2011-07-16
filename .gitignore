@@ -4,5 +4,6 @@
 *vim/snippets
 *vim/viminf*
 *vim/doc/*
+*vim/tmp/*
 *.*~
 .DS_Store
