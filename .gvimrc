@@ -44,7 +44,7 @@ set cursorline " highlight the line of the cursor
 set ttyfast " smooth and fast redrawing
 set ruler " show line and column info
 set laststatus=2 " show status line
-set relativenumber " show relative line numbers to current cursor position
+" set relativenumber " show relative line numbers to current cursor position
 set wrap " wrap text if longer than window width
 set textwidth=79 " max text insertion width before breakage
 set formatoptions=qrn1 " describition of automatic formatting
@@ -58,11 +58,14 @@ set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo " store history information
 
 "" backup/swap/undo
 set backup " enable backups
-set backupdir=~/.vim/backup// " backup file directory
-set directory=~/.vim/tmp/swap// " swap file directory
-set undodir=~/.vim/tmp/undo// " undo file directory
+set backupdir=~/.vim/backup/ " backup file directory
+set directory=~/.vim/tmp/swap/ " swap file directory
+set undodir=~/.vim/tmp/undo/ " undo file directory
 set writebackup " backup before overwritting
-set background=light
+set background=dark
+let g:yankring_history_dir="~/.vim/tmp"
+let g:yankring_history_file="yankie"
+
 colorscheme solarized
 
 if &t_Co > 2 || has("gui_running")
