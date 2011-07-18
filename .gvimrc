@@ -48,7 +48,9 @@ set laststatus=2 " show status line
 set wrap " wrap text if longer than window width
 set textwidth=79 " max text insertion width before breakage
 set formatoptions=qrn1 " describition of automatic formatting
-set colorcolumn=85 " highlight column
+if exists('+colorcolumn')
+  set colorcolumn=85 " highlight column
+endif
 set autowriteall " auto-save the file on different commands
 set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) " Useful status information at bottom of screen
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
