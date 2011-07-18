@@ -60,12 +60,13 @@ set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo " store history information
 
 "" backup/swap/undo
 set backup " enable backups
-set backupdir=~/.vim/backup/ " backup file directory
+set backupdir=~/.vim/tmp/backup/ " backup file directory
 set directory=~/.vim/tmp/swap/ " swap file directory
 if exists('+undodir')
   set undodir=~/.vim/tmp/undo/ " undo file directory
 endif
 set writebackup " backup before overwritting
+
 set background=dark
 let g:yankring_history_dir="~/.vim/tmp"
 let g:yankring_history_file="yankie"
