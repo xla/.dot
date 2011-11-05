@@ -1,15 +1,3 @@
-[submodule ".vim/bundle/jade"]
-	path = .vim/bundle/jade
-	url = git://github.com/vim-scripts/jade.vim.git
-[submodule ".vim/bundle/bufkill"]
-	path = .vim/bundle/bufkill
-	url = git://github.com/vim-scripts/bufkill.vim.git
-[submodule ".vim/bundle/simple_comments"]
-	path = .vim/bundle/simple_comments
-	url = git://github.com/vim-scripts/simple_comments.vim.git
-[submodule ".vim/bundle/quickrun"]
-	path = .vim/bundle/quickrun
-	url = git://github.com/vim-scripts/quickrun.vim.git
 [submodule ".vim/bundle/delimitMate"]
 	path = .vim/bundle/delimitMate
 	url = git://github.com/vim-scripts/delimitMate.vim.git
@@ -25,15 +13,9 @@
 [submodule ".vim/bundle/javascript"]
 	path = .vim/bundle/javascript
 	url = git://github.com/pangloss/vim-javascript.git
-[submodule ".vim/bundle/yankring"]
-	path = .vim/bundle/yankring
-	url = git://github.com/chrismetcalf/vim-yankring.git
 [submodule ".vim/bundle/vim-colors-solarized"]
 	path = .vim/bundle/vim-colors-solarized
 	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule ".vim/bundle/snipmate"]
-	path = .vim/bundle/snipmate
-	url = git://github.com/msanders/snipmate.vim.git
 [submodule ".vim/bundle/markdown"]
 	path = .vim/bundle/markdown
 	url = git://github.com/plasticboy/vim-markdown.git
