@@ -1,3 +1,5 @@
+set shell=/bin/sh
+
 set nocompatible " must be first to change other options as side effect
 
 filetype off
@@ -67,7 +69,7 @@ if exists('+undodir')
 endif
 set writebackup " backup before overwritting
 
-set background=dark
+set background=light
 let g:yankring_history_dir="~/.vim/tmp"
 let g:yankring_history_file="yankie"
 
