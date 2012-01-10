@@ -5,5 +5,8 @@
 *vim/viminf*
 *vim/doc/*
 *vim/tmp/*
+*vim/swap/*
+*vim/undo/*
+.VimballRecord
 *.*~
 .DS_Store
