@@ -70,8 +70,6 @@ endif
 set writebackup " backup before overwritting
 
 set background=light
-let g:yankring_history_dir="~/.vim/tmp"
-let g:yankring_history_file="yankie"
 
 colorscheme solarized
 
@@ -90,10 +88,6 @@ nnoremap ; :
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-" use Q for formatting the current paragraph (or selection)
-vmap Q gq
-nmap Q gqap
-
 " force home row usage
 map <up> <nop>
 map <down> <nop>
@@ -103,12 +97,6 @@ map <right> <nop>
 " step line by line even when text is wrapped
 nnoremap j gj
 nnoremap k gk
-
-" easy window navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
 
 " clear search highlights
 nmap <silent> <leader><space> :nohlsearch<cr>
@@ -122,90 +110,13 @@ vnoremap / /\v
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
-
 " remap help file
-map <F1> <ESC>
-
-" reselect just pasted text
-nnoremap <leader>v V`]
-
+inoremap <F1> <ESC>
 " escape from insert mode
 inoremap jj <ESC>
 
-" rewrap hard a paragraph
-nnoremap <leader>q gqip
-
-nmap <leader><W> :%s/\s\+$\| \+\ze\t//g<cr>
-" nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
-" nnoremap <leader>W :%s/\s\+$\| \+\ze\t//<cr>:let @/=''<CR>
-nnoremap <leader>w <C-w>v<C-w>l
-
-"" Bash out extra whitespace
-highlight ExtraWhitespace ctermfg=15 ctermbg=4 guifg=#CF6A4C guibg=#420E09
-match ExtraWhitespace /\s\+$\| \+\ze\t/
-
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
-
 
 highlight CursorLine guibg=Gray20
 "" filetype matches
 au! BufRead,BufNewFile *.json setfiletype json
-
-"" CoffeeScript
-" let coffee_compile_on_save = 1 " auto compile on write/save
-let coffee_no_trailing_space_error = 1
-let coffee_no_trailing_semicolon_error = 1
-let coffee_no_reserved_words_error = 1
-
-if has("gui_macvim")
-  colorscheme wombat
-  set antialias               " MacVim: smooth fonts.
-  set sidescroll=5 " side scrolling from :h wrap
-  set listchars+=precedes:<,extends:>
-  set listchars=tab:▸\ ,trail:.,eol:¬ " Use the same symbols as TextMate for tabstops and EOL
-
-
-  let macvim_skip_cmd_opt_movement = 1
-  set fuoptions=maxvert,maxhorz
-  " Fullscreen on start
-  au GUIEnter * set fullscreen
-  " hide toolbar
-  " hide scrollbars
-  set go-=T
-  set go-=r
-  set go-=R
-  set go-=l
-  set go-=L
-  set mousefocus
-  macmenu &File.New\ Tab key=<nop>
-
-  "set undofile
-
-  set lines=999
-
-  " color of statusline changes according to mode
-  function! InsertStatuslineColor(mode)
-    if a:mode == 'i'
-      highlight statusline guibg=#e5786d
-    elseif a:mode == 'r'
-      highlight statusline guibg=#8ac6f2
-    else
-      highlight statusline guibg=red
-    endif
-  endfunction
-
-  au InsertEnter * call InsertStatuslineColor(v:insertmode)
-  au InsertLeave * hi statusline guibg=#8ac6f2
-
-  " default the statusline to green when entering Vim
-  highlight statusline guifg=#444444 guibg=#8ac6f2 gui=none
-
-  " nice max col mark
-  highlight ColorColumn guibg=black
-
-  " cursor colors
-  highlight Cursor guifg=black guibg=#8ac6f2
-  highlight iCursor guifg=red guibg=#e5786d
-
-  au FocusLost * :wa
-endif
