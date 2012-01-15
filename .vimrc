@@ -69,7 +69,7 @@ if exists('+undodir')
 endif
 set writebackup " backup before overwritting
 
-set background=light
+set background=dark
 
 colorscheme solarized
 
