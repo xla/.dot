@@ -94,6 +94,10 @@ map <down> <nop>
 map <left> <nop>
 map <right> <nop>
 
+" ctrlp
+map <leader>t :CtrlP<cr>
+let g:ctrlp_working_path_mode=2
+
 " step line by line even when text is wrapped
 nnoremap j gj
 nnoremap k gk
