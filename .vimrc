@@ -27,7 +27,6 @@ set ignorecase " ignore case when searching
 set smartcase  " ignore case if search pattern is all lowercase, case-sensitive otherwise
 set hlsearch   " highlight search terms
 set incsearch  " show search matches as you type
-" set gdefault " substituion flag 'g' on by default
 set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
 set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**
@@ -46,13 +45,9 @@ set cursorline " highlight the line of the cursor
 set ttyfast " smooth and fast redrawing
 set ruler " show line and column info
 set laststatus=2 " show status line
-" set relativenumber " show relative line numbers to current cursor position
 set wrap " wrap text if longer than window width
 set textwidth=79 " max text insertion width before breakage
 set formatoptions=qrn1 " describition of automatic formatting
-if exists('+colorcolumn')
-  set colorcolumn=85 " highlight column
-endif
 set autowriteall " auto-save the file on different commands
 set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) " Useful status information at bottom of screen
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
@@ -71,7 +66,7 @@ set writebackup " backup before overwritting
 
 set background=dark
 
-colorscheme solarized
+colorscheme kyle
 
 if &t_Co > 2 || has("gui_running")
   " switch syntax highlighting on, when the terminal has colors
@@ -122,5 +117,3 @@ inoremap jj <ESC>
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
 
 highlight CursorLine guibg=Gray20
-"" filetype matches
-au! BufRead,BufNewFile *.json setfiletype json
