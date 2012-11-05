@@ -44,12 +44,10 @@ set wildmode=list:longest " enhanced completion
 set cursorline " highlight the line of the cursor
 set ttyfast " smooth and fast redrawing
 set ruler " show line and column info
-set laststatus=2 " show status line
 set wrap " wrap text if longer than window width
 set textwidth=79 " max text insertion width before breakage
 set formatoptions=qrn1 " describition of automatic formatting
 set autowriteall " auto-save the file on different commands
-set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff}) " Useful status information at bottom of screen
 set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
 set fileformat=unix " EOL for current buffer
 set fileformats=unix,dos,mac " list of EOL formats to try
@@ -67,6 +65,14 @@ set writebackup " backup before overwritting
 set background=dark
 
 colorscheme kyle
+
+hi User1 ctermfg=94 ctermbg=0
+
+set laststatus=2          " show status line
+set statusline=
+set statusline +=%<%F%*   "full path
+set statusline +=%2*%m%*  "modified flag
+set statusline +=%=%5l/%L "current line
 
 if &t_Co > 2 || has("gui_running")
   " switch syntax highlighting on, when the terminal has colors

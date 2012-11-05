@@ -3,8 +3,6 @@
 " act like t_Co=0 but use (256) color on just a few things
 "
 
-
-hi clear
 if exists("syntax_on")
   syntax reset
 endif
@@ -17,8 +15,8 @@ hi Search   cterm=reverse   ctermfg=NONE
 hi MoreMsg    cterm=bold    ctermfg=NONE
 hi ModeMsg    cterm=bold    ctermfg=NONE
 hi LineNr   cterm=NONE    ctermfg=238
-hi StatusLine   cterm=bold,reverse  ctermfg=NONE
-hi StatusLineNC   cterm=reverse   ctermfg=NONE
+hi StatusLine   cterm=reverse ctermfg=0 ctermbg=59
+hi StatusLineNC cterm=reverse ctermfg=0 ctermbg=10
 hi VertSplit    cterm=reverse   ctermfg=NONE
 hi Title    cterm=bold    ctermfg=NONE
 hi Visual   cterm=reverse   ctermfg=NONE
@@ -50,5 +48,3 @@ hi String               cterm=underline         ctermfg=NONE
 hi ErrorMsg   cterm=reverse   ctermfg=9 ctermbg=15
 hi Error    cterm=reverse   ctermfg=9 ctermbg=15
 hi Todo     cterm=bold,standout ctermfg=11  ctermbg=0
-
-hi ColorColumn              ctermbg=255
