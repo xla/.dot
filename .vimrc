@@ -112,7 +112,7 @@ nmap <leader>l :set list!<CR>
 " remap help file
 inoremap <F1> <ESC>
 " escape from insert mode
-inoremap jj <ESC>
+inoremap jk <ESC>
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
 
