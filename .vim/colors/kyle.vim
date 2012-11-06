@@ -15,8 +15,8 @@ hi Search   cterm=reverse   ctermfg=NONE
 hi MoreMsg    cterm=bold    ctermfg=NONE
 hi ModeMsg    cterm=bold    ctermfg=NONE
 hi LineNr   cterm=NONE    ctermfg=238
-hi StatusLine   cterm=reverse ctermfg=0 ctermbg=59
-hi StatusLineNC cterm=reverse ctermfg=0 ctermbg=10
+hi StatusLine   cterm=NONE ctermfg=238 ctermbg=NONE
+hi StatusLineNC cterm=NONE ctermfg=10 ctermbg=NONE
 hi VertSplit    cterm=reverse   ctermfg=NONE
 hi Title    cterm=bold    ctermfg=NONE
 hi Visual   cterm=reverse   ctermfg=NONE

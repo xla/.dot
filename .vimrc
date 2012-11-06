@@ -70,9 +70,9 @@ hi User1 ctermfg=94 ctermbg=0
 
 set laststatus=2          " show status line
 set statusline=
-set statusline +=%<%F%*   "full path
-set statusline +=%2*%m%*  "modified flag
-set statusline +=%=%5l/%L "current line
+set statusline +=\ %1*%m  "modified flag
+set statusline +=%*%t
+set statusline +=\ [%2l/%L] "current line
 
 if &t_Co > 2 || has("gui_running")
   " switch syntax highlighting on, when the terminal has colors
@@ -123,3 +123,4 @@ inoremap jk <ESC>
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
 
 highlight CursorLine guibg=Gray20
+set makeprg=go\ test\ ./...
