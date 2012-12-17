@@ -41,7 +41,7 @@ set showmode                        " display the mode you're in.
 set showcmd                         " display incomplete commands.
 set wildmenu " enhanced completion
 set wildmode=list:longest " enhanced completion
-set cursorline " highlight the line of the cursor
+" set cursorline " highlight the line of the cursor
 set ttyfast " smooth and fast redrawing
 set ruler " show line and column info
 set wrap " wrap text if longer than window width
@@ -64,7 +64,7 @@ set writebackup " backup before overwritting
 
 set background=dark
 
-colorscheme kyle
+colorscheme solarized
 
 hi User1 ctermfg=94 ctermbg=0
 
@@ -122,5 +122,5 @@ inoremap jk <ESC>
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
 
-highlight CursorLine guibg=Gray20
-set makeprg=go\ test\ ./...
+" highlight CursorLine guibg=Gray20
+set makeprg=go\ build\ ./...
