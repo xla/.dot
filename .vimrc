@@ -66,8 +66,6 @@ set background=dark
 
 colorscheme solarized
 
-hi User1 ctermfg=94 ctermbg=0
-
 set laststatus=2          " show status line
 set statusline=
 set statusline +=\ %1*%m  "modified flag
@@ -123,4 +121,4 @@ inoremap jk <ESC>
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
 
 " highlight CursorLine guibg=Gray20
-set makeprg=go\ build\ ./...
+set makeprg=go\ test\ -v\ ./...
