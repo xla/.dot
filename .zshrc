@@ -26,7 +26,6 @@ zstyle ':vcs_info:*' formats "%b"
 
 local return_code="%(?..%{$fg[red]%})"
 export PS1='%c ${return_code}➤%{$reset_color%} '
-export RPS1='${vcs_info_msg_0_}'
 
 # colorful listings
 zmodload -i zsh/complist
