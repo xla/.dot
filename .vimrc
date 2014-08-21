@@ -179,7 +179,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " highlight CursorLine guibg=Gray20
 set makeprg=go\ test\ ./...
 
-" formatting for go files
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
-" linting for go files
-autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
+" linting & vetting for go files
+autocmd FileType go autocmd BufWritePost <buffer> GoLint
+autocmd FileType go autocmd BufWritePost <buffer> GoVet
