@@ -1,6 +1,7 @@
-set shell=/bin/sh
+" must be first to change other options as side effect
+set nocompatible
 
-set nocompatible " must be first to change other options as side effect
+set shell=/bin/sh
 
 filetype off
 " pathogen bootstrap
@@ -10,77 +11,131 @@ call pathogen#runtime_append_all_bundles()
 " force reload of ftdetect files
 filetype plugin indent on
 
-set hidden " hide buffers instead of closing them
-set expandtab " use correct amount of spaces for a tab in insert mode
-set tabstop=2 " a tab is two spaces
+" add golint plugin
+set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+
+" hide buffers instead of closing them
+set hidden
+" use correct amount of spaces for a tab in insert mode
+set expandtab
+" a tab is two spaces
+set tabstop=2
 set softtabstop=2
-set shiftwidth=2 " number of spaces to use for autoindenting
-set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
-set modelines=0 " avoid modeline vulnerabilities
-set backspace=indent,eol,start " allow backspacing over everything in insert mode
-set smarttab      " insert tabs on the start of a line according to shiftwidth, not tabstop
-set autoindent " copies indentation from previous line
-set copyindent " copy the previous indentation on autoindenting
-set number " always show line numbers
-set showmatch   " set show matching parenthesis
-set ignorecase " ignore case when searching
-set smartcase  " ignore case if search pattern is all lowercase, case-sensitive otherwise
-set hlsearch   " highlight search terms
-set incsearch  " show search matches as you type
-set history=1000         " remember more commands and search history
-set undolevels=1000      " use many muchos levels of undo
+" number of spaces to use for autoindenting
+set shiftwidth=2
+" use multiple of shiftwidth when indenting with '<' and '>'
+set shiftround
+" avoid modeline vulnerabilities
+set modelines=0
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+" insert tabs on the start of a line according to shiftwidth, not tabstop
+set smarttab
+" copies indentation from previous line
+set autoindent
+" copy the previous indentation on autoindenting
+set copyindent
+" always show line numbers
+set number
+" set show matching parenthesis
+set showmatch
+" ignore case when searching
+set ignorecase
+" ignore case if search pattern is all lowercase, case-sensitive otherwise
+set smartcase
+" highlight search terms
+set hlsearch
+" show search matches as you type
+set incsearch
+" remember more commands and search history
+set history=1000
+" use many muchos levels of undo
+set undolevels=1000
 set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**
-set title                " change the terminal's title
-set visualbell           " don't beep
-set noerrorbells         " don't beep
-set pastetoggle=<F2> " prevent auto indentation when pasting
-set guifont=Inconsolata:h18         " font family & size
-set encoding=utf-8                  " use utf-8 everywhere
-set scrolloff=3 " minimal lines to kepp above and below screen
-set showmode                        " display the mode you're in.
-set showcmd                         " display incomplete commands.
-set wildmenu " enhanced completion
-set wildmode=list:longest " enhanced completion
-" set cursorline " highlight the line of the cursor
-set ttyfast " smooth and fast redrawing
-set ruler " show line and column info
-set wrap " wrap text if longer than window width
-set textwidth=79 " max text insertion width before breakage
-set formatoptions=qrn1 " describition of automatic formatting
-set autowriteall " auto-save the file on different commands
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar " Suffixes that get lower priority when doing tab completion for filenames.
-set fileformat=unix " EOL for current buffer
-set fileformats=unix,dos,mac " list of EOL formats to try
-set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo " store history information
+" change the terminal's title
+set title
+" don't beep
+set visualbell
+" don't beep
+set noerrorbells
+" prevent auto indentation when pasting
+set pastetoggle=<F2>
+" font family & size
+set guifont=Inconsolata:h18
+" use utf-8 everywhere
+set encoding=utf-8
+" minimal lines to kepp above and below screen
+set scrolloff=3
+" display the mode you're in.
+set showmode
+" display incomplete commands.
+set showcmd
+" enhanced completion
+set wildmenu
+" enhanced completion
+set wildmode=list:longest
+" disable folding
+set nofoldenable    
+" highlight the line of the cursor
+" set cursorline
+" smooth and fast redrawing
+set ttyfast 
+" show line and column info
+set ruler
+" wrap text if longer than window width
+set wrap
+" max text insertion width before breakage
+set textwidth=79
+" description of automatic formatting
+set formatoptions=qrn1
+" auto-save the file on different commands
+set autowriteall
+" Suffixes that get lower priority when doing tab completion for filenames.
+set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar 
+" EOL for current buffer
+set fileformat=unix
+" list of EOL formats to try
+set fileformats=unix,dos,mac 
+" store history information
+set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 
 "" backup/swap/undo
-set backup " enable backups
-set backupdir=~/.vim/tmp/backup/ " backup file directory
-set directory=~/.vim/tmp/swap/ " swap file directory
+" enable backups
+set backup 
+" backup file directory
+set backupdir=~/.vim/tmp/backup/
+" swap file directory
+set directory=~/.vim/tmp/swap/
+" undo file directory
 if exists('+undodir')
-  set undodir=~/.vim/tmp/undo/ " undo file directory
+  set undodir=~/.vim/tmp/undo/ 
 endif
-set writebackup " backup before overwritting
+" backup before overwritting
+set writebackup
 
 set background=dark
-
 colorscheme solarized
 
-set laststatus=2          " show status line
+" show status line
+set laststatus=2            
 set statusline=
-set statusline +=\ %1*%m  "modified flag
+" modified flag
+set statusline +=\ %1*%m
+" file name
 set statusline +=%*%t
-set statusline +=\ [%2l/%L] "current line
+" current line
+set statusline +=\ [%2l/%L+%c]
 
+" switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
-  " switch syntax highlighting on, when the terminal has colors
   syntax enable
   syntax sync fromstart
 endif
 
-let mapleader="," " change the mapleader from \ to ,
+" change the mapleader from \ to ,
+let mapleader=","
 
-" spare two strokes for command invocation
+" spare extra modifier key for commands
 nnoremap ; :
 
 " quickly edit/reload the vimrc file
@@ -118,7 +173,13 @@ inoremap <F1> <ESC>
 " escape from insert mode
 inoremap jk <ESC>
 
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " remember cursor position
+" remember cursor position
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 " highlight CursorLine guibg=Gray20
-set makeprg=go\ test\ -v\ ./...
+set makeprg=go\ test\ ./...
+
+" formatting for go files
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+" linting for go files
+autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
