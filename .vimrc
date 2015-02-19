@@ -51,7 +51,7 @@ set incsearch
 set history=1000
 " use many muchos levels of undo
 set undolevels=1000
-set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**
+set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**,**Godeps
 " change the terminal's title
 set title
 " don't beep
@@ -168,6 +168,10 @@ vnoremap / /\v
 
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
+
+nmap <leader>b :GoBuild<cr>
+nmap <leader>m :GoTest<cr>
+
 " remap help file
 inoremap <F1> <ESC>
 " escape from insert mode
@@ -175,9 +179,6 @@ inoremap jk <ESC>
 
 " remember cursor position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-
-" highlight CursorLine guibg=Gray20
-set makeprg=go\ test\ ./...
 
 " linting & vetting for go files
 autocmd FileType go autocmd BufWritePost <buffer> GoLint
