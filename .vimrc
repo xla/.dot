@@ -11,9 +11,6 @@ call pathogen#runtime_append_all_bundles()
 " force reload of ftdetect files
 filetype plugin indent on
 
-" add golint plugin
-set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-
 " hide buffers instead of closing them
 set hidden
 " use correct amount of spaces for a tab in insert mode
@@ -113,7 +110,7 @@ endif
 " backup before overwritting
 set writebackup
 
-set background=dark
+set background=light
 colorscheme solarized
 
 " show status line
@@ -181,5 +178,9 @@ inoremap jk <ESC>
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 " linting & vetting for go files
-autocmd FileType go autocmd BufWritePost <buffer> GoLint
 autocmd FileType go autocmd BufWritePost <buffer> GoVet
+autocmd FileType go autocmd BufWritePost <buffer> GoLint
+
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+let g:go_fmt_experimental = 1

@@ -55,6 +55,7 @@ alias tsl="tail -f /var/log/syslog"
 alias df="df -hT"
 alias g="git"
 alias mosh='mosh --server="LC_ALL=\"en_US.UTF-8\" mosh-server" '
+alias vi=vim
 
 # functions
 setenv() { export $1=$2 }  # csh compatibility
