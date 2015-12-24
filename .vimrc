@@ -49,6 +49,7 @@ set history=1000
 " use many muchos levels of undo
 set undolevels=1000
 set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**,**Godeps
+set wildignore+=*Godeps
 " change the terminal's title
 set title
 " don't beep
@@ -110,7 +111,7 @@ endif
 " backup before overwritting
 set writebackup
 
-set background=light
+set background=dark
 colorscheme solarized
 
 " show status line
