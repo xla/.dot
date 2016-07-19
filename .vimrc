@@ -112,7 +112,7 @@ endif
 set writebackup
 
 set background=dark
-colorscheme solarized
+colorscheme kyle
 
 " show status line
 set laststatus=2            
@@ -182,6 +182,6 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 autocmd FileType go autocmd BufWritePost <buffer> GoVet
 autocmd FileType go autocmd BufWritePost <buffer> GoLint
 
-let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
+let g:go_fmt_command = "goimports"
 let g:go_fmt_experimental = 1
