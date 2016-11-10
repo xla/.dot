@@ -1,0 +1,22 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Elm Language Support",
+		"GitGutter",
+		"GoSublime",
+		"Highlight Build Errors",
+		"Origami",
+		"Package Control",
+		"PlainTasks",
+		"Protocol Buffer Syntax",
+		"Terraform",
+		"Theme - Spacegray",
+		"TodoReview",
+		"Vintageous",
+		"VintageousOrigami"
+	]
+}
