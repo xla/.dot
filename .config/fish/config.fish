@@ -8,6 +8,8 @@ set -x GAPP $HOME/dev/go_appengine
 set -x GOPATH $HOME/dev
 set -x GOBIN $GOPATH/bin
 
+set -x JAVA_HOME (/usr/libexec/java_home)
+
 set -x PATH node_modules/.bin $GOBIN $GAPP $GCLOUD $PATH 
 
 alias g git
