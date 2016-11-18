@@ -1,6 +1,6 @@
 set fish_greeting ""
 
-set -x EDITOR vim
+set -x EDITOR nvim
 
 set -x GCLOUD $HOME/dev/google-cloud-sdk/bin
 set -x GAPP $HOME/dev/go_appengine
@@ -15,6 +15,7 @@ set -x PATH node_modules/.bin $GOBIN $GAPP $GCLOUD $PATH
 alias g git
 alias l 'ls -lah'
 alias vi vim
+alias vim nvim
 
 setenv SSH_ENV "$HOME/.ssh/environment"
 
