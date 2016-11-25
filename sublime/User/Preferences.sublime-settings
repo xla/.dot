@@ -1,6 +1,6 @@
 {
 	"auto_match_enabled": false,
-	"caret_style": "solid",
+	"caret_style": "phase",
 	"color_scheme": "Packages/User/ColorSchemes/Sombre.tmTheme",
 	"draw_centered": false,
 	"draw_indent_guides": false,
@@ -16,13 +16,13 @@
 		"dist",
 		"__pycache__"
 	],
-	"font_face": "Anonymous Pro",
-	"font_size": 18,
+	"font_face": "PragmataPro",
+	"font_size": 17,
 	"ignored_packages":
 	[
 		"Vintage"
 	],
-	"line_padding_bottom": 3,
+	"line_padding_bottom": 2,
 	"line_padding_top": 3,
 	"match_brackets": false,
 	"overlay_scroll_bars": "enabled",
