@@ -305,7 +305,7 @@ Find more themes at : https://github.com/daylerees/colour-schemes
 				<key>fontStyle</key>
 				<string>italic</string>
 				<key>foreground</key>
-				<string>#ffff00</string>
+				<string>#d3d3d3</string>
 			</dict>
 		</dict>
 		<dict>
