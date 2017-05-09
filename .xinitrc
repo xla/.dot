@@ -9,6 +9,10 @@ xset s off                           #
 xset m 4/3 0                         # Pointer settings
 setxkbmap -option compose:super      # Set compose key to R-Alt
 
+if [ -f ~/.nvidia-settings-rc ]; then
+  nvidia-settings --load-config-only;
+fi
+
 if [ -f ~/.xbindkeysrc ]; then
   xbindkeys;
 fi
