@@ -1,0 +1,50 @@
+[
+	{
+        "keys": ["j", "k"],
+        "command": "_enter_normal_mode",
+        "args": {
+            "mode": "mode_insert"
+        },
+        "context": [{"key": "vi_insert_mode_aware"}]
+    },
+    {
+    	"keys": [";"],
+    	"command": "press_key",
+    	"args": {"key": ":"},
+    	"context": [{"key": "vi_command_mode_aware"}]
+    },
+    {
+        "keys": ["g", "d"],
+        "command": "gs_doc",
+        "args": {"mode": "goto"},
+        "context": [
+            { "key": "selector", "operator": "equal", "operand": "source.go" },
+            { "key": "vi_command_mode_aware" }
+        ]
+    },
+    {
+        "keys": ["g", "d"],
+        "command": "gs9o_open_selection",
+        "context": [
+            { "key": "selector", "operator": "equal", "operand": "text.9o" },
+            { "key": "vi_command_mode_aware" }
+        ]
+    },
+    // Disable <enter> to commit completions, because it's a dumb idea.
+    {
+        "keys": ["enter"], "command": "insert", "args": {"characters": "\n"},
+        "context":
+        [
+            { "key": "setting.command_mode", "operand": false },
+            { "key": "auto_complete_visible" },
+        ]
+     },
+     {
+        "keys": [
+            "ctrl+w",
+            "c"
+        ],
+        "command": "destroy_pane",
+        "args": {"direction": "self"}
+    }
+]
