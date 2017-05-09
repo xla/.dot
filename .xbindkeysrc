@@ -1,0 +1,11 @@
+# Mute Master
+"/usr/bin/amixer -q sset Master toggle"
+	XF86AudioMute
+
+# Increase Volume
+"/usr/bin/amixer -q sset Master 2+"
+	XF86AudioRaiseVolume
+
+# Lower Volume
+"/usr/bin/amixer -q sset Master 2-"
+	XF86AudioLowerVolume
