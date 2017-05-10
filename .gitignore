@@ -1,4 +1,7 @@
+.DS_Store
+*.*~
 *.netrwhist*
+*fishd*
 *vim/backup*
 *vim/backup/*
 *vim/snippets
@@ -8,5 +11,12 @@
 *vim/swap/*
 *vim/undo/*
 .VimballRecord
-*.*~
-.DS_Store
+sublime/User/GoSublime-aux.sublime-settings
+sublime/User/GoSublime/
+sublime/User/*.cache
+sublime/User/*.last-run
+.xmonad/xmonad-x86_64-linux
+.xmonad/xmonad.errors
+.xmonad/xmonad.hi
+.xmonad/xmonad.o
+.xmonad/xmonad.state
