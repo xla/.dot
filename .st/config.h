@@ -6,7 +6,7 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 static char font[] = "PragmataPro:pixelsize=18:antialias=true:autohint=false:dpi=96";
-static int borderpx = 5;
+static int borderpx = 8;
 #define histsize 4000
 
 /*
@@ -43,8 +43,8 @@ static unsigned int tripleclicktimeout = 600;
 static int allowaltscreen = 1;
 
 /* frames per second st should at maximum draw to the screen */
-static unsigned int xfps = 120;
-static unsigned int actionfps = 60;
+static unsigned int xfps = 144;
+static unsigned int actionfps = 144;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
