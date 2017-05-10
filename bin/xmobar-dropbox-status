@@ -8,5 +8,5 @@ case "$status" in
 	Syncing*)
 		echo "↯" ;;
 	*)
-		echo "✘ $status" ;;
+		echo "✘" ;;
 esac
