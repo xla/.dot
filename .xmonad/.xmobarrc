@@ -1,25 +1,22 @@
--- Xmobar configuration
-
-Config {
-       font = "xft:PragmataPro:size=13,monospace:size=12"
-     , borderColor = "black"
-     , border = TopB
-     , bgColor = "#000000"
-     , fgColor = "#777777"
-     , position = TopW L 100
-     , commands = [ Run DynNetwork [ "--template", "<tx> <rx>", "-w", "7", "-S", "True" ] 10
-                  , Run Cpu        [ "--template", "<bar>" ] 50
-                  , Run Memory     [ "--template", "<availablebar>" ] 50
-                  , Run Date       "%b %d %Y %H:%M" "date" 10
-                  , Run Com        "/home/xla/dev/bin/xmobar-dropbox-status" [] "dropbox" 10
-                  , Run Com        "/home/xla/dev/bin/fan-speed" [ "fan2" ] "fanspeed" 10
-                  , Run Com        "/home/xla/dev/bin/cpu-package" [] "package" 10
-                  , Run Com        "/home/xla/dev/bin/get-volume" [] "volume" 10
-                  , Run CoreTemp   [ "--template", "<core0>° <core1>° <core2>° <core3>°" ] 50
-                  , Run Wireless   "wlp5s0" [ "--template", "☎ <essid>/<quality>"] 10
-                  , Run StdinReader
-                  ]
-     , sepChar = "%"
-     , alignSep = "}{"
-     , template = "%StdinReader%  }{  %dropbox% ┊ %volume% ┊ %fanspeed%/%package%° %cpu% ┊ %memory% ┊ %dynnetwork%"
-}
+Config
+  { alignSep = "}{"
+  , bgColor = "#000000"
+  , border = TopB
+  , borderColor = "black"
+  , fgColor = "#777777"
+  , font = "xft:PragmataPro:size=13,monospace:size=13"
+  , position = TopW L 100
+  , sepChar = "%"
+  , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %default:Master% ┊ %bright% ┊ %dynnetwork% %wlp58s0wi%"
+  , commands =
+    [ Run Battery    [ "-t", "<leftvbar>" ] 100
+    , Run Brightness [ "-t", "<vbar>", "--", "-D", "intel_backlight" ] 10
+    , Run Com        "/home/xla/dev/bin/xmobar-dropbox-status" [] "dropbox" 10
+    , Run Cpu        [ "-t", "<vbar>" ] 50
+    , Run DynNetwork [ "-t", "<rxvbar> <txvbar>", "-w", "7", "-S", "True" ] 10
+    , Run Memory     [ "-t", "<availablevbar>" ] 50
+    , Run StdinReader
+    , Run Volume     "default" "Master" [ "-t", "<volumevbar>" ] 10
+    , Run Wireless   "wlp58s0" [ "-t", "<qualityvbar> <essid>"] 10
+    ]
+  }
