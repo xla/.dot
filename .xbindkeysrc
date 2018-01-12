@@ -9,3 +9,11 @@
 # Lower Volume
 "/usr/bin/amixer -q sset Master 2-"
 	XF86AudioLowerVolume
+
+# Increase Brightness
+"xbacklight -inc +10"
+  XF86MonBrightnessUp
+
+# Lower Brighness
+"xbacklight -inc -10"
+  XF86MonBrightnessDown
