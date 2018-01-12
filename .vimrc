@@ -4,10 +4,6 @@ set nocompatible
 set shell=/bin/sh
 
 filetype off
-" pathogen bootstrap
-call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
-
 " force reload of ftdetect files
 filetype plugin indent on
 
@@ -112,7 +108,6 @@ endif
 set writebackup
 
 set background=dark
-colorscheme kyle
 
 " show status line
 set laststatus=2            
@@ -146,10 +141,6 @@ map <down> <nop>
 map <left> <nop>
 map <right> <nop>
 
-" ctrlp
-map <leader>t :CtrlP<cr>
-let g:ctrlp_working_path_mode=2
-
 " step line by line even when text is wrapped
 nnoremap j gj
 nnoremap k gk
@@ -167,9 +158,6 @@ vnoremap / /\v
 " shortcut to rapidly toggle `set list`
 nmap <leader>l :set list!<CR>
 
-nmap <leader>b :GoBuild<cr>
-nmap <leader>m :GoTest<cr>
-
 " remap help file
 inoremap <F1> <ESC>
 " escape from insert mode
@@ -178,10 +166,90 @@ inoremap jk <ESC>
 " remember cursor position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
+" Per file-type indentation
+au FileType haskell     setlocal sts=4 sw=4 expandtab
+au FileType javascript  setlocal sts=4 sw=4 expandtab
+au FileType css         setlocal ts=4  sw=4 noexpandtab
+au FileType go          setlocal ts=4  sw=4 noexpandtab
+au FileType c,cpp       setlocal       sw=4 noexpandtab
+au FileType lua         setlocal       sw=2 expandtab
+au FileType sh,zsh      setlocal ts=2  sw=2 noexpandtab
+au FileType vim,ruby    setlocal sts=2 sw=2 expandtab
+au FileType help        setlocal ts=4  sw=4 noexpandtab
+au FileType txt         setlocal noai nocin nosi inde= wrap linebreak
+au FileType pandoc      setlocal nonumber
+au FileType markdown    setlocal nonumber
+au FileType fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
+
+if has("nvim")
+  call plug#begin()
+
+  Plug 'cloudhead/neovim-fuzzy'
+  Plug 'cloudhead/shady.vim'
+  Plug 'exu/pgsql.vim'
+  Plug 'fatih/vim-go'
+  Plug 'hail2u/vim-css3-syntax'
+  Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
+  Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-markdown'
+  Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
+
+  call plug#end()
+endif
+
+try
+  colorscheme shady
+catch
+endtry
+
+" Commentary
+nmap <C-_>  <Plug>CommentaryLine
+xmap <C-_>  <Plug>Commentar
+
+" File navigation/search
+nnoremap <Leader>o :FuzzyOpen<CR>
+nnoremap <Leader>f :FuzzyGrep<CR>
+
+" Go
 " linting & vetting for go files
 autocmd FileType go autocmd BufWritePost <buffer> GoVet
 autocmd FileType go autocmd BufWritePost <buffer> GoLint
 
+nmap <leader>b :GoBuild<cr>
+nmap <leader>m :GoTest<cr>
+
 let g:go_auto_type_info = 1
 let g:go_fmt_command = "goimports"
 let g:go_fmt_experimental = 1
+
+
+" ----- parsonsmatt/intero-neovim -----
+
+" Prefer starting Intero manually (faster startup times)
+let g:intero_start_immediately = 0
+" Use ALE (works even when not using Intero)
+let g:intero_use_neomake = 0
+
+augroup interoMaps
+  au!
+
+  au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+  au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
+  au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+  au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
+  au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+
+  au FileType haskell nnoremap <silent> <leader>wr :w \| :InteroReload<CR>
+  au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+  au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
+
+  au FileType haskell map <leader>t <Plug>InteroGenericType
+  au FileType haskell map <leader>T <Plug>InteroType
+  au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+
+  au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
+  au FileType haskell nnoremap <silent> <leader>iu :InteroUses<CR>
+  au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
+augroup END
