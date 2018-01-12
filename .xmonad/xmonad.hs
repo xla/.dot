@@ -71,18 +71,17 @@ myTerm = "st -e /bin/fish"
 rofi :: X ()
 rofi = safeSpawn
     "rofi" [ "-show", "run"
-           , "-color-active", "#fdf6e3,#268bd2,#eee8d5,#268bd2,#fdf6e3"
-           , "-color-normal", "#444,#bbb,#444,#bbb,#000"
-           , "-color-urgent", "#fdf6e3,#dc322f,#eee8d5,#dc322f,#fdf6e3"
-           , "-color-window", "#444"
-           , "-font", "PragmataPro 13"
+           , "-color-normal", "#333,#aaa,#000,#aaa,#000"
+           , "-color-window", "#000,#333,#333"
+           , "-font", "PragmataPro 28"
            , "-hide-scrollbar"
            , "-levenshtein-sort"
+           , "-line-margin", "6"
            , "-lines", "5"
            , "-matching", "fuzzy"
-           , "-padding", "2"
+           , "-padding", "12"
            , "-separator-style", "solid"
-           , "-width", "25"
+           , "-width", "40"
            ]
 
 slock :: X ()
