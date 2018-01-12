@@ -15,7 +15,7 @@ source=(http://dl.suckless.org/st/$pkgname-$pkgver.tar.gz
        st-scrollback-20160727-308bfbf.diff)
 
 md5sums=('29b2a599cf1511c8062ed8f025c84c63'
-         '48aaea17ad6cd71ea280c18478f18b95'
+         '329c1ad63bd5318c0bc331c780a55090'
          'c55076d94247e121a1a86d32a793cf2e')
 
 prepare() {

@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char font[] = "PragmataPro:pixelsize=18:antialias=true:autohint=false:dpi=96";
+static char font[] = "PragmataPro:pixelsize=28:antialias=true:autohint=false:dpi=276";
 static int borderpx = 8;
 #define histsize 4000
 
