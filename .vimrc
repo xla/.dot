@@ -132,8 +132,8 @@ let mapleader=","
 nnoremap ; :
 
 " quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nmap <silent> <leader>ev :e $MYVIMRC<cr>
+nmap <silent> <leader>sv :so $MYVIMRC<cr>
 
 " force home row usage
 map <up> <nop>
@@ -156,12 +156,17 @@ nnoremap / /\v
 vnoremap / /\v
 
 " shortcut to rapidly toggle `set list`
-nmap <leader>l :set list!<CR>
+nmap <leader>l :set list!<cr>
 
 " remap help file
 inoremap <F1> <ESC>
 " escape from insert mode
 inoremap jk <ESC>
+
+" quickfix navigation
+map <C-n> :cnext<cr>
+map <C-m> :cprevious<cr>
+nnoremap <leader>a :cclose<cr>
 
 " remember cursor position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -171,6 +176,7 @@ au FileType haskell     setlocal sts=4 sw=4 expandtab
 au FileType javascript  setlocal sts=4 sw=4 expandtab
 au FileType css         setlocal ts=4  sw=4 noexpandtab
 au FileType go          setlocal ts=4  sw=4 noexpandtab
+au BufNewFile,BufRead,FileType *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 au FileType c,cpp       setlocal       sw=4 noexpandtab
 au FileType lua         setlocal       sw=2 expandtab
 au FileType sh,zsh      setlocal ts=2  sw=2 noexpandtab
@@ -194,6 +200,7 @@ if has("nvim")
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-markdown'
+  Plug 'w0rp/ale'
   Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
 
   call plug#end()
@@ -204,26 +211,43 @@ try
 catch
 endtry
 
+" ALE
+
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = "never"
+let g:ale_open_list = 1
+let g:ale_set_highlights = 0
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = "xx"
+let g:ale_sign_warning = "--"
+
 " Commentary
 nmap <C-_>  <Plug>CommentaryLine
 xmap <C-_>  <Plug>Commentar
 
+" Deoplete
+if has("nvim")
+  let g:deoplete#enable_at_startup = 1
+endif
+
 " File navigation/search
-nnoremap <Leader>o :FuzzyOpen<CR>
-nnoremap <Leader>f :FuzzyGrep<CR>
+nnoremap <leader>o :FuzzyOpen<cr>
+nnoremap <leader>f :FuzzyGrep<cr>
 
-" Go
-" linting & vetting for go files
-autocmd FileType go autocmd BufWritePost <buffer> GoVet
-autocmd FileType go autocmd BufWritePost <buffer> GoLint
+" vim-go
 
-nmap <leader>b :GoBuild<cr>
-nmap <leader>m :GoTest<cr>
+autocmd FileType go nmap <leader>b <Plug>(go-build)
+autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
 
+let g:go_addtags_transform = "snakecase"
 let g:go_auto_type_info = 1
 let g:go_fmt_command = "goimports"
 let g:go_fmt_experimental = 1
-
+let g:go_list_type = "quickfix"
 
 " ----- parsonsmatt/intero-neovim -----
 
