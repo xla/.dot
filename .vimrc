@@ -110,14 +110,20 @@ set writebackup
 set background=dark
 
 " show status line
-set laststatus=2            
+set laststatus=2
 set statusline=
-" modified flag
-set statusline +=\ %1*%m
 " file name
-set statusline +=%*%t
-" current line
-set statusline +=\ [%2l/%L+%c]
+set statusline +=%t
+" modified flag
+set statusline +=\ %#todo#%m%*
+" right aligned from here
+set statusline +=%=
+" current line/total lines and column
+set statusline +=[%3l/%-3L\|%-2c]
+" file type
+set statusline +=\ %Y
+
+set completeopt-=preview
 
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
@@ -196,7 +202,10 @@ if has("nvim")
   Plug 'fatih/vim-go'
   Plug 'hail2u/vim-css3-syntax'
   Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
+  Plug 'pbogut/deoplete-elm'
+  Plug 'sbdchd/neoformat'
   Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'theJian/elm.vim'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-markdown'
@@ -211,8 +220,7 @@ try
 catch
 endtry
 
-" ALE
-
+" ale
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_text_changed = "never"
 let g:ale_open_list = 1
@@ -223,21 +231,47 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = "xx"
 let g:ale_sign_warning = "--"
 
-" Commentary
-nmap <C-_>  <Plug>CommentaryLine
-xmap <C-_>  <Plug>Commentar
+au FileType haskell let g:ale_enabled = 0
 
-" Deoplete
+" deoplete
 if has("nvim")
+  let g:deoplete#disable_auto_complete = 1
   let g:deoplete#enable_at_startup = 1
+  let g:deoplete#max_list = 5
+  let g:deoplete#ignore_sources = [ "around", "buffer", "member" ]
+  let g:deoplete#sources#go#package_dot = 1
+  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+
+  inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ deoplete#mappings#manual_complete()
+  function! s:check_back_space()
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
 endif
 
-" File navigation/search
+" deoplete-go
+if has("nvim")
+endif
+
+
+" fuzzy
 nnoremap <leader>o :FuzzyOpen<cr>
 nnoremap <leader>f :FuzzyGrep<cr>
 
-" vim-go
+" neoformat
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.elm undojoin | Neoformat
+augroup END
 
+" vim-commentary
+nmap <C-_> <Plug>CommentaryLine
+xmap <C-_> <Plug>Commentary
+
+" vim-go
 autocmd FileType go nmap <leader>b <Plug>(go-build)
 autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
 autocmd FileType go nmap <leader>r <Plug>(go-run)
@@ -277,3 +311,6 @@ augroup interoMaps
   au FileType haskell nnoremap <silent> <leader>iu :InteroUses<CR>
   au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
 augroup END
+
+" custom highlight
+hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
