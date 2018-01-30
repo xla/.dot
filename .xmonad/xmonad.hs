@@ -26,11 +26,11 @@ main = do
         , borderWidth        = 1
         , handleEventHook    = mconcat [docksEventHook, handleEventHook def]
         , keys               = myKeys home
-        , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ layoutHook def
+        , layoutHook         = avoidStruts $ smartBorders $ layoutHook def
         -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
         , manageHook         = manageDocks <+> manageHook def
-        , workspaces = [ "1", "2", "3", "4", "5" ]
+        , workspaces         = [ "1", "2", "3", "4", "5" ]
         }
 
 myBarConfig :: Handle -> PP
@@ -71,15 +71,17 @@ myTerm = "st -e /bin/fish"
 rofi :: X ()
 rofi = safeSpawn
     "rofi" [ "-show", "run"
-           , "-color-normal", "#333,#aaa,#000,#aaa,#000"
-           , "-color-window", "#000,#333,#333"
-           , "-font", "PragmataPro 28"
+           , "-auto-select"
+           , "-color-normal", "#000,#888,#000,#000,#fff"
+           , "-color-window", "#000,#000,#333"
+           , "-font", "FiraMono-Regular 22"
            , "-hide-scrollbar"
            , "-levenshtein-sort"
-           , "-line-margin", "6"
+           , "-line-margin", "0"
            , "-lines", "5"
+           , "-location", "2"
            , "-matching", "fuzzy"
-           , "-padding", "12"
+           , "-padding", "6"
            , "-separator-style", "solid"
            , "-width", "40"
            ]
