@@ -4,16 +4,15 @@ Config
   , border = TopB
   , borderColor = "black"
   , fgColor = "#777777"
-  , font = "xft:PragmataPro:size=13,monospace:size=13"
+  , font = "xft:PragmataPro:size=11,monospace:size=11"
   , position = TopW L 100
   , sepChar = "%"
-  , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %default:Master% ┊ %bright% ┊ %dynnetwork% %wlp58s0wi%"
+  , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %default:Master% ┊ %bright% ┊ %wlp58s0wi%"
   , commands =
     [ Run Battery    [ "-t", "<leftvbar>" ] 100
     , Run Brightness [ "-t", "<vbar>", "--", "-D", "intel_backlight" ] 10
     , Run Com        "/home/xla/dev/bin/xmobar-dropbox-status" [] "dropbox" 10
     , Run Cpu        [ "-t", "<vbar>" ] 50
-    , Run DynNetwork [ "-t", "<rxvbar> <txvbar>", "-w", "7", "-S", "True" ] 10
     , Run Memory     [ "-t", "<availablevbar>" ] 50
     , Run StdinReader
     , Run Volume     "default" "Master" [ "-t", "<volumevbar>" ] 10
