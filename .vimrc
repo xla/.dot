@@ -175,6 +175,9 @@ map <C-n> :cnext<cr>
 map <C-m> :cprevious<cr>
 nnoremap <leader>a :cclose<cr>
 
+" map make
+nmap <leader>m :make!<cr>
+
 " remember cursor position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
@@ -201,6 +204,7 @@ if has("nvim")
   Plug 'cloudhead/shady.vim'
   Plug 'exu/pgsql.vim'
   Plug 'fatih/vim-go'
+  Plug 'hwayne/tla.vim'
   Plug 'hail2u/vim-css3-syntax'
   Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
   Plug 'pbogut/deoplete-elm'
@@ -239,10 +243,13 @@ let g:ale_linters = {
   \ }
 let g:ale_go_gometalinter_options = '
   \ --aggregate
+  \ --concurrency 6
   \ --cyclo-over 20
-  \ --disable=vetshadow
-  \ --fast
-  \ --sort=line
+  \ --deadline 500ms
+  \ --enable-all
+  \ --disable vetshadow
+  \ --disable dupl
+  \ --sort line
   \ --tests
   \ --vendor
   \ '
