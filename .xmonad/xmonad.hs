@@ -9,7 +9,7 @@ import XMonad.Actions.CycleWS (toggleWS)
 import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Hooks.DynamicLog (PP, dynamicLogWithPP, ppCurrent, ppHidden, ppHiddenNoWindows, ppLayout, ppOutput, ppSep, ppTitle, ppUrgent, ppWsSep, wrap, xmobarColor, xmobarPP)
 import XMonad.Hooks.EwmhDesktops (ewmh)
-import XMonad.Hooks.ManageDocks (avoidStruts, docksEventHook, manageDocks)
+import XMonad.Hooks.ManageDocks (ToggleStruts(..), avoidStruts, docksEventHook, manageDocks)
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Spacing (spacing)
 import XMonad.Layout.ThreeColumns
@@ -60,8 +60,10 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
     ks = Map.fromList
        [ ((modMask, xK_F5),   spawn $ printf "scrot -u -e 'mv $f %s/Dropbox/Screenshots'" home)
        , ((modMask, xK_F6),   spawn $ printf "scrot -e 'mv $f %s/Dropbox/Screenshots'" home)
+       , ((modMask, xK_F9),   safeSpawn "toggle-displays" [])
        , ((modMask, xK_F10),  slock)
        , ((modMask, xK_Tab),  toggleWS)
+       , ((modMask, xK_b),    sendMessage ToggleStruts)
        , ((modMask, xK_p),    rofi)
        ]
 
