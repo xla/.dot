@@ -72,7 +72,7 @@ set wildmode=list:longest
 " disable folding
 set nofoldenable    
 " highlight the line of the cursor
-" set cursorline
+set cursorline
 " smooth and fast redrawing
 set ttyfast 
 " show line and column info
@@ -124,6 +124,8 @@ set statusline +=[%3l/%-3L\|%-2c]
 " file type
 set statusline +=\ %Y
 
+set completeopt-=longest
+set completeopt-=menu
 set completeopt-=preview
 
 " switch syntax highlighting on, when the terminal has colors
@@ -256,17 +258,24 @@ let g:ale_go_gometalinter_options = '
 
 " deoplete
 if has("nvim")
-  let g:deoplete#disable_auto_complete = 1
-  let g:deoplete#enable_at_startup = 1
-  let g:deoplete#max_list = 5
-  let g:deoplete#ignore_sources = [ "around", "buffer", "member" ]
+  call deoplete#enable()
+  call deoplete#custom#option('auto_complete', 0)
+  call deoplete#custom#option('ignore_sources', {'_': [ "around", "buffer", "dictionary", "file", "member", "omni", "tag" ] })
+  call deoplete#custom#option('max_list', 20)
+
   let g:deoplete#sources#go#package_dot = 1
   let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
   inoremap <silent><expr> <TAB>
     \ pumvisible() ? "\<C-n>" :
     \ <SID>check_back_space() ? "\<TAB>" :
-    \ deoplete#mappings#manual_complete()
+    \ deoplete#manual_complete()
+
+  inoremap <silent><expr> <C-n>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ deoplete#manual_complete()
+
   function! s:check_back_space()
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
