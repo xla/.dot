@@ -208,6 +208,7 @@ if has("nvim")
   Plug 'fatih/vim-go'
   Plug 'hwayne/tla.vim'
   Plug 'hail2u/vim-css3-syntax'
+  Plug 'mileszs/ack.vim'
   Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
   Plug 'pbogut/deoplete-elm'
   Plug 'sbdchd/neoformat'
@@ -310,3 +311,14 @@ let g:go_list_type = "quickfix"
 
 " custom highlight
 hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+" TODO list
+command Todo Ack! 'TODO'
+command TodoLocal Ack! 'TODO' %
+
+nnoremap <leader>tg :Todo<cr>
+nnoremap <leader>tl :TodoLocal<cr>
