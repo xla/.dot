@@ -206,17 +206,20 @@ if has("nvim")
   Plug 'cloudhead/shady.vim'
   Plug 'exu/pgsql.vim'
   Plug 'fatih/vim-go'
+  Plug 'FrigoEU/psc-ide-vim'
   Plug 'hwayne/tla.vim'
   Plug 'hail2u/vim-css3-syntax'
   Plug 'mileszs/ack.vim'
   Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
   Plug 'pbogut/deoplete-elm'
+  Plug 'purescript-contrib/purescript-vim'
   Plug 'sbdchd/neoformat'
   Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'theJian/elm.vim'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-markdown'
+  Plug 'vim-syntastic/syntastic'
   Plug 'w0rp/ale'
   Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
 
@@ -316,9 +319,18 @@ if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
+" psc-ide
+let g:psc_ide_syntastic_mode = 1
+
+" Syntastic
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " TODO list
-command Todo Ack! 'TODO'
-command TodoLocal Ack! 'TODO' %
+command! Todo Ack! 'TODO'
+command! TodoLocal Ack! 'TODO' %
 
 nnoremap <leader>tg :Todo<cr>
 nnoremap <leader>tl :TodoLocal<cr>
