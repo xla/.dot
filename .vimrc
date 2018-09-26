@@ -94,6 +94,10 @@ set fileformats=unix,dos,mac
 " store history information
 set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 
+" autoread changed files
+set autoread
+au FocusGained * :checktime
+
 "" backup/swap/undo
 " enable backups
 set backup 
@@ -113,6 +117,7 @@ set background=dark
 " show status line
 set laststatus=2
 set statusline=
+
 " file name
 set statusline +=%t
 " modified flag
@@ -123,6 +128,8 @@ set statusline +=%=
 set statusline +=[%3l/%-3L\|%-2c]
 " file type
 set statusline +=\ %Y
+
+set scl=yes
 
 set completeopt-=longest
 set completeopt-=menu
@@ -188,9 +195,9 @@ au FileType                    haskell     setlocal sts=4 sw=4 expandtab
 au FileType                    javascript  setlocal sts=4 sw=4 expandtab
 au FileType                    css         setlocal ts=4  sw=4 noexpandtab
 au FileType                    go          setlocal ts=4  sw=4 noexpandtab
-au BufNewFile,BufRead,FileType *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-au FileType                    c,cpp       setlocal       sw=4 noexpandtab
-au FileType                    lua         setlocal       sw=2 expandtab
+au BufNewFile,BufRead,FileType *.go        setlocal ts=4  sw=4 noexpandtab
+au FileType                    c,cpp       setlocal ts=8  sw=8 noexpandtab
+au FileType                    lua         setlocal       sw=4 expandtab
 au FileType                    sh,zsh      setlocal ts=2  sw=2 noexpandtab
 au FileType                    vim,ruby    setlocal sts=2 sw=2 expandtab
 au FileType                    help        setlocal ts=4  sw=4 noexpandtab
@@ -202,13 +209,19 @@ au FileType                    fountain    setlocal nonumber noai nocin nosi ind
 if has("nvim")
   call plug#begin()
 
+  Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
   Plug 'cloudhead/neovim-fuzzy'
   Plug 'cloudhead/shady.vim'
   Plug 'exu/pgsql.vim'
   Plug 'fatih/vim-go'
-  Plug 'FrigoEU/psc-ide-vim'
+  Plug 'frigoeu/psc-ide-vim'
   Plug 'hwayne/tla.vim'
   Plug 'hail2u/vim-css3-syntax'
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
   Plug 'mileszs/ack.vim'
   Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
   Plug 'pbogut/deoplete-elm'
@@ -232,6 +245,8 @@ catch
 endtry
 
 " ale
+let g:ale_enabled = 0
+let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_text_changed = "never"
 let g:ale_open_list = 1
@@ -241,24 +256,59 @@ let g:ale_set_quickfix = 1
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = "xx"
 let g:ale_sign_warning = "--"
+let g:ale_parse_makefile = 1
+let g:ale_c_build_dir = "build"
+let g:ale_c_clang_options = "-msse4.1 -Wall -Wconversion -Wpedantic -Wno-missing-braces -fno-omit-frame-pointer -fstrict-aliasing -pedantic -std=c17 -O0 -g -fsanitize=undefined -fsanitize=address -fsanitize=leak -fsanitize=integer -I./include -I./deps/g/include"
+let g:ale_c_uncrustify_options = "-c .uncrustify.cfg"
 
-au FileType haskell let g:ale_enabled = 0
+let g:ale_fixers = {
+  \ "c": [ "clang-format", "remove_trailing_lines", "trim_whitespace", "uncrustify" ]
+  \ }
 
 let g:ale_linters = {
+  \ "c": [ "clang", "cquery" ],
   \ 'go': ['gometalinter'],
   \ }
+
+" let g:ale_linters = {
+"   \ "c": [ "clang", "clangd", "clangtidy", "cppcheck", "cquery", "flawfinder" ],
+"   \ 'go': ['gometalinter'],
+"   \ }
+
 let g:ale_go_gometalinter_options = '
   \ --aggregate
   \ --concurrency 6
   \ --cyclo-over 20
   \ --deadline 500ms
   \ --enable-all
+  \ --fast
   \ --disable vetshadow
   \ --disable dupl
   \ --sort line
   \ --tests
   \ --vendor
   \ '
+
+" au FileType c let g:ale_enabled = 1
+au FileType go let g:ale_enabled = 1
+au FileType lua let g:ale_enabled = 1
+
+let g:LanguageClient_serverCommands = {
+    \ "cpp": ["cquery", "--log-file=/tmp/cq.log"],
+    \ "c": ["cquery", "--log-file=/tmp/cq.log"],
+    \ }
+
+let g:LanguageClient_loadSettings = 1
+" Use an absolute configuration path if you want system-wide settings
+let g:LanguageClient_settingsPath = '/home/xla/.config/nvim/settings.json'
+set completefunc=LanguageClient#complete
+set formatexpr=LanguageClient_textDocument_rangeFormatting()
+
+au FileType c nnoremap <silent> gh :call LanguageClient#textDocument_hover()<CR>
+au FileType c nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+au FileType c nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
+au FileType c nnoremap <silent> gs :call LanguageClient#textDocument_documentSymbol()<CR>
+au FileType c nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " deoplete
 if has("nvim")
@@ -290,11 +340,24 @@ endif
 nnoremap <leader>o :FuzzyOpen<cr>
 nnoremap <leader>f :FuzzyGrep<cr>
 
+" goyo
+let g:goyo_width = 100
+let g:goyo_height = "90%"
+
+" lua
+let g:lua_complete_omni = 1
+
 " neoformat
 augroup fmt
   autocmd!
   autocmd BufWritePre *.elm undojoin | Neoformat
 augroup END
+
+" purescript
+let g:psc_ide_syntastic_mode = 1
+
+autocmd FileType purescript nmap <leader>b :Prebuild!<cr>
+autocmd Filetype purescript autocmd BufWritePost !purty --write %
 
 " vim-commentary
 nmap <C-_> <Plug>CommentaryLine
@@ -318,9 +381,6 @@ hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
-
-" psc-ide
-let g:psc_ide_syntastic_mode = 1
 
 " Syntastic
 let g:syntastic_always_populate_loc_list = 1
