@@ -5,11 +5,12 @@ set -x EDITOR nvim
 set -x GOPATH $HOME/dev
 set -x GOBIN $GOPATH/bin
 
+set -x LOCALBIN ~/.local/bin
 set -x NPM ~/.node_modules/bin
 set -x NPMLOCAL node_modules/.bin
 set -x npm_config_prefix ~/.node_modules
 
-set -x PATH $NPMLOCAL $NPM $GOBIN $GAPP $PATH
+set -x PATH $LOCALBIN $NPMLOCAL $NPM $GOBIN $GAPP $PATH
 
 alias g git
 alias l 'ls -lah'
