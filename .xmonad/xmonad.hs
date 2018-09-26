@@ -21,7 +21,7 @@ main = do
     xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh $ desktopConfig
         { terminal           = myTerm
-        , focusedBorderColor = "#555"
+        , focusedBorderColor = "powder blue"
         , normalBorderColor  = "#0a0a0a"
         , borderWidth        = 1
         , handleEventHook    = mconcat [docksEventHook, handleEventHook def]
@@ -30,7 +30,7 @@ main = do
         -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
         , manageHook         = manageDocks <+> manageHook def
-        , workspaces         = [ "1", "2", "3", "4", "5" ]
+        , workspaces         = [ "|", "||", "|||", "||||", "|||||" ]
         }
 
 myBarConfig :: Handle -> PP
