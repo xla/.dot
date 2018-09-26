@@ -257,23 +257,10 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = "xx"
 let g:ale_sign_warning = "--"
 let g:ale_parse_makefile = 1
-let g:ale_c_build_dir = "build"
-let g:ale_c_clang_options = "-msse4.1 -Wall -Wconversion -Wpedantic -Wno-missing-braces -fno-omit-frame-pointer -fstrict-aliasing -pedantic -std=c17 -O0 -g -fsanitize=undefined -fsanitize=address -fsanitize=leak -fsanitize=integer -I./include -I./deps/g/include"
-let g:ale_c_uncrustify_options = "-c .uncrustify.cfg"
-
-let g:ale_fixers = {
-  \ "c": [ "clang-format", "remove_trailing_lines", "trim_whitespace", "uncrustify" ]
-  \ }
 
 let g:ale_linters = {
-  \ "c": [ "clang", "cquery" ],
   \ 'go': ['gometalinter'],
   \ }
-
-" let g:ale_linters = {
-"   \ "c": [ "clang", "clangd", "clangtidy", "cppcheck", "cquery", "flawfinder" ],
-"   \ 'go': ['gometalinter'],
-"   \ }
 
 let g:ale_go_gometalinter_options = '
   \ --aggregate
