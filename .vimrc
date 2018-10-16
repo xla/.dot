@@ -192,7 +192,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " Per file-type indentation
 au FileType                    haskell     setlocal sts=4 sw=4 expandtab
-au FileType                    javascript  setlocal sts=4 sw=4 expandtab
+au FileType                    javascript  setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
 au FileType                    css         setlocal ts=4  sw=4 noexpandtab
 au FileType                    go          setlocal ts=4  sw=4 noexpandtab
 au BufNewFile,BufRead,FileType *.go        setlocal ts=4  sw=4 noexpandtab
@@ -236,6 +236,12 @@ if has("nvim")
   Plug 'w0rp/ale'
   Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
 
+  Plug 'pangloss/vim-javascript'
+  Plug 'maxmellon/vim-jsx-pretty'
+  Plug 'ludovicchabant/vim-gutentags'
+  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+  Plug 'skywind3000/asyncrun.vim'
+
   call plug#end()
 endif
 
@@ -257,9 +263,21 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = "xx"
 let g:ale_sign_warning = "--"
 let g:ale_parse_makefile = 1
+let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
+
+let g:ale_fixers = {
+  \ 'javascript': [ 'eslint', 'prettier' ],
+  \ }
 
 let g:ale_linters = {
-  \ 'go': ['gometalinter'],
+  \ 'css': [ 'stylelint' ],
+  \ 'go': [ 'gometalinter' ],
+  \ 'javascript': [ 'eslint', 'stylelint' ],
+  \ 'js': [ 'eslint', 'stylelint' ],
+  \ }
+let g:ale_linter_aliases = {
+  \ 'javascript': 'css',
+  \ 'jsx': 'css',
   \ }
 
 let g:ale_go_gometalinter_options = '
@@ -278,8 +296,10 @@ let g:ale_go_gometalinter_options = '
 
 " au FileType c let g:ale_enabled = 1
 au FileType go let g:ale_enabled = 1
+au FileType javascript let g:ale_enabled = 1
 au FileType lua let g:ale_enabled = 1
 
+" LanguageClient
 let g:LanguageClient_serverCommands = {
     \ "cpp": ["cquery", "--log-file=/tmp/cq.log"],
     \ "c": ["cquery", "--log-file=/tmp/cq.log"],
