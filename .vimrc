@@ -135,6 +135,12 @@ set completeopt-=longest
 set completeopt-=menu
 set completeopt-=preview
 
+" Set python paths explicitly under macOS.
+if has('macunix')
+  let g:python2_host_prog = '/usr/local/bin/python'
+  let g:python3_host_prog = '/usr/local/bin/python3'
+endif
+
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
   syntax enable
@@ -193,7 +199,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " Per file-type indentation
 au FileType                    haskell     setlocal sts=4 sw=4 expandtab
 au FileType                    javascript  setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
-au FileType                    css         setlocal ts=4  sw=4 noexpandtab
+au FileType                    css         setlocal ts=2  sw=2 noexpandtab
 au FileType                    go          setlocal ts=4  sw=4 noexpandtab
 au BufNewFile,BufRead,FileType *.go        setlocal ts=4  sw=4 noexpandtab
 au FileType                    c,cpp       setlocal ts=8  sw=8 noexpandtab
