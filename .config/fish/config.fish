@@ -12,6 +12,11 @@ set -x npm_config_prefix ~/.node_modules
 
 set -x PATH $LOCALBIN $NPMLOCAL $NPM $GOBIN $GAPP $PATH
 
+switch (uname)
+case Darwin
+  set -g fish_user_paths "/usr/local/opt/node@8/bin" $fish_user_paths
+end
+
 alias g git
 alias l 'ls -lah'
 alias pacman 'sudo pacman'
