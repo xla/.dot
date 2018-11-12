@@ -50,7 +50,7 @@ set wildignore+=*Godeps
 " change the terminal's title
 set title
 " don't beep
-set visualbell
+set novisualbell
 " don't beep
 set noerrorbells
 " prevent auto indentation when pasting
@@ -72,7 +72,9 @@ set wildmode=list:longest
 " disable folding
 set nofoldenable    
 " highlight the line of the cursor
-set cursorline
+" set cursorline
+" avoid excessive redraws
+set lazyredraw
 " smooth and fast redrawing
 set ttyfast 
 " show line and column info
@@ -128,6 +130,7 @@ set statusline +=%=
 set statusline +=[%3l/%-3L\|%-2c]
 " file type
 set statusline +=\ %Y
+
 
 set scl=yes
 
@@ -212,159 +215,30 @@ au FileType                    pandoc      setlocal nonumber
 au FileType                    markdown    setlocal nonumber
 au FileType                    fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
 
-if has("nvim")
+" if has("nvim")
   call plug#begin()
 
-  Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
   Plug 'cloudhead/neovim-fuzzy'
   Plug 'cloudhead/shady.vim'
-  Plug 'exu/pgsql.vim'
-  Plug 'fatih/vim-go'
   Plug 'frigoeu/psc-ide-vim'
-  Plug 'hwayne/tla.vim'
-  Plug 'hail2u/vim-css3-syntax'
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
-  Plug 'mileszs/ack.vim'
-  Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim' }
-  Plug 'pbogut/deoplete-elm'
   Plug 'purescript-contrib/purescript-vim'
-  Plug 'sbdchd/neoformat'
-  Plug 'shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'theJian/elm.vim'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-markdown'
-  Plug 'vim-syntastic/syntastic'
-  Plug 'w0rp/ale'
-  Plug 'zchee/deoplete-go', {'build': {'unix': 'make'}}
-
-  Plug 'pangloss/vim-javascript'
-  Plug 'maxmellon/vim-jsx-pretty'
-  Plug 'ludovicchabant/vim-gutentags'
-  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-  Plug 'skywind3000/asyncrun.vim'
 
   call plug#end()
-endif
+" endif
 
 try
   colorscheme shady
 catch
 endtry
 
-" ale
-let g:ale_enabled = 0
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = "never"
-let g:ale_open_list = 1
-let g:ale_set_highlights = 0
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = "xx"
-let g:ale_sign_warning = "--"
-let g:ale_parse_makefile = 1
-let g:ale_lint_on_enter = 0 " Less distracting when opening a new file
-
-let g:ale_fixers = {
-  \ 'javascript': [ 'eslint', 'prettier' ],
-  \ }
-
-let g:ale_linters = {
-  \ 'css': [ 'stylelint' ],
-  \ 'go': [ 'gometalinter' ],
-  \ 'javascript': [ 'eslint', 'stylelint' ],
-  \ 'js': [ 'eslint', 'stylelint' ],
-  \ }
-let g:ale_linter_aliases = {
-  \ 'javascript': 'css',
-  \ 'jsx': 'css',
-  \ }
-
-let g:ale_go_gometalinter_options = '
-  \ --aggregate
-  \ --concurrency 6
-  \ --cyclo-over 20
-  \ --deadline 500ms
-  \ --enable-all
-  \ --fast
-  \ --disable vetshadow
-  \ --disable dupl
-  \ --sort line
-  \ --tests
-  \ --vendor
-  \ '
-
-" au FileType c let g:ale_enabled = 1
-au FileType go let g:ale_enabled = 1
-au FileType javascript let g:ale_enabled = 1
-au FileType lua let g:ale_enabled = 1
-
-" LanguageClient
-let g:LanguageClient_serverCommands = {
-    \ "cpp": ["cquery", "--log-file=/tmp/cq.log"],
-    \ "c": ["cquery", "--log-file=/tmp/cq.log"],
-    \ }
-
-let g:LanguageClient_loadSettings = 1
-" Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/xla/.config/nvim/settings.json'
-set completefunc=LanguageClient#complete
-set formatexpr=LanguageClient_textDocument_rangeFormatting()
-
-au FileType c nnoremap <silent> gh :call LanguageClient#textDocument_hover()<CR>
-au FileType c nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-au FileType c nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
-au FileType c nnoremap <silent> gs :call LanguageClient#textDocument_documentSymbol()<CR>
-au FileType c nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-" deoplete
-if has("nvim")
-  call deoplete#enable()
-  call deoplete#custom#option('auto_complete', 0)
-  call deoplete#custom#option('ignore_sources', {'_': [ "around", "buffer", "dictionary", "file", "member", "omni", "tag" ] })
-  call deoplete#custom#option('max_list', 20)
-
-  let g:deoplete#sources#go#package_dot = 1
-  let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-
-  inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ deoplete#manual_complete()
-
-  inoremap <silent><expr> <C-n>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ deoplete#manual_complete()
-
-  function! s:check_back_space()
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-endif
-
 " fuzzy
 nnoremap <leader>o :FuzzyOpen<cr>
 nnoremap <leader>f :FuzzyGrep<cr>
-
-" goyo
-let g:goyo_width = 100
-let g:goyo_height = "90%"
-
-" lua
-let g:lua_complete_omni = 1
-
-" neoformat
-augroup fmt
-  autocmd!
-  autocmd BufWritePre *.elm undojoin | Neoformat
-augroup END
 
 " purescript
 let g:psc_ide_syntastic_mode = 1
@@ -376,30 +250,13 @@ autocmd Filetype purescript autocmd BufWritePost !purty --write %
 nmap <C-_> <Plug>CommentaryLine
 xmap <C-_> <Plug>Commentary
 
-" vim-go
-autocmd FileType go nmap <leader>b <Plug>(go-build)
-autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-
-let g:go_addtags_transform = "snakecase"
-let g:go_auto_type_info = 1
-let g:go_fmt_command = "goimports"
-let g:go_fmt_experimental = 1
-let g:go_list_type = "quickfix"
-
 " custom highlight
 hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
 
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
+if executable('rg')
+  set grepprg=rg\ --vimgrep
+  let g:ackprg = 'rg --vimgrep'
 endif
-
-" Syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
 
 " TODO list
 command! Todo Ack! 'TODO'
