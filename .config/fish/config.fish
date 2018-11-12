@@ -12,6 +12,8 @@ set -x npm_config_prefix ~/.node_modules
 
 set -x PATH $LOCALBIN $NPMLOCAL $NPM $GOBIN $GAPP $PATH
 
+set -x FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+
 switch (uname)
 case Darwin
   set -g fish_user_paths "/usr/local/opt/node@8/bin" $fish_user_paths
