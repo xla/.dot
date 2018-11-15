@@ -26,8 +26,8 @@ window:
   # Blank space added around the window in pixels. This padding is not scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 12
-    y: 12
+    x: 16
+    y: 16
 
   # Window decorations
   #
@@ -155,7 +155,7 @@ colors:
   # Normal colors
   normal:
     black:   '0x000000'
-    red:     '0x800000'
+    red:     '0xb03060'
     green:   '0x66cdaa'
     yellow:  '0xffe4b5'
     blue:    '0x483d8b'
