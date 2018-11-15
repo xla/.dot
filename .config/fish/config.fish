@@ -2,6 +2,8 @@ set fish_greeting ""
 
 set -x EDITOR nvim
 
+set -x GPG_TTY (tty)
+
 set -x GOPATH $HOME/dev
 set -x GOBIN $GOPATH/bin
 
