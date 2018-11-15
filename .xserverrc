@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec /usr/bin/X -nolisten tcp -ardelay 180 -arinterval 40 "$@"
+exec /usr/bin/X -nolisten tcp -ardelay 180 -arinterval 10 "$@"
