@@ -1,5 +1,11 @@
-" must be first to change other options as side effect
-set nocompatible
+" For a paranoia.
+" Normally `:set nocp` is not needed, because it is done automatically
+" when .vimrc is found.
+if &compatible
+  " `:set nocp` has many side effects. Therefore this should be done
+  " only when 'compatible' is set.
+  set nocompatible
+endif
 
 set shell=/bin/sh
 
@@ -56,7 +62,7 @@ set noerrorbells
 " prevent auto indentation when pasting
 set pastetoggle=<F2>
 " font family & size
-set guifont=Inconsolata:h18
+set guifont=PragmataProLiga-Regular:h18
 " use utf-8 everywhere
 set encoding=utf-8
 " minimal lines to kepp above and below screen
@@ -70,13 +76,13 @@ set wildmenu
 " enhanced completion
 set wildmode=list:longest
 " disable folding
-set nofoldenable    
+set nofoldenable
 " highlight the line of the cursor
 " set cursorline
 " avoid excessive redraws
 set lazyredraw
 " smooth and fast redrawing
-set ttyfast 
+set ttyfast
 " show line and column info
 set ruler
 " wrap text if longer than window width
@@ -92,9 +98,17 @@ set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.i
 " EOL for current buffer
 set fileformat=unix
 " list of EOL formats to try
-set fileformats=unix,dos,mac 
+set fileformats=unix,dos,mac
 " store history information
 set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
+" always show signcolumns
+set signcolumn=yes
+" better display of messages
+set cmdheight=2
+" smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
+" split at the bottom
+set splitbelow
 
 " autoread changed files
 set autoread
@@ -102,14 +116,14 @@ au FocusGained * :checktime
 
 "" backup/swap/undo
 " enable backups
-set backup 
+set backup
 " backup file directory
 set backupdir=~/.vim/tmp/backup/
 " swap file directory
 set directory=~/.vim/tmp/swap/
 " undo file directory
 if exists('+undodir')
-  set undodir=~/.vim/tmp/undo/ 
+  set undodir=~/.vim/tmp/undo/
 endif
 " backup before overwritting
 set writebackup
@@ -134,9 +148,9 @@ set statusline +=\ %Y
 
 set scl=yes
 
-set completeopt-=longest
-set completeopt-=menu
-set completeopt-=preview
+" set completeopt-=longest
+" set completeopt-=menu
+" set completeopt-=preview
 
 " Set python paths explicitly under macOS.
 if has('macunix')
@@ -145,7 +159,7 @@ if has('macunix')
 endif
 
 " switch syntax highlighting on, when the terminal has colors
-if &t_Co > 2 || has("gui_running")
+if &t_Co > 2
   syntax enable
   syntax sync fromstart
 endif
@@ -214,53 +228,156 @@ au FileType                    txt         setlocal noai nocin nosi inde= wrap l
 au FileType                    pandoc      setlocal nonumber
 au FileType                    markdown    setlocal nonumber
 au FileType                    fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
+au BufNewFile,BufReadPost      *.md        set filetype=markdown
 
-" if has("nvim")
-  call plug#begin()
+" plugin management with minpac
+function! PackInit() abort
+  packadd minpac
 
-  Plug 'cloudhead/neovim-fuzzy'
-  Plug 'cloudhead/shady.vim'
-  Plug 'frigoeu/psc-ide-vim'
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
-  Plug 'purescript-contrib/purescript-vim'
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-markdown'
+  if exists('*minpac#init')
+    call minpac#init()
+    call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-  call plug#end()
-" endif
+    " colorscheme
+    call minpac#add('cloudhead/shady.vim')
 
+    " comments
+    call minpac#add('tpope/vim-commentary')
+
+    " git
+    call minpac#add('mhinz/vim-signify')
+
+    " navigation
+    call minpac#add('cloudhead/neovim-fuzzy')
+    call minpac#add('jremmen/vim-ripgrep')
+
+    " intellisense
+    call minpac#add('Shougo/denite.nvim')
+    call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
+
+    " markdown
+    call minpac#add('plasticboy/vim-markdown')
+    call minpac#add('junegunn/goyo.vim')
+    call minpac#add('junegunn/limelight.vim')
+
+    " purescript
+    call minpac#add('purescript-contrib/purescript-vim')
+
+    " es/jsx
+    " call minpac#add('hail2u/vim-css3-syntax')
+    " call minpac#add('pangloss/vim-javascript')
+    " call minpac#add('MaxMEllon/vim-jsx-pretty')
+    call minpac#add('neoclide/vim-jsx-improve', {'for': ['javascript', 'js']})
+    call minpac#add('styled-components/vim-styled-components')
+
+    " rst
+    call minpac#add('gu-fan/riv.vim')
+
+    " toml
+    call minpac#add('cespare/vim-toml')
+  endif
+endfunction
+
+command! PackClean call PackInit() | call minpac#clean()
+command! PackStatus call PackInit() | call minpac#status()
+command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
+
+packloadall
+
+" colors
 try
   colorscheme shady
 catch
 endtry
 
+" comments
+nmap <C-_> <Plug>CommentaryLine
+xmap <C-_> <Plug>Commentary
+
 " fuzzy
 nnoremap <leader>o :FuzzyOpen<cr>
 nnoremap <leader>f :FuzzyGrep<cr>
 
-" purescript
-let g:psc_ide_syntastic_mode = 1
-
-autocmd FileType purescript nmap <leader>b :Prebuild!<cr>
-autocmd Filetype purescript autocmd BufWritePost !purty --write %
-
-" vim-commentary
-nmap <C-_> <Plug>CommentaryLine
-xmap <C-_> <Plug>Commentary
-
-" custom highlight
-hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
-
+" ripgrep
 if executable('rg')
+  let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep
-  let g:ackprg = 'rg --vimgrep'
 endif
 
+" intellisense
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" use <c-space>for trigger completion
+imap <c-space> coc#refresh()
+" Use <cr> for confirm completion.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" use <c-space>for trigger completion
+imap <c-space> coc#refresh()
+
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Remap keys for gotos
+nmap <silent> gd :call CocAction('jumpDefinition')<cr>
+nmap <silent> gj :call CocAction('jumpTypeDefinition')<cr>
+nmap <silent> gi :call CocAction('jumpImplementation')<cr>
+nmap <silent> gr :call CocAction('jumpReferences')<cr>
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <sid>show_documentation()<cr>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+" Show diagnostics of current workspace
+nnoremap <silent> <space>a  :<C-u>Denite coc-diagnostic<cr>
+
+" markdown editing like it's iA Writer
+let g:goyo_height = '90%'
+let g:goyo_width = 120
+
+" sane defaults to not error for inability to calculate dimming.
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+" Default: 0.5
+let g:limelight_default_coefficient = 0.7
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+let g:limelight_priority = -1
+
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+nnoremap <silent> <leader>z :Goyo<cr>
+
+" rst
+let g:riv_auto_format_table = 0
+let g:riv_fold_auto_update = 0
+
 " TODO list
-command! Todo Ack! 'TODO'
-command! TodoLocal Ack! 'TODO' %
+command! Todo Rg 'TODO'
+command! TodoLocal Rg 'TODO' %
 
 nnoremap <leader>tg :Todo<cr>
 nnoremap <leader>tl :TodoLocal<cr>
+
+" custom highlight
+hi User1 ctermbg=black ctermfg=red guibg=black guifg=red

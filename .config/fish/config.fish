@@ -12,8 +12,9 @@ set -x NPM ~/.node_modules/bin
 set -x NPMLOCAL node_modules/.bin
 set -x npm_config_prefix ~/.node_modules
 
-set -x PATH $LOCALBIN $NPMLOCAL $NPM $GOBIN $GAPP $PATH
-
+set -x PATH $LOCALBIN $NPMLOCAL $NPM $GOBIN $GAPP $PATH ~/dev/src/github.com/oscoin/radicle/bin
+set -x IPFS_API_URL http://127.0.0.1:9301
+ 
 set -x FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 
 switch (uname)
@@ -26,6 +27,7 @@ alias l 'ls -lah'
 alias pacman 'sudo pacman'
 alias vi vim
 alias vim nvim
+alias rad radd
 
 setenv SSH_ENV "/tmp/ssh-environment"
 
