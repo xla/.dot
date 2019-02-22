@@ -11,9 +11,9 @@
 	XF86AudioLowerVolume
 
 # Increase Brightness
-"xbacklight -inc +10"
+"xbacklight -inc 5"
   XF86MonBrightnessUp
 
 # Lower Brighness
-"xbacklight -inc -10"
+"xbacklight -inc -5"
   XF86MonBrightnessDown

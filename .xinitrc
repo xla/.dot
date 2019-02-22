@@ -2,10 +2,10 @@
 #
 # ~/.xinitrc
 #
-xset r rate 180 40                   # Sane repeat rate
+xset r rate 160 80                   # Sane repeat rate
 xset -b                              # No bell
-# xset -dpms                           # Keep screen on at all times
-xset s off                           #
+xset dpms 180 300 600
+xset s 120 0                         #
 xset m 7/5 0												 # Pointer settings
 setxkbmap -option compose:super      # Set compose key to R-Alt
 
@@ -25,8 +25,6 @@ if [ -f ~/.Xresources ]; then
   xrdb -merge ~/.Xresources
 fi
 
-xautolock -time 5 -locker slock &
-
-# ~/.fehbg &
+xss-lock -- /usr/bin/slock &
 
 exec xmonad
