@@ -30,7 +30,7 @@ main = do
         -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
         , manageHook         = manageDocks <+> manageHook def
-        , workspaces         = [ "|", "||", "|||", "||||", "|||||" ]
+        , workspaces         = [ "λ", "α", "β", "γ", "δ" ]
         }
 
 myBarConfig :: Handle -> PP
@@ -68,7 +68,7 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
        ]
 
 myTerm :: FilePath
-myTerm = "st -e /bin/fish"
+myTerm = "kitty"
 
 rofi :: X ()
 rofi = safeSpawn
