@@ -4,18 +4,28 @@ Config
   , border = TopB
   , borderColor = "black"
   , fgColor = "#777777"
-  , font = "xft:PragmataPro:size=11,monospace:size=11"
+  , font = "xft:PragmataPro:size=12,monospace:size=12"
   , position = TopW L 100
   , sepChar = "%"
-  , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %default:Master% ┊ %bright% ┊ %wlp58s0wi%"
+  , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %bright% %default:Master% ┊ %wlp2s0wi%"
   , commands =
-    [ Run Battery    [ "-t", "<leftvbar>" ] 100
+    [ Run Battery    [ "--template" , "<acstatus>"
+                     , "--Low"      , "5"
+                     , "--low"      , "#b03060"
+                     , "--" -- battery specific options
+                           -- discharging status
+                           , "-o"	, "<leftvbar>"
+                           -- AC "on" status
+                           , "-O"	, "<fc=#ffe4b5><leftvbar></fc>"
+                           -- charged status
+                           , "-i"	, "<fc=#66cdaa><leftvbar></fc>"
+                     ] 10
     , Run Brightness [ "-t", "<vbar>", "--", "-D", "intel_backlight" ] 10
-    , Run Com        "/home/xla/dev/bin/xmobar-dropbox-status" [] "dropbox" 10
+    , Run Com        "/home/xla/.dot/bin/xmobar-dropbox-status" [] "dropbox" 10
     , Run Cpu        [ "-t", "<vbar>" ] 50
     , Run Memory     [ "-t", "<availablevbar>" ] 50
     , Run StdinReader
     , Run Volume     "default" "Master" [ "-t", "<volumevbar>" ] 10
-    , Run Wireless   "wlp58s0" [ "-t", "<qualityvbar> <essid>"] 10
+    , Run Wireless   "wlp2s0" [ "-t", "<qualityvbar> <essid>"] 10
     ]
   }
