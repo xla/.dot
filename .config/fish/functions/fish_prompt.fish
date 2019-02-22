@@ -1,6 +1,4 @@
 function fish_prompt
-  # echo -n (basename (pwd))
-
   # Print a red dot if the exit status of the previous command isn't 0.
   if test $status -gt 0
       set color red
