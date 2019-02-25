@@ -4,9 +4,10 @@
 #
 xset r rate 160 80                   # Sane repeat rate
 xset -b                              # No bell
-xset dpms 180 300 600
-xset s 120 0                         #
-xset m 7/5 0												 # Pointer settings
+# order: STANDBY SUSPEND OFF
+xset dpms 360 720 600                # Energy mode switch in sec
+xset s 300 0                         # Sets the timeout for the screen saver in sec
+xset m 7/5 0                         # Pointer settings
 setxkbmap -option compose:super      # Set compose key to R-Alt
 
 if [ -f ~/.nvidia-settings-rc ]; then
