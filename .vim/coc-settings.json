@@ -1,0 +1,14 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["javascript", "rust"],
+  "coc.source.around.enable": false,
+  "coc.source.buffer.enable": false,
+  "coc.source.file.enable": true,
+  "diagnostic.level": "hint",
+  "diagnostic.locationlist": true,
+  "diagnostic.virtualText": true,
+  "suggest.autoTrigger": "always",
+  "suggest.timeout": 1000,
+  "suggest.echodocSupport": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.enable": true
+}
