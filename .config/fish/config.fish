@@ -27,7 +27,6 @@ alias l 'ls -lah'
 alias pacman 'sudo pacman'
 alias vi vim
 alias vim nvim
-alias rad radd
 
 setenv SSH_ENV "/tmp/ssh-environment"
 
