@@ -61,7 +61,7 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
        [ ((modMask, xK_F5),   spawn $ printf "scrot -u -e 'mv $f %s/Dropbox/Screenshots'" home)
        , ((modMask, xK_F6),   spawn $ printf "scrot -e 'mv $f %s/Dropbox/Screenshots'" home)
        , ((modMask, xK_F9),   safeSpawn "toggle-displays" [])
-       , ((modMask, xK_F10),  slock)
+       , ((modMask, xK_F10),  safeSpawn "loginctl" ["lock-session"])
        , ((modMask, xK_Tab),  toggleWS)
        , ((modMask, xK_b),    sendMessage ToggleStruts)
        , ((modMask, xK_p),    rofi)
@@ -88,6 +88,3 @@ rofi = safeSpawn
            , "-width", "40"
            ]
 
-slock :: X ()
-slock = safeSpawn
-      "slock" []
