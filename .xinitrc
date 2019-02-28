@@ -2,6 +2,9 @@
 #
 # ~/.xinitrc
 #
+
+export PATH="/home/xla/.local/bin:$PATH"
+
 xset r rate 160 80                   # Sane repeat rate
 xset -b                              # No bell
 # order: STANDBY SUSPEND OFF
