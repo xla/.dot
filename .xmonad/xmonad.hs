@@ -1,5 +1,6 @@
 import qualified Data.Map as Map
 import Data.Map (Map)
+import System.Exit (ExitCode(ExitSuccess), exitWith)
 import System.Directory (getHomeDirectory)
 import System.IO (Handle, hPutStrLn)
 import Text.Printf (printf)
@@ -13,7 +14,15 @@ import XMonad.Hooks.ManageDocks (ToggleStruts(..), avoidStruts, docksEventHook, 
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Spacing (spacing)
 import XMonad.Layout.ThreeColumns
+import XMonad.Prompt
+import XMonad.Prompt.Input
+import XMonad.Prompt.XMonad
 import XMonad.Util.Run (safeSpawn, spawnPipe)
+
+data EnterPrompt = EnterPrompt String
+
+instance XPrompt EnterPrompt where
+    showXPrompt (EnterPrompt n) = " " ++ n ++ " "
 
 main :: IO ()
 main = do
@@ -26,8 +35,9 @@ main = do
         , borderWidth        = 1
         , handleEventHook    = mconcat [docksEventHook, handleEventHook def]
         , keys               = myKeys home
-        , layoutHook         = avoidStruts $ smartBorders $ layoutHook def
+        -- , layoutHook         = avoidStruts $ smartBorders $ layoutHook def
         -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
+        , layoutHook         = avoidStruts $ smartBorders $ ThreeColMid 1 (3/100) (1/2)
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
         , manageHook         = manageDocks <+> manageHook def
         , workspaces         = [ "λ", "α", "β", "γ", "δ" ]
@@ -65,10 +75,25 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
        , ((modMask, xK_Tab),  toggleWS)
        , ((modMask, xK_b),    sendMessage ToggleStruts)
        , ((modMask, xK_p),    rofi)
+       , ((modMask .|. shiftMask, xK_q), confirmPrompt myXPConfig "Exit?" $ io (exitWith ExitSuccess))
        ]
 
 myTerm :: FilePath
 myTerm = "kitty"
+
+myXPConfig :: XPConfig
+myXPConfig = def
+  { position          = CenteredAt 0.5 0.09
+  , alwaysHighlight   = True
+  , height            = 80
+  , promptBorderWidth = 1
+  , font              = "xft:FiraMono-Regular:size=14"
+  , borderColor       = "#888"
+  , bgColor           = "#000"
+}
+
+confirmPrompt :: XPConfig -> String -> X () -> X ()
+confirmPrompt config app func = mkXPrompt (EnterPrompt app) config (mkComplFunFromList []) $ const func
 
 rofi :: X ()
 rofi = safeSpawn
