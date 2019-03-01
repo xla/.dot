@@ -104,7 +104,7 @@ set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
 " always show signcolumns
 set signcolumn=yes
 " better display of messages
-set cmdheight=2
+set cmdheight=3
 " smaller updatetime for CursorHold & CursorHoldI
 set updatetime=300
 " split at the bottom
@@ -145,12 +145,7 @@ set statusline +=[%3l/%-3L\|%-2c]
 " file type
 set statusline +=\ %Y
 
-
 set scl=yes
-
-" set completeopt-=longest
-" set completeopt-=menu
-" set completeopt-=preview
 
 " Set python paths explicitly under macOS.
 if has('macunix')
@@ -203,9 +198,9 @@ inoremap <F1> <ESC>
 inoremap jk <ESC>
 
 " quickfix navigation
-map <C-n> :cnext<cr>
-map <C-m> :cprevious<cr>
-nnoremap <leader>a :cclose<cr>
+map <C-n> :lnext<cr>
+map <C-m> :lprevious<cr>
+nnoremap <leader>a :LToggle<cr>
 
 " map make
 nmap <leader>m :make!<cr>
@@ -229,6 +224,9 @@ au FileType                    pandoc      setlocal nonumber
 au FileType                    markdown    setlocal nonumber
 au FileType                    fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
 au BufNewFile,BufReadPost      *.md        set filetype=markdown
+
+" rust.vim sets the filetype for Cargo.toml to cfg, which confuses vim-toml
+au BufNewFile,BufRead *.toml,Gopkg.lock,Cargo.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setf toml
 
 " plugin management with minpac
 function! PackInit() abort
@@ -255,26 +253,23 @@ function! PackInit() abort
     call minpac#add('Shougo/denite.nvim')
     call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
 
-    " markdown
-    call minpac#add('plasticboy/vim-markdown')
-    call minpac#add('junegunn/goyo.vim')
-    call minpac#add('junegunn/limelight.vim')
+    " toml
+    call minpac#add('cespare/vim-toml')
 
-    " purescript
-    call minpac#add('purescript-contrib/purescript-vim')
+    " glsl
+    call minpac#add('tikhomirov/vim-glsl')
 
-    " es/jsx
-    " call minpac#add('hail2u/vim-css3-syntax')
-    " call minpac#add('pangloss/vim-javascript')
-    " call minpac#add('MaxMEllon/vim-jsx-pretty')
-    call minpac#add('neoclide/vim-jsx-improve', {'for': ['javascript', 'js']})
-    call minpac#add('styled-components/vim-styled-components')
+    " go
+    call minpac#add('fatih/vim-go')
 
     " rst
     call minpac#add('gu-fan/riv.vim')
 
-    " toml
-    call minpac#add('cespare/vim-toml')
+    " rust
+    call minpac#add('rust-lang/rust.vim')
+
+    " terraform
+    call minpac#add('hashivim/vim-terraform')
   endif
 endfunction
 
@@ -282,7 +277,11 @@ command! PackClean call PackInit() | call minpac#clean()
 command! PackStatus call PackInit() | call minpac#status()
 command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
 
+" Plugins need to be added to runtimepath before helptags can be generated.
 packloadall
+" Load all of the helptags now, after plugins have been loaded.
+" Ignore all messages and errors.
+silent! helptags ALL
 
 " colors
 try
@@ -298,11 +297,19 @@ xmap <C-_> <Plug>Commentary
 nnoremap <leader>o :FuzzyOpen<cr>
 nnoremap <leader>f :FuzzyGrep<cr>
 
+" vim-commentary
+nmap <C-_> gcc
+xmap <C-_> gc
+
 " ripgrep
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep
 endif
+
+" ListToggle
+let g:lt_location_list_toggle_map = '<leader>a'
+let g:lt_height = 5
 
 " intellisense
 function! s:check_back_space() abort
@@ -346,32 +353,6 @@ command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 " Show diagnostics of current workspace
 nnoremap <silent> <space>a  :<C-u>Denite coc-diagnostic<cr>
 
-" markdown editing like it's iA Writer
-let g:goyo_height = '90%'
-let g:goyo_width = 120
-
-" sane defaults to not error for inability to calculate dimming.
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
-" Default: 0.5
-let g:limelight_default_coefficient = 0.7
-" Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 1
-" Highlighting priority (default: 10)
-"   Set it to -1 not to overrule hlsearch
-let g:limelight_priority = -1
-
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-
-nnoremap <silent> <leader>z :Goyo<cr>
-
-" rst
-let g:riv_auto_format_table = 0
-let g:riv_fold_auto_update = 0
-
 " TODO list
 command! Todo Rg 'TODO'
 command! TodoLocal Rg 'TODO' %
@@ -379,5 +360,38 @@ command! TodoLocal Rg 'TODO' %
 nnoremap <leader>tg :Todo<cr>
 nnoremap <leader>tl :TodoLocal<cr>
 
+" go
+let g:go_fmt_command = "goimports"
+
+" rst
+let g:riv_auto_format_table = 0
+let g:riv_fold_auto_update = 0
+
+" rust
+let g:rustfmt_autosave = 1
+
+" terraform
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+
 " custom highlight
 hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
+
+" helper functions
+command! LToggle call s:LListToggle()
+
+function! s:LListToggle() abort
+    let buffer_count_before = s:BufferCount()
+    " Location list can't be closed if there's cursor in it, so we need
+    " to call lclose twice to move cursor to the main pane
+    silent! lclose
+    silent! lclose
+
+    if s:BufferCount() == buffer_count_before
+        execute "silent! lopen 10"
+    endif
+endfunction
+
+function! s:BufferCount() abort
+    return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+endfunction
