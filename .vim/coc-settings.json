@@ -28,5 +28,7 @@
   "suggest.timeout": 1000,
   "suggest.echodocSupport": true,
   "eslint.autoFixOnSave": true,
-  "eslint.enable": true
+  "eslint.enable": true,
+  "yaml.format.enable": true,
+  "yaml.validate": true
 }
