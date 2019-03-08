@@ -128,8 +128,6 @@ endif
 " backup before overwritting
 set writebackup
 
-set background=dark
-
 " show status line
 set laststatus=2
 set statusline=
@@ -144,8 +142,6 @@ set statusline +=%=
 set statusline +=[%3l/%-3L\|%-2c]
 " file type
 set statusline +=\ %Y
-
-set scl=yes
 
 " Set python paths explicitly under macOS.
 if has('macunix')
@@ -284,6 +280,7 @@ packloadall
 silent! helptags ALL
 
 " colors
+set background=dark
 try
   colorscheme shady
 catch
@@ -368,7 +365,7 @@ let g:riv_auto_format_table = 0
 let g:riv_fold_auto_update = 0
 
 " rust
-let g:rustfmt_autosave = 1
+let g:rustfmt_autosave = 0
 
 " terraform
 let g:terraform_align=1
@@ -376,6 +373,8 @@ let g:terraform_fmt_on_save=1
 
 " custom highlight
 hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
+hi CocErrorSign ctermfg=red guibg=black guifg=red
+hi CocWarningSign ctermfg=yellow guibg=black guifg=yello
 
 " helper functions
 command! LToggle call s:LListToggle()
