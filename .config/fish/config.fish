@@ -23,6 +23,9 @@ case Darwin
 end
 
 alias g git
+alias ga 'git add'
+alias gl 'git pull'
+alias gp 'git push'
 alias l 'ls -lah'
 alias pacman 'sudo pacman'
 alias vi vim
