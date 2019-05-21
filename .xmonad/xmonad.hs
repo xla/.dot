@@ -12,8 +12,10 @@ import XMonad.Hooks.DynamicLog (PP, dynamicLogWithPP, ppCurrent, ppHidden, ppHid
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageDocks (ToggleStruts(..), avoidStruts, docks, docksEventHook, docksStartupHook, manageDocks)
 import XMonad.Hooks.ManageHelpers (doFullFloat, isFullscreen)
+import XMonad.Layout (Full, Mirror, Tall)
 import XMonad.Layout.Fullscreen (fullscreenManageHook)
 import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout.ResizableTile (MirrorResize(..), ResizableTall(..))
 import XMonad.Layout.Spacing (spacing)
 import XMonad.Layout.ThreeColumns
 import XMonad.Prompt
@@ -29,21 +31,19 @@ instance XPrompt EnterPrompt where
 main :: IO ()
 main = do
     home <- getHomeDirectory
-    xmproc <- spawnPipe "sh $HOME/.config/polybar/launch.sh"
-    -- xmproc <- spawnPipe "xmobar"
+    -- xmproc <- spawnPipe "sh $HOME/.config/polybar/launch.sh"
+    xmproc <- spawnPipe "xmobar"
     xmonad $ ewmh $ docks $ desktopConfig
         { terminal           = myTerm
         , focusedBorderColor = "powder blue"
         , normalBorderColor  = "#0a0a0a"
         , borderWidth        = 1
-        , handleEventHook    = mconcat [docksEventHook, fullscreenEventHook, handleEventHook def]
+        , handleEventHook    = mconcat [docksEventHook, handleEventHook def]
         , keys               = myKeys home
-        , layoutHook         = avoidStruts $ desktopLayoutModifiers $ smartBorders $ layoutHook def
-        -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
-        -- , layoutHook         = avoidStruts $ smartBorders $ ThreeColMid 1 (3/100) (1/2)
+        , layoutHook         = avoidStruts $ smartBorders $ myLayout
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
-        , manageHook         = manageDocks <+> (isFullscreen --> doFullFloat) <+> fullscreenManageHook <+> manageHook def
-        , startupHook        = docksStartupHook <+> startupHook def
+        , manageHook         = manageDocks <+> manageHook def
+        -- , startupHook        = docksStartupHook <+> startupHook def
         , workspaces         = [ "λ", "α", "β", "γ", "δ" ]
         }
 
@@ -72,15 +72,19 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
     Map.union ks (XMonad.keys def conf)
   where
     ks = Map.fromList
-       [ ((modMask, xK_F5),   spawn $ printf "scrot -u -e 'mv $f %s/Dropbox/Screenshots'" home)
-       , ((modMask, xK_F6),   spawn $ printf "scrot -e 'mv $f %s/Dropbox/Screenshots'" home)
-       , ((modMask, xK_F9),   safeSpawn "toggle-displays" [])
-       , ((modMask, xK_F10),  safeSpawn "loginctl" ["lock-session"])
-       , ((modMask, xK_Tab),  toggleWS)
-       , ((modMask, xK_b),    sendMessage ToggleStruts)
-       , ((modMask, xK_p),    rofi)
+       [ ((modMask, xK_F5),              spawn $ printf "scrot -u -e 'mv $f %s/Dropbox/Screenshots'" home)
+       , ((modMask, xK_F6),              spawn $ printf "scrot -e 'mv $f %s/Dropbox/Screenshots'" home)
+       , ((modMask, xK_F9),              safeSpawn "toggle-displays" [])
+       , ((modMask, xK_F10),             safeSpawn "loginctl" ["lock-session"])
+       , ((modMask, xK_Tab),             toggleWS)
+       , ((modMask, xK_b),               sendMessage ToggleStruts)
+       , ((modMask, xK_u),               sendMessage MirrorShrink)
+       , ((modMask, xK_o),               sendMessage MirrorExpand)
+       , ((modMask, xK_p),               rofi)
        , ((modMask .|. shiftMask, xK_q), confirmPrompt myXPConfig "Exit?" $ io (exitWith ExitSuccess))
        ]
+
+myLayout = ResizableTall 1 (3/100) (1/2) [] ||| Mirror (Tall 1 (3/100) (1/2)) ||| Full ||| ThreeColMid 1 (3/100) (1/2)
 
 myTerm :: FilePath
 myTerm = "kitty"
