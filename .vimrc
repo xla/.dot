@@ -206,6 +206,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 
 " Per file-type indentation
 au FileType                    haskell     setlocal sts=4 sw=4 expandtab
+au FileType                    elm         setlocal sts=4 sw=4 expandtab
 au FileType                    javascript  setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
 au FileType                    css         setlocal ts=2  sw=2 noexpandtab
 au FileType                    go          setlocal ts=4  sw=4 noexpandtab
@@ -239,7 +240,7 @@ function! PackInit() abort
     call minpac#add('tpope/vim-commentary')
 
     " git
-    call minpac#add('mhinz/vim-signify')
+    " call minpac#add('mhinz/vim-signify')
 
     " navigation
     call minpac#add('cloudhead/neovim-fuzzy')
@@ -249,6 +250,10 @@ function! PackInit() abort
     call minpac#add('Shougo/denite.nvim')
     call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
 
+    " elm
+    " call minpac#add('w0rp/ale')
+    " call minpac#add('elmcast/elm-vim')
+
     " toml
     call minpac#add('cespare/vim-toml')
 
@@ -257,6 +262,18 @@ function! PackInit() abort
 
     " go
     call minpac#add('fatih/vim-go')
+
+    " pico8
+    " call minpac#add('justinj/vim-pico8-syntax')
+
+    " purescript
+    " call minpac#add('purescript-contrib/purescript-vim')
+    " call minpac#add('FrigoEU/psc-ide-vim')
+    " call minpac#add('vim-syntastic/syntastic')
+
+    " ocaml/reason
+    " call minpac#add('reasonml-editor/vim-reason-plus')
+    " call minpac#add('sbdchd/neoformat')
 
     " rst
     call minpac#add('gu-fan/riv.vim')
@@ -357,8 +374,25 @@ command! TodoLocal Rg 'TODO' %
 nnoremap <leader>tg :Todo<cr>
 nnoremap <leader>tl :TodoLocal<cr>
 
+" elm
+let g:elm_jump_to_error = 1
+let g:elm_make_show_warnings = 1
+let g:elm_detailed_complete = 1
+let g:elm_format_autosave = 1
+let g:elm_format_fail_silently = 0
+let g:elm_setup_keybindings = 1
+
 " go
 let g:go_fmt_command = "goimports"
+
+" ocaml/reason
+let g:neoformat_enabled_ocaml = ['ocamlformat']
+
+" purs
+let g:psc_ide_syntastic_mode = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
 
 " rst
 let g:riv_auto_format_table = 0
