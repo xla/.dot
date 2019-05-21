@@ -7,10 +7,12 @@ import Text.Printf (printf)
 
 import XMonad
 import XMonad.Actions.CycleWS (toggleWS)
-import XMonad.Config.Desktop (desktopConfig)
+import XMonad.Config.Desktop (desktopConfig, desktopLayoutModifiers)
 import XMonad.Hooks.DynamicLog (PP, dynamicLogWithPP, ppCurrent, ppHidden, ppHiddenNoWindows, ppLayout, ppOutput, ppSep, ppTitle, ppUrgent, ppWsSep, wrap, xmobarColor, xmobarPP)
-import XMonad.Hooks.EwmhDesktops (ewmh)
-import XMonad.Hooks.ManageDocks (ToggleStruts(..), avoidStruts, docksEventHook, manageDocks)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.ManageDocks (ToggleStruts(..), avoidStruts, docks, docksEventHook, docksStartupHook, manageDocks)
+import XMonad.Hooks.ManageHelpers (doFullFloat, isFullscreen)
+import XMonad.Layout.Fullscreen (fullscreenManageHook)
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Spacing (spacing)
 import XMonad.Layout.ThreeColumns
@@ -27,19 +29,21 @@ instance XPrompt EnterPrompt where
 main :: IO ()
 main = do
     home <- getHomeDirectory
-    xmproc <- spawnPipe "xmobar"
-    xmonad $ ewmh $ desktopConfig
+    xmproc <- spawnPipe "sh $HOME/.config/polybar/launch.sh"
+    -- xmproc <- spawnPipe "xmobar"
+    xmonad $ ewmh $ docks $ desktopConfig
         { terminal           = myTerm
         , focusedBorderColor = "powder blue"
         , normalBorderColor  = "#0a0a0a"
         , borderWidth        = 1
-        , handleEventHook    = mconcat [docksEventHook, handleEventHook def]
+        , handleEventHook    = mconcat [docksEventHook, fullscreenEventHook, handleEventHook def]
         , keys               = myKeys home
-        -- , layoutHook         = avoidStruts $ smartBorders $ layoutHook def
+        , layoutHook         = avoidStruts $ desktopLayoutModifiers $ smartBorders $ layoutHook def
         -- , layoutHook         = avoidStruts $ smartBorders $ spacing 16 $ ThreeColMid 1 (3/100) (1/2)
-        , layoutHook         = avoidStruts $ smartBorders $ ThreeColMid 1 (3/100) (1/2)
+        -- , layoutHook         = avoidStruts $ smartBorders $ ThreeColMid 1 (3/100) (1/2)
         , logHook            = dynamicLogWithPP (myBarConfig xmproc)
-        , manageHook         = manageDocks <+> manageHook def
+        , manageHook         = manageDocks <+> (isFullscreen --> doFullFloat) <+> fullscreenManageHook <+> manageHook def
+        , startupHook        = docksStartupHook <+> startupHook def
         , workspaces         = [ "λ", "α", "β", "γ", "δ" ]
         }
 
