@@ -1,6 +1,6 @@
 {
   "coc.preferences.colorSupport": true,
-  "coc.preferences.formatOnSaveFiletypes": ["html", "javascript", "json", "rust", "yaml"],
+  "coc.preferences.formatOnSaveFiletypes": ["css", "html", "javascript", "json", "ocaml", "rust", "yaml"],
   "coc.preferences.previewAutoClose": true,
   "coc.source.around.enable": false,
   "coc.source.buffer.enable": false,
@@ -27,11 +27,20 @@
   "diagnostic.warningSign": "!!",
   "highlight.colors.enable": true,
   "highlight.document.enable": true,
+  "languageserver": {
+    "reason": {
+      "command": "ocaml-language-server",
+      "args": ["--stdio"],
+      "filetypes": [ "ocaml", "reason" ]
+    }
+  },
   "suggest.autoTrigger": "always",
   "suggest.timeout": 1000,
   "suggest.echodocSupport": true,
-  "eslint.autoFixOnSave": true,
   "eslint.enable": true,
+  "prettier.eslintIntegration": true,
+  "prettier.requireConfig": true,
+  "prettier.semi": false,
   "yaml.format.enable": true,
   "yaml.validate": true
 }
