@@ -5,7 +5,7 @@ Config
   , borderColor = "black"
   , fgColor = "#777777"
   , font = "xft:PragmataPro:size=12,monospace:size=12"
-  , position = TopW L 100
+  , position = BottomW L 100
   , sepChar = "%"
   , template = "%StdinReader%  }{ %dropbox% ┊ %cpu% ┊ %memory% ┊ %battery% ┊ %bright% %default:Master% ┊ %wlp2s0wi%"
   , commands =
