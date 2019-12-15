@@ -109,7 +109,7 @@ rofi = safeSpawn
            , "-auto-select"
            , "-color-normal", "#000,#888,#000,#000,#fff"
            , "-color-window", "#000,#000,#333"
-           , "-font", "FiraMono-Regular 22"
+           , "-font", "FiraMono 22"
            , "-hide-scrollbar"
            , "-levenshtein-sort"
            , "-line-margin", "0"
