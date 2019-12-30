@@ -50,5 +50,5 @@ else
   end
 end
 
-# opam configuration
-source /home/xla/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/xla/.dot/.local/bin/google-cloud-sdk/path.fish.inc' ]; . '/home/xla/.dot/.local/bin/google-cloud-sdk/path.fish.inc'; end
