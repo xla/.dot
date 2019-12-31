@@ -17,6 +17,9 @@ if [ -f ~/.nvidia-settings-rc ]; then
   nvidia-settings --load-config-only;
 fi
 
+# Set us layout with accentuated keys.
+setxkbmap us -variant altgr-intl
+
 if [ -f ~/.xbindkeysrc ]; then
   xbindkeys;
 fi
