@@ -3,17 +3,17 @@
 	XF86AudioMute
 
 # Increase Volume
-"/usr/bin/amixer -q sset Master 2+"
+"/usr/bin/amixer set Master 5%+"
 	XF86AudioRaiseVolume
 
 # Lower Volume
-"/usr/bin/amixer -q sset Master 2-"
+"/usr/bin/amixer set Master 5%-"
 	XF86AudioLowerVolume
 
 # Increase Brightness
-"xbacklight -inc 5"
+"/usr/bin/light -A 2"
   XF86MonBrightnessUp
 
 # Lower Brighness
-"xbacklight -inc -5"
+"/usr/bin/light -U 2"
   XF86MonBrightnessDown
