@@ -109,6 +109,8 @@ set cmdheight=3
 set updatetime=300
 " split at the bottom
 set splitbelow
+" some file watching tools will miss an rename and replace
+set backupcopy=yes
 
 " autoread changed files
 set autoread
@@ -211,7 +213,7 @@ au FileType                    javascript  setlocal fo=cqt sts=2 sw=2 tw=80 wm=0
 au FileType                    css         setlocal ts=2  sw=2 noexpandtab
 au FileType                    go          setlocal ts=4  sw=4 noexpandtab
 au BufNewFile,BufRead,FileType *.go        setlocal ts=4  sw=4 noexpandtab
-au FileType                    c,cpp       setlocal ts=8  sw=8 noexpandtab
+au FileType                    c,cpp,glsl  setlocal ts=8  sw=8 noexpandtab
 au FileType                    lua         setlocal       sw=4 expandtab
 au FileType                    sh,zsh      setlocal ts=2  sw=2 noexpandtab
 au FileType                    vim,ruby    setlocal sts=2 sw=2 expandtab
@@ -251,8 +253,8 @@ function! PackInit() abort
     call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
 
     " elm
-    " call minpac#add('w0rp/ale')
-    " call minpac#add('elmcast/elm-vim')
+    call minpac#add('w0rp/ale')
+    call minpac#add('elmcast/elm-vim')
 
     " toml
     call minpac#add('cespare/vim-toml')
@@ -263,6 +265,9 @@ function! PackInit() abort
     " go
     call minpac#add('fatih/vim-go')
 
+    " graphql
+    call minpac#add('jparise/vim-graphql')
+
     " pico8
     " call minpac#add('justinj/vim-pico8-syntax')
 
@@ -272,8 +277,8 @@ function! PackInit() abort
     " call minpac#add('vim-syntastic/syntastic')
 
     " ocaml/reason
-    " call minpac#add('reasonml-editor/vim-reason-plus')
-    " call minpac#add('sbdchd/neoformat')
+    call minpac#add('reasonml-editor/vim-reason-plus')
+    call minpac#add('sbdchd/neoformat')
 
     " rst
     call minpac#add('gu-fan/riv.vim')
@@ -281,8 +286,12 @@ function! PackInit() abort
     " rust
     call minpac#add('rust-lang/rust.vim')
 
+    " svelte
+    call minpac#add('evanleck/vim-svelte')
+
     " terraform
     call minpac#add('hashivim/vim-terraform')
+    call minpac#add('juliosueiras/vim-terraform-completion')
   endif
 endfunction
 
@@ -384,6 +393,7 @@ let g:elm_setup_keybindings = 1
 
 " go
 let g:go_fmt_command = "goimports"
+let g:go_gopls_enabled = 1
 
 " ocaml/reason
 let g:neoformat_enabled_ocaml = ['ocamlformat']
@@ -399,7 +409,7 @@ let g:riv_auto_format_table = 0
 let g:riv_fold_auto_update = 0
 
 " rust
-let g:rustfmt_autosave = 0
+let g:rustfmt_autosave = 1
 
 " terraform
 let g:terraform_align=1
