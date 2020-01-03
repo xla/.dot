@@ -25,6 +25,7 @@
   "diagnostic.hintSign": "__",
   "diagnostic.infoSign": ">>",
   "diagnostic.warningSign": "!!",
+  "go.enable": true,
   "highlight.colors.enable": true,
   "highlight.document.enable": true,
   "languageserver": {
@@ -34,6 +35,11 @@
       "filetypes": [ "ocaml", "reason" ]
     }
   },
+  "rust.all_targets": false,
+  "rust.clippy_preference": "on",
+  "rust.full_docs": true,
+  "rust.show_hover_context": true,
+  "rust.wait_to_build": 220,
   "suggest.autoTrigger": "always",
   "suggest.timeout": 1000,
   "suggest.echodocSupport": true,
