@@ -1,14 +1,18 @@
 # Mute Master
-"/usr/bin/amixer -q sset Master toggle"
-  XF86AudioMute
+"/usr/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle"
+	XF86AudioMute
 
 # Increase Volume
-"/usr/bin/amixer set Master 5%+"
-  XF86AudioRaiseVolume
+"/usr/bin/pactl set-sink-volume @DEFAULT_SINK@ +1000"
+	XF86AudioRaiseVolume
 
 # Lower Volume
-"/usr/bin/amixer set Master 5%-"
-  XF86AudioLowerVolume
+"/usr/bin/pactl set-sink-volume @DEFAULT_SINK@ -1000"
+	XF86AudioLowerVolume
+
+# Mute Mic
+"/usr/bin/pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+  XF86AudioMicMute
 
 "/usr/bin/playerctl play-pause"
   XF86AudioPlay
@@ -20,9 +24,9 @@
   XF86AudioPrev
 
 # Increase Brightness
-"/usr/bin/light -A 2"
+"/usr/bin/xbacklight -inc 5"
   XF86MonBrightnessUp
 
 # Lower Brighness
-"/usr/bin/light -U 2"
+"/usr/bin/xbacklight -dec 5"
   XF86MonBrightnessDown
