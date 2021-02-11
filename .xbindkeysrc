@@ -1,14 +1,23 @@
 # Mute Master
 "/usr/bin/amixer -q sset Master toggle"
-	XF86AudioMute
+  XF86AudioMute
 
 # Increase Volume
 "/usr/bin/amixer set Master 5%+"
-	XF86AudioRaiseVolume
+  XF86AudioRaiseVolume
 
 # Lower Volume
 "/usr/bin/amixer set Master 5%-"
-	XF86AudioLowerVolume
+  XF86AudioLowerVolume
+
+"/usr/bin/playerctl play-pause"
+  XF86AudioPlay
+
+"/usr/bin/playerctl next"
+  XF86AudioNext
+
+"/usr/bin/playerctl previous"
+  XF86AudioPrev
 
 # Increase Brightness
 "/usr/bin/light -A 2"
