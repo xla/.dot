@@ -81,7 +81,7 @@ myKeys home conf@XConfig { XMonad.modMask = modMask } =
        , ((modMask, xK_u),               sendMessage MirrorShrink)
        , ((modMask, xK_o),               sendMessage MirrorExpand)
        , ((modMask, xK_p),               rofi)
-       , ((modMask .|. shiftMask, xK_q), confirmPrompt myXPConfig "Exit?" $ io (exitWith ExitSuccess))
+       -- , ((modMask .|. shiftMask, xK_q), confirmPrompt myXPConfig "Exit?" $ io (exitWith ExitSuccess))
        ]
 
 myLayout = ResizableTall 1 (3/100) (1/2) [] ||| Mirror (Tall 1 (3/100) (1/2)) ||| Full ||| ThreeColMid 1 (3/100) (1/2)
@@ -100,8 +100,8 @@ myXPConfig = def
   , bgColor           = "#000"
 }
 
-confirmPrompt :: XPConfig -> String -> X () -> X ()
-confirmPrompt config app func = mkXPrompt (EnterPrompt app) config (mkComplFunFromList []) $ const func
+-- confirmPrompt :: XPConfig -> String -> X () -> X ()
+-- confirmPrompt config app func = mkXPrompt (EnterPrompt app) config (mkComplFunFromList []) $ const func
 
 rofi :: X ()
 rofi = safeSpawn
@@ -109,7 +109,7 @@ rofi = safeSpawn
            , "-auto-select"
            , "-color-normal", "#000,#888,#000,#000,#fff"
            , "-color-window", "#000,#000,#333"
-           , "-font", "FiraMono 22"
+           , "-font", "FiraMono 12"
            , "-hide-scrollbar"
            , "-levenshtein-sort"
            , "-line-margin", "0"
