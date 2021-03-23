@@ -9,6 +9,7 @@ xset r rate 160 80                   # Sane repeat rate
 xset -b                              # No bell
 # order: STANDBY SUSPEND OFF
 xset dpms 180 210 240                # Energy mode switch in sec
+xset dpms force off
 xset s 180 0                         # Sets the timeout for the screen saver in sec
 xset m 7/5 0                         # Pointer settings
 setxkbmap -option compose:super      # Set compose key to R-Alt
@@ -33,5 +34,10 @@ if [ -f ~/.Xresources ]; then
 fi
 
 xss-lock -- /usr/bin/slock &
+
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+export SSH_AUTH_SOCK
+
+source /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
 
 exec xmonad
