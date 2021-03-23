@@ -223,6 +223,7 @@ au FileType                    pandoc      setlocal nonumber
 au FileType                    markdown    setlocal nonumber
 au FileType                    fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
 au BufNewFile,BufReadPost      *.md        set filetype=markdown
+au BufNewFile,BufRead          *.tsx,*.jsx set filetype=typescriptreact
 
 " rust.vim sets the filetype for Cargo.toml to cfg, which confuses vim-toml
 au BufNewFile,BufRead *.toml,Gopkg.lock,Cargo.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setf toml
@@ -286,12 +287,19 @@ function! PackInit() abort
     " rust
     call minpac#add('rust-lang/rust.vim')
 
+    " solidity
+    call minpac#add('tomlion/vim-solidity')
+
     " svelte
+    call minpac#add('leafgarland/typescript-vim')
     call minpac#add('evanleck/vim-svelte')
 
     " terraform
     call minpac#add('hashivim/vim-terraform')
     call minpac#add('juliosueiras/vim-terraform-completion')
+
+    " typescript
+    call minpac#add('peitalin/vim-jsx-typescript')
   endif
 endfunction
 
