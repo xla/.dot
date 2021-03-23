@@ -30,7 +30,7 @@
 [user]
   name = Alexander Simmerl
   email = a.simmerl@gmail.com
-  signingkey = 630364069600339B
+  signingkey = E6C6C5C056FAA75E
 [core]
   editor = nvim
 [commit]
