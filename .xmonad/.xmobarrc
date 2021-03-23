@@ -23,7 +23,7 @@ Config
     , Run Brightness [ "-t", "<vbar>", "--", "-D", "intel_backlight" ] 10
     , Run Com        "xmobar-dropbox-status" [] "dropbox" 100
     , Run MultiCpu   [ "-t"
-                     , "<vbar0> <vbar1> <vbar1> <vbar3> <vbar4> <vbar5> <vbar6> <vbar7> <vbar8> <vbar9> <vbar10> <vbar11>"
+                     , "<vbar0> <vbar1> <vbar1> <vbar3> <vbar4> <vbar5> <vbar6> <vbar7>"
                      ]
                      10
     , Run DiskU      [ ( "nvme0n1p5", "<freevbar>" )
