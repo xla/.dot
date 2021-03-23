@@ -1,0 +1,41 @@
+[alias]
+  amend = commit --amend -C HEAD --signoff
+  br = branch
+  ci = commit --signoff
+  co = checkout
+  dump = cat-file -p
+  fs = flow feature start
+  ff = flow feature finish
+  fco = flow feature checkout
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  l = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
+  lol = log --pretty=oneline --abbrev-commit --graph --decorate
+  st = status -sb
+  staged = diff --cached
+  type = cat-file -t
+  lastchange = log -p --follow -n 1
+[apply]
+  whitespace = warn
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = true
+[help]
+  autocorrect = 1
+[push]
+  default = current
+[status]
+  submodule = 1
+[user]
+  name = Alexander Simmerl
+  email = a.simmerl@gmail.com
+  signingkey = 630364069600339B
+[core]
+  editor = nvim
+[commit]
+  gpgsign = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
