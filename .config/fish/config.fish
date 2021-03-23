@@ -7,13 +7,18 @@ set -x GPG_TTY (tty)
 set -x GOPATH $HOME/dev
 set -x GOBIN $GOPATH/bin
 
+set -x NIX_LINK $HOME/.nix-profile
+
 set -x CARGOBIN ~/.cargo/bin
+set -x GEMBIN ~/.local/share/gem/ruby/2.7.0/bin
 set -x LOCALBIN ~/.local/bin
 set -x NPM ~/.node_modules/bin
 set -x NPMLOCAL node_modules/.bin
 set -x npm_config_prefix ~/.node_modules
 
-set -x PATH $LOCALBIN $NPMLOCAL $NPM $CARGOBIN $GOBIN $GAPP $PATH
+set -x RADBIN ~/.radicle/bin
+
+set -x PATH $RADBIN $CARGOBIN $GAPP $GEMBIN $GOBIN $LOCALBIN $NPM $NPMLOCAL $PATH
 
 set -x FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 
@@ -51,4 +56,8 @@ else
 end
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/xla/.dot/.local/bin/google-cloud-sdk/path.fish.inc' ]; . '/home/xla/.dot/.local/bin/google-cloud-sdk/path.fish.inc'; end
+if [ -f '/home/xla/.local/bin/google-cloud-sdk/path.fish.inc' ]; . '/home/xla/.local/bin/google-cloud-sdk/path.fish.inc'; end
+
+if test -n "$DESKTOP_SESSION"
+    set -x (gnome-keyring-daemon --start | string split "=")
+end
