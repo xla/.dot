@@ -1,0 +1,10 @@
+#!/bin/sh
+
+status="$(nordvpn status | awk 'NR==1 {print $4}')"
+
+case $status in
+	"Connected")
+		echo "✔" ;;
+	*)
+		echo "✘" ;;
+esac
