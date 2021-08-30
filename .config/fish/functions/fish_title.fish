@@ -9,7 +9,7 @@ function fish_title
     if test $command = "fish"
         # we are sitting at the fish prompt
 
-        if git rev-parse --git-dir > /dev/null ^ /dev/null
+        if git rev-parse --git-dir 2> /dev/null
             # we are inside a git directory, so use the name of the repo as the terminal title
 
             set -l git_dir (git rev-parse --git-dir)
