@@ -300,6 +300,12 @@ function! PackInit() abort
 
     " typescript
     call minpac#add('peitalin/vim-jsx-typescript')
+
+    " writer
+    call minpac#add('junegunn/goyo.vim')
+    call minpac#add('junegunn/limelight.vim')
+    call minpac#add('reedes/vim-colors-pencil')
+    call minpac#add('subnut/vim-iawriter')
   endif
 endfunction
 
