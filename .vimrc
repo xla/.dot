@@ -245,6 +245,9 @@ function! PackInit() abort
     " git
     " call minpac#add('mhinz/vim-signify')
 
+    " fish
+    call minpac#add('dag/vim-fish')
+
     " navigation
     call minpac#add('cloudhead/neovim-fuzzy')
     call minpac#add('jremmen/vim-ripgrep')
