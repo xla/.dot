@@ -1,41 +1,43 @@
 [alias]
-  amend = commit --amend -C HEAD --signoff
-  br = branch
-  ci = commit --signoff
-  co = checkout
-  dump = cat-file -p
-  fs = flow feature start
-  ff = flow feature finish
-  fco = flow feature checkout
-  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-  l = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
-  lol = log --pretty=oneline --abbrev-commit --graph --decorate
-  st = status -sb
-  staged = diff --cached
-  type = cat-file -t
-  lastchange = log -p --follow -n 1
+	amend = commit --amend -C HEAD --signoff
+	br = branch
+	ci = commit --signoff
+	co = checkout
+	dump = cat-file -p
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	l = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
+	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+	st = status -sb
+	staged = diff --cached
+	type = cat-file -t
+	lastchange = log -p --follow -n 1
 [apply]
-  whitespace = warn
+	whitespace = warn
 [color]
-  diff = auto
-  status = auto
-  branch = auto
-  ui = true
+	diff = auto
+	status = auto
+	branch = auto
+	ui = true
 [help]
-  autocorrect = 1
+	autocorrect = 1
 [push]
-  default = current
+	default = current
 [status]
-  submodule = 1
+	submodule = 1
 [user]
-  name = Alexander Simmerl
-  email = a.simmerl@gmail.com
-  signingkey = E6C6C5C056FAA75E
+	name = xla
+	email = self@xla.is
+	signingkey = A364EACF574E8E2C
 [core]
-  editor = nvim
+	editor = nvim
 [commit]
-  gpgsign = true
+	gpgsign = true
 [pull]
 	rebase = true
 [init]
 	defaultBranch = main
+[sendemail]
+	smtpEncryption = ssl
+	smtpServer = smtp.migadu.com
+	smtpUser = self@xla.is
+	smtpServerPort = 465

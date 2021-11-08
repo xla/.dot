@@ -207,23 +207,37 @@ nmap <leader>m :make!<cr>
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 " Per file-type indentation
-au FileType                    haskell     setlocal sts=4 sw=4 expandtab
-au FileType                    elm         setlocal sts=4 sw=4 expandtab
-au FileType                    javascript  setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
-au FileType                    css         setlocal ts=2  sw=2 noexpandtab
-au FileType                    go          setlocal ts=4  sw=4 noexpandtab
-au BufNewFile,BufRead,FileType *.go        setlocal ts=4  sw=4 noexpandtab
-au FileType                    c,cpp,glsl  setlocal ts=8  sw=8 noexpandtab
-au FileType                    lua         setlocal       sw=4 expandtab
-au FileType                    sh,zsh      setlocal ts=2  sw=2 noexpandtab
-au FileType                    vim,ruby    setlocal sts=2 sw=2 expandtab
-au FileType                    help        setlocal ts=4  sw=4 noexpandtab
-au FileType                    txt         setlocal noai nocin nosi inde= wrap linebreak
-au FileType                    pandoc      setlocal nonumber
-au FileType                    markdown    setlocal nonumber
-au FileType                    fountain    setlocal nonumber noai nocin nosi inde= wrap linebreak
-au BufNewFile,BufReadPost      *.md        set filetype=markdown
-au BufNewFile,BufRead          *.tsx,*.jsx set filetype=typescriptreact
+au FileType                     haskell         setlocal sts=4 sw=4 expandtab
+au FileType                     elm             setlocal sts=4 sw=4 expandtab
+au FileType                     javascript      setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
+au FileType                     css             setlocal ts=2  sw=2 noexpandtab
+au FileType                     go              setlocal ts=4  sw=4 noexpandtab
+au BufNewFile,BufRead,FileType  *.go            setlocal ts=4  sw=4 noexpandtab
+au FileType                     c,cpp,glsl      setlocal ts=8  sw=8 noexpandtab
+au FileType                     lua             setlocal       sw=4 expandtab
+au FileType                     sh,zsh          setlocal ts=2  sw=2 noexpandtab
+au FileType                     vim,ruby        setlocal sts=2 sw=2 expandtab
+au FileType                     help            setlocal ts=4  sw=4 noexpandtab
+au FileType                     txt             setlocal noai nocin nosi inde= wrap linebreak
+au FileType                     pandoc          setlocal nonumber
+au FileType                     markdown        setlocal nonumber
+au FileType                     fountain        setlocal nonumber noai nocin nosi inde= wrap linebreak
+au BufNewFile,BufReadPost       *.md            set filetype=markdown
+au BufNewFile,BufRead           *.tsx,*.jsx     set filetype=typescriptreact
+
+augroup configgroup
+    autocmd!
+
+    "Set Pollen syntax for files with these extensions:
+    au! BufRead,BufNewFile *.p set filetype=pollen
+    au! BufRead,BufNewFile *.pm set filetype=pollen
+    au! BufRead,BufNewFile *.pp set filetype=pollen
+    au! BufRead,BufNewFile *.ptree set filetype=pollen
+
+    " Suggested editor settings:
+    autocmd FileType pollen setlocal wrap      " Soft wrap (don't affect buffer)
+    autocmd FileType pollen setlocal linebreak " Wrap on word-breaks only
+augroup END
 
 " rust.vim sets the filetype for Cargo.toml to cfg, which confuses vim-toml
 au BufNewFile,BufRead *.toml,Gopkg.lock,Cargo.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setf toml
@@ -236,17 +250,11 @@ function! PackInit() abort
     call minpac#init()
     call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-    " colorscheme
-    call minpac#add('cloudhead/shady.vim')
-
     " comments
     call minpac#add('tpope/vim-commentary')
 
     " git
     " call minpac#add('mhinz/vim-signify')
-
-    " fish
-    call minpac#add('dag/vim-fish')
 
     " navigation
     call minpac#add('cloudhead/neovim-fuzzy')
@@ -272,6 +280,9 @@ function! PackInit() abort
     " graphql
     call minpac#add('jparise/vim-graphql')
 
+    " latex
+    call minpac#add('lervag/vimtex')
+
     " pico8
     " call minpac#add('justinj/vim-pico8-syntax')
 
@@ -284,11 +295,21 @@ function! PackInit() abort
     call minpac#add('reasonml-editor/vim-reason-plus')
     call minpac#add('sbdchd/neoformat')
 
+    " one
+    call minpac#add('rakr/vim-one')
+
+    " racket
+    call minpac#add('otherjoel/vim-pollen')
+    call minpac#add('wlangstroth/vim-racket')
+
     " rst
     call minpac#add('gu-fan/riv.vim')
 
     " rust
     call minpac#add('rust-lang/rust.vim')
+
+    " shady
+    call minpac#add('cloudhead/shady.vim')
 
     " solidity
     call minpac#add('tomlion/vim-solidity')
@@ -309,6 +330,7 @@ function! PackInit() abort
     call minpac#add('junegunn/limelight.vim')
     call minpac#add('reedes/vim-colors-pencil')
     call minpac#add('subnut/vim-iawriter')
+    call minpac#add('preservim/vim-pencil')
   endif
 endfunction
 
@@ -323,9 +345,9 @@ packloadall
 silent! helptags ALL
 
 " colors
-set background=dark
 try
   colorscheme shady
+  set background=dark
 catch
 endtry
 
@@ -369,6 +391,10 @@ imap <c-space> coc#refresh()
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " use <c-space>for trigger completion
 imap <c-space> coc#refresh()
+
+" shortcuts for rakcet & pollen
+imap <C-L> λ
+imap <C-E> ◊
 
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
@@ -431,6 +457,29 @@ let g:rustfmt_autosave = 1
 " terraform
 let g:terraform_align=1
 let g:terraform_fmt_on_save=1
+
+" vimtex
+let g:vimtex_view_general_viewer = 'mupdf'
+let g:vimtex_view_general_options
+    \ = '-reuse-instance -forward-search @tex @line @pdf'
+" let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+let g:tex_flavor  = 'xelatex'
+let g:tex_conceal = ''
+let g:vimtex_fold_manual = 1
+let g:vimtex_compiler_latexmk = {
+        \ 'executable' : 'latexmk',
+        \ 'options' : [
+        \   '-xelatex',
+        \   '-file-line-error',
+        \   '-synctex=1',
+        \   '-interaction=nonstopmode',
+        \ ],
+        \}
+
+nnoremap <leader>c :VimtexCompile<cr>
+
+" writer
+let g:pencil_higher_contrast_ui = 1
 
 " custom highlight
 hi User1 ctermbg=black ctermfg=red guibg=black guifg=red

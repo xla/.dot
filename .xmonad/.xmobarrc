@@ -10,7 +10,7 @@ Config
   , template = "%StdinReader% }{ %dropbox% %vpn% ┊ %multicpu% ┊ %memory% ┊ %disku% ┊ %battery% ┊ %bright% %default:Master% ┊ %wlan0wi%"
   , commands =
     [ Run Battery    [ "--template" , "<acstatus>"
-                     , "--Low"      , "5"
+                     , "--Low"      , "10"
                      , "--low"      , "#b03060"
                      , "--" -- battery specific options
                            -- discharging status
@@ -22,6 +22,7 @@ Config
                      ] 100
     , Run Brightness [ "-t", "<vbar>", "--", "-D", "intel_backlight" ] 10
     , Run Com        "xmobar-dropbox-status" [] "dropbox" 100
+    , Run Com        "xmobar-nordvpn-status" [] "vpn" 100
     , Run MultiCpu   [ "-t"
                      , "<vbar0> <vbar1> <vbar1> <vbar3> <vbar4> <vbar5> <vbar6> <vbar7>"
                      ]
