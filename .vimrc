@@ -320,7 +320,7 @@ function! PackInit() abort
 
     " terraform
     call minpac#add('hashivim/vim-terraform')
-    call minpac#add('juliosueiras/vim-terraform-completion')
+    " call minpac#add('juliosueiras/vim-terraform-completion')
 
     " typescript
     call minpac#add('peitalin/vim-jsx-typescript')
@@ -504,3 +504,6 @@ endfunction
 function! s:BufferCount() abort
     return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()

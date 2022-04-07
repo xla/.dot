@@ -1,5 +1,4 @@
 {
-  "coc.preferences.colorSupport": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "html",
@@ -9,18 +8,16 @@
     "rust",
     "yaml"
   ],
-  "coc.preferences.previewAutoClose": true,
   "coc.source.around.enable": false,
   "coc.source.buffer.enable": false,
-  "coc.source.emoji.enable": true,
   "coc.source.file.enable": true,
   "codeLens.enable": true,
+  "codeLens.position": "eol",
   "codeLens.separator": "‣",
   "diagnostic.displayByAle": false,
   "diagnostic.enableMessage": "always",
   "diagnostic.enable": true,
   "diagnostic.level": "hint",
-  "diagnostic.highlightOffset": 1000,
   "diagnostic.refreshOnInsertMode": true,
   "diagnostic.virtualTextLines": 1,
   "diagnostic.virtualTextLineSeparator": " \\ ",
@@ -30,20 +27,29 @@
   "diagnostic.hintSign": "__",
   "diagnostic.infoSign": ">>",
   "diagnostic.warningSign": "!!",
-  "eslint.autoFixOnSave": true,
-  "highlight.colors.enable": true,
-  "highlight.document.enable": true,
+  "languageserver": {
+		"terraform": {
+			"command": "terraform-ls",
+			"args": ["serve"],
+			"filetypes": [
+				"terraform",
+				"tf"
+			],
+			"initializationOptions": {},
+			"settings": {}
+		}
+	},
+  "rust-analyzer.cache.warmup": true,
+  "rust-analyzer.callInfo.full": true,
   "rust-analyzer.cargo.allFeatures": true,
+  "rust-analyzer.cargo.runBuildScripts": true,
   "rust-analyzer.checkOnSave.allTargets": true,
   "rust-analyzer.experimental.procAttrMacros": true,
   "rust-analyzer.lens.enable": true,
   "rust-analyzer.procMacro.enable": true,
-  "rust-analyzer.cargo.runBuildScripts": true,
-  "rust-analyzer.callInfo.full": true,
   "suggest.autoTrigger": "always",
   "suggest.timeout": 1000,
   "suggest.echodocSupport": true,
-  "prettier.eslintIntegration": true,
   "prettier.requireConfig": true,
   "prettier.semi": false,
   "yaml.format.enable": true,
