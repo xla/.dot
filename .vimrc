@@ -482,9 +482,35 @@ nnoremap <leader>c :VimtexCompile<cr>
 let g:pencil_higher_contrast_ui = 1
 
 " custom highlight
-hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
+" hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
 hi CocErrorSign ctermfg=red guibg=black guifg=red
 hi CocWarningSign ctermfg=yellow guibg=black guifg=yello
+
+" CoC
+hi link CocErrorVirtualText    Error
+hi link CocErrorSign           Error
+hi      CocErrorHighlight      cterm=undercurl guisp=#B03060
+hi link CocErrorFloat          Error
+
+hi link CocWarningVirtualText  Warning
+hi link CocWarningSign         Warning
+hi      CocWarningHighlight    cterm=undercurl guisp=#FFE4B5
+
+hi link CocInfoVirtualText     Alternative
+hi link CocInfoSign            Alternative
+hi      CocInfoHighlight       cterm=underline guisp=blue
+
+hi link CocHintVirtualText     Alternative
+hi link CocHintSign            Alternative
+hi      CocHintHighlight       cterm=none guisp=blue
+hi      CocUnusedHighlight     ctermfg=246 cterm=strikethrough
+
+hi link CocRustChainingHint    Hint
+" These only use an 'undercurl'. The colors used are
+" 'maroon' and 'moccasin'.
+hi link CocHintSign            Hint
+hi link CocCodeLens            DarkGrey
+hi link CocFloating            Pmenu
 
 " helper functions
 command! LToggle call s:LListToggle()
