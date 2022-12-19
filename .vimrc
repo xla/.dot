@@ -533,3 +533,4 @@ endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+nmap <c-a> <Plug>(coc-codeaction)

@@ -27,11 +27,11 @@
 [user]
 	name = xla
 	email = self@xla.is
-	signingkey = A364EACF574E8E2C
+  # signingkey = A364EACF574E8E2C
 [core]
 	editor = nvim
 [commit]
-	gpgsign = true
+  # gpgsign = true
 [pull]
 	rebase = true
 [init]

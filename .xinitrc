@@ -8,9 +8,9 @@ export PATH="/home/xla/.local/bin:$PATH"
 xset r rate 160 80                   # Sane repeat rate
 xset -b                              # No bell
 # order: STANDBY SUSPEND OFF
-xset dpms 180 210 240                # Energy mode switch in sec
+xset dpms 600 720 900                # Energy mode switch in sec
 xset dpms force off
-xset s 180 0                         # Sets the timeout for the screen saver in sec
+xset s 600 0                         # Sets the timeout for the screen saver in sec
 xset m 7/5 0                         # Pointer settings
 setxkbmap -option compose:super      # Set compose key to R-Alt
 

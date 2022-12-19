@@ -2,7 +2,7 @@
 ! .Xresources
 !
 
-Xft.dpi: 162
+Xft.dpi: 109
 Xft.antialias: 1
 Xft.autohint: 0
 Xft.hinting: 1
