@@ -46,21 +46,21 @@ set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 echo UPDATESTARTUPTTY | gpg-connect-agent -q > /dev/null
 
-# setenv SSH_ENV "/tmp/ssh-environment"
+setenv SSH_ENV "/tmp/ssh-environment"
 
-# if [ -n "$SSH_AGENT_PID" ]
-#   ps -ef | grep $SSH_AGENT_PID | grep ssh-agent > /dev/null
-#   if [ $status -eq 0 ]
-#     test_identities
-#   end
-# else
-#   if [ -f $SSH_ENV ]
-#     . $SSH_ENV > /dev/null
-#   end
-#   ps -ef | grep -v grep | grep ssh-agent > /dev/null
-#   if [ $status -eq 0 ]
-#     test_identities
-#   else
-#     start_agent
-#   end
-# end
+if [ -n "$SSH_AGENT_PID" ]
+  ps -ef | grep $SSH_AGENT_PID | grep ssh-agent > /dev/null
+  if [ $status -eq 0 ]
+    test_identities
+  end
+else
+  if [ -f $SSH_ENV ]
+    . $SSH_ENV > /dev/null
+  end
+  ps -ef | grep -v grep | grep ssh-agent > /dev/null
+  if [ $status -eq 0 ]
+    test_identities
+  else
+    start_agent
+  end
+end
