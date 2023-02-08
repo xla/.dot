@@ -24,9 +24,9 @@
   XF86AudioPrev
 
 # Increase Brightness
-"/usr/bin/xbacklight -inc 2"
+"/usr/bin/light -A 2"
   XF86MonBrightnessUp
 
 # Lower Brighness
-"/usr/bin/xbacklight -dec 2"
+"/usr/bin/light -U 2"
   XF86MonBrightnessDown
