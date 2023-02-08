@@ -334,6 +334,12 @@ function! PackInit() abort
 
     " move
     call minpac#add('rvmelkonian/move.vim')
+
+    " fish
+    call minpac#add('dag/vim-fish')
+
+    " protobuf
+    call minpac#add('uarun/vim-protobuf')
   endif
 endfunction
 
