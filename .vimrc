@@ -340,6 +340,9 @@ function! PackInit() abort
 
     " protobuf
     call minpac#add('uarun/vim-protobuf')
+
+    " d2
+    call minpac#add('terrastruct/d2-vim')
   endif
 endfunction
 
