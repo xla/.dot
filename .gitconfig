@@ -1,43 +1,31 @@
 [alias]
 	amend = commit --amend -C HEAD --signoff
-	br = branch
-	ci = commit --signoff
-	co = checkout
-	dump = cat-file -p
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-	l = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
-	lol = log --pretty=oneline --abbrev-commit --graph --decorate
-	st = status -sb
-	staged = diff --cached
-	type = cat-file -t
-	lastchange = log -p --follow -n 1
+	ci    = commit --signoff
+	co    = checkout
+	l     = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
+	st    = status -sb
 [apply]
 	whitespace = warn
+[commit]
+  gpgsign = true
 [color]
-	diff = auto
-	status = auto
-	branch = auto
-	ui = true
+	diff    = auto
+	status  = auto
+	branch  = auto
+	ui      = true
+[core]
+	editor = nvim
 [help]
 	autocorrect = 1
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
 [push]
 	default = current
 [status]
 	submodule = 1
 [user]
-	name = xla
-	email = self@xla.is
-  # signingkey = A364EACF574E8E2C
-[core]
-	editor = nvim
-[commit]
-  # gpgsign = true
-[pull]
-	rebase = true
-[init]
-	defaultBranch = main
-[sendemail]
-	smtpEncryption = ssl
-	smtpServer = smtp.migadu.com
-	smtpUser = self@xla.is
-	smtpServerPort = 465
+	name        = xla
+	email       = self@xla.is
+  signingkey  = 4AFF44222AF43F8F
