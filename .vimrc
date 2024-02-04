@@ -422,10 +422,10 @@ imap <C-E> ◊
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Remap keys for gotos
-nmap <silent> gd :call CocAction('jumpDefinition')<cr>
-nmap <silent> gj :call CocAction('jumpTypeDefinition')<cr>
-nmap <silent> gi :call CocAction('jumpImplementation')<cr>
-nmap <silent> gr :call CocAction('jumpReferences')<cr>
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <sid>show_documentation()<cr>
