@@ -24,9 +24,9 @@
   XF86AudioPrev
 
 # Increase Brightness
-"/usr/bin/light -A 2"
+"/home/xla/.cargo/bin/blight inc 10"
   XF86MonBrightnessUp
 
 # Lower Brighness
-"/usr/bin/light -U 2"
+"/home/xla/.cargo/bin/blight dec 10"
   XF86MonBrightnessDown
