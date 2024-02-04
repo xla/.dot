@@ -1,3 +1,0 @@
-#!/bin/bash
-
-sensors -A | grep $1 | awk '{print $2}' | sed 's/$//'

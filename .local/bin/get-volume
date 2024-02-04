@@ -1,3 +1,0 @@
-#!/bin/sh
-
-amixer | grep 'dB' | head -n 1 | awk -F"[][]" '/dB/ { print $2 }'

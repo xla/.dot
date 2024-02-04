@@ -476,6 +476,8 @@ let g:riv_fold_auto_update = 0
 
 " rust
 let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_command = 'rustfmt +nightly'
 
 " terraform
 let g:terraform_align=1
