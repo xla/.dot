@@ -8,21 +8,18 @@ set -x XDG_DATA_HOME    $HOME/.local/share
 
 set -x GNUPGHOME  $HOME/.gnupg
 
-set -x NPM                $HOME/.node_modules/bin
-set -x NPMLOCAL           node_modules/.bin
 set -x npm_config_prefix  $HOME/.node_modules
 
 set -x CARGOBIN $HOME/.cargo/bin
+set -x CUDABIN  /opt/cuda/bin
 set -x GEMBIN   $HOME/.local/share/gem/ruby/2.7.0/bin
 set -x GOBIN    $XDG_BIN_HOME
 set -x GOPATH   $HOME
-set -x NIX_LINK $HOME/.nix-profile
+set -x NPM      $HOME/.node_modules/bin
+set -x NPMLOCAL node_modules/.bin
 set -x RADBIN   $HOME/.radicle/bin
 
-set -x PATH $XDG_BIN_HOME $RADBIN $CARGOBIN $GEMBIN $GOBIN $NPM $NPMLOCAL $PATH
-
-set -x NOTMUCH_CONFIG $XDG_CONFIG_HOME/notmuch/notmuchrc
-set -x NMBGIT         $XDG_DATA_HOME/notmuch/nmbug
+set -x PATH $XDG_BIN_HOME $CARGOBIN $CUDABIN $GEMBIN $GOBIN $NPM $NPMLOCAL $RADBIN $PATH
 
 set -x FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 set -x LESS '-asrRix8'
@@ -37,7 +34,6 @@ alias ga 'git add'
 alias gl 'git pull'
 alias gp 'git push'
 alias l 'ls -lah'
-# alias mbsync 'mbsync -c $XDG_CONFIG_HOME/isync/config'
 alias vi vim
 alias vim nvim
 
