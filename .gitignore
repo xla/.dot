@@ -6,8 +6,7 @@
 .config/fish/completions
 .config/fish/fish_variables
 
-.local/share
-.local/state
+.local
 
 .vim/pack
 .vim/sessions
