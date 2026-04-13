@@ -1,74 +1,152 @@
+// Required Coc extensions:
+// :CocInstall coc-json coc-eslint coc-prettier coc-yaml coc-tsserver coc-svelte coc-lua coc-rust-analyzer
+//
+// Notes:
+// - coc-settings.json supports JSONC comments. :contentReference[oaicite:0]{index=0}
+// - coc-eslint deprecates eslint.autoFixOnSave in favor of editor.codeActionsOnSave. :contentReference[oaicite:1]{index=1}
+// - coc-rust-analyzer settings are defined by the extension schema, so keep only supported rust-analyzer keys. :contentReference[oaicite:2]{index=2}
 {
-  "coc.preferences.formatOnSaveFiletypes": [
-    "css",
-    "html",
-    "javascript",
-    "json",
-    "ocaml",
-    "rust",
-    "yaml"
-  ],
+  // -------------------------------------------------------------------------
+  // Formatting
+  // -------------------------------------------------------------------------
+  // Use per-language format-on-save overrides.
+  "[css]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[html]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[javascript]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[json]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[markdown]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[rust]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[svelte]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[typescript]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[yaml]": {
+    "coc.preferences.formatOnSave": true
+  },
+  // Prettier should only run when a project config exists.
+  "prettier.requireConfig": true,
+  // Keep your no-semicolon preference.
+  "prettier.semi": false,
+  // ESLint fixes on save through code actions.
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  // YAML language features.
+  "yaml.format.enable": true,
+  "yaml.validate": true,
+  // -------------------------------------------------------------------------
+  // Completion sources
+  // -------------------------------------------------------------------------
+  // Disable noisy local-word completion sources.
   "coc.source.around.enable": false,
   "coc.source.buffer.enable": false,
+  // Keep file path completion.
   "coc.source.file.enable": true,
-  "codeLens.enable": true,
-  "codeLens.position": "eol",
-  "codeLens.separator": "‣",
-  "diagnostic.checkCurrentLine": true,
-  "diagnostic.displayByAle": false,
-  "diagnostic.enableMessage": "always",
+  // Keep suggestions automatically triggered, but not sluggish.
+  "suggest.autoTrigger": "always",
+  "suggest.timeout": 500,
+  // -------------------------------------------------------------------------
+  // Diagnostics
+  // -------------------------------------------------------------------------
+  // Keep diagnostics enabled.
   "diagnostic.enable": true,
-  "diagnostic.level": "hint",
-  "diagnostic.messageLevel": "hint",
+  // Normal editing should focus on warnings and errors only.
+  "diagnostic.level": "warning",
+  "diagnostic.messageLevel": "warning",
+  // Re-check current line, but do not churn while typing.
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.refreshOnInsertMode": false,
+  // Keep auto float for diagnostic detail.
+  "diagnostic.enableMessage": "always",
   "diagnostic.messageTarget": "float",
-  "diagnostic.refreshOnInsertMode": true,
   "diagnostic.floatConfig": {
     "focusable": false,
     "highlight": "CocFloating"
   },
+  // Keep virtual text for warnings/errors across the file.
+  // Restrict it to one rendered line per source line.
   "diagnostic.virtualText": true,
   "diagnostic.virtualTextCurrentLineOnly": false,
-  "diagnostic.virtualTextLevel": "hint",
+  "diagnostic.virtualTextLevel": "warning",
   "diagnostic.virtualTextLines": 1,
-  "diagnostic.virtualTextLineSeparator": " \\ ",
-  "diagnostic.virtualTextPrefix": "■ ",
-  "diagnostic.virtualTextWinCol": null,
+  "diagnostic.virtualTextPrefix": "",
+  "diagnostic.virtualTextLineSeparator": " ",
+  // Keep your preferred signs.
   "diagnostic.errorSign": "XX",
-  "diagnostic.hintSign": "__",
-  "diagnostic.infoSign": ">>",
   "diagnostic.warningSign": "!!",
-  "languageserver": {
-		"terraform": {
-			"command": "terraform-ls",
-			"args": ["serve"],
-			"filetypes": [
-				"terraform",
-				"tf"
-			],
-			"initializationOptions": {},
-			"settings": {}
-		}
-	},
-  "eslint.autoFixOnSave": true,
-  "highlight.colors.enable": true,
-  "highlight.document.enable": true,
-  "prettier.requireConfig": true,
-  "prettier.semi": false,
+  // Keep lower severities quiet in case they surface anywhere.
+  "diagnostic.infoSign": ">>",
+  "diagnostic.hintSign": "__",
+  // -------------------------------------------------------------------------
+  // Visual noise reduction
+  // -------------------------------------------------------------------------
+  // Disable code lens entirely.
+  "codeLens.enable": false,
+  // -------------------------------------------------------------------------
+  // Rust / rust-analyzer
+  // -------------------------------------------------------------------------
+
+  // Cargo / macro support.
   "rust-analyzer.cargo.autoreload": true,
   "rust-analyzer.cargo.buildScripts.enable": true,
   "rust-analyzer.check.allTargets": true,
+  "rust-analyzer.procMacro.enable": true,
+
+  // Keep auto import on completion.
   "rust-analyzer.completion.autoimport.enable": true,
+
+  // Keep diagnostics enabled.
   "rust-analyzer.diagnostics.enable": true,
-  "rust-analyzer.inlayHints.maxLength": 25,
-  "rust-analyzer.inlayHints.parameterHints.enable": false,
-  "rust-analyzer.inlayHints.renderColons": true,
-  "rust-analyzer.lens.enable": true,
+
+  // Disable lens-style extras.
+  "rust-analyzer.lens.enable": false,
   "rust-analyzer.lens.run.enable": false,
   "rust-analyzer.lens.debug.enable": false,
-  "rust-analyzer.procMacro.enable": true,
-  "suggest.autoTrigger": "always",
-  "suggest.timeout": 1000,
+
+  // Disable inline hints that shift code.
+  "rust-analyzer.inlayHints.typeHints.enable": false,
+  "rust-analyzer.inlayHints.parameterHints.enable": false,
+  "rust-analyzer.inlayHints.chainingHints.enable": false,
+  "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+  "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "never",
+  "rust-analyzer.inlayHints.lifetimeElisionHints.enable": "never",
+  "rust-analyzer.inlayHints.renderColons": false,
+  "rust-analyzer.inlayHints.maxLength": 25,
+  // -------------------------------------------------------------------------
+  // Svelte
+  // -------------------------------------------------------------------------
+  // Keep TypeScript integration inside Svelte.
   "svelte.enable-ts-plugin": true,
-  "yaml.format.enable": true,
-  "yaml.validate": true
+  // -------------------------------------------------------------------------
+  // Optional language servers
+  // -------------------------------------------------------------------------
+  // Keep Terraform only if you still occasionally open it.
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": [
+        "serve"
+      ],
+      "filetypes": [
+        "terraform",
+        "tf"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  }
 }

@@ -1,562 +1,452 @@
-" For a paranoia.
-" Normally `:set nocp` is not needed, because it is done automatically
-" when .vimrc is found.
+" ---------------------------------------------------------------------------
+" Compatibility
+" ---------------------------------------------------------------------------
+
+" Normally `:set nocompatible` is not needed because it is done automatically
+" when a vimrc is found, but keep the explicit guard for safety.
 if &compatible
-  " `:set nocp` has many side effects. Therefore this should be done
-  " only when 'compatible' is set.
   set nocompatible
 endif
 
-set shell=/bin/sh
-
-filetype off
-" force reload of ftdetect files
+" Enable filetype detection, filetype plugins and indentation rules.
 filetype plugin indent on
 
+
+" ---------------------------------------------------------------------------
+" Core editor behaviour
+" ---------------------------------------------------------------------------
+
 set mouse=a
-" hide buffers instead of closing them
+" allow switching buffers without forcing writes
 set hidden
-" use correct amount of spaces for a tab in insert mode
+
+" use spaces instead of tab characters by default
 set expandtab
-" a tab is two spaces
+" default tab width for general web-oriented editing
 set tabstop=2
 set softtabstop=2
-" number of spaces to use for autoindenting
+" indentation width for >> << and autoindent
 set shiftwidth=2
-" use multiple of shiftwidth when indenting with '<' and '>'
+" round indent operations to multiples of shiftwidth
 set shiftround
-" avoid modeline vulnerabilities
+
+" disable modelines for safety
 set modelines=0
-" allow backspacing over everything in insert mode
+" allow backspacing over indentation, line breaks and insert start
 set backspace=indent,eol,start
-" insert tabs on the start of a line according to shiftwidth, not tabstop
-set smarttab
-" copies indentation from previous line
+" preserve indentation from previous line
 set autoindent
-" copy the previous indentation on autoindenting
+" copy existing indentation structure where possible
 set copyindent
-" always show line numbers
+
+" always show absolute line numbers
 set number
-" set show matching parenthesis
-set showmatch
-" ignore case when searching
+
+" ignore case when searching...
 set ignorecase
-" ignore case if search pattern is all lowercase, case-sensitive otherwise
+" ...unless the pattern contains uppercase characters
 set smartcase
-" highlight search terms
+" keep search matches highlighted
 set hlsearch
-" show search matches as you type
+" show matches while typing the search pattern
 set incsearch
-" remember more commands and search history
-set history=1000
-" use many muchos levels of undo
-set undolevels=1000
-set wildignore+=*.swp,*.bak,*.pyc,*.class,.git,node_modules/**,**Godeps
-set wildignore+=*Godeps
-" change the terminal's title
-set title
-" don't beep
-set novisualbell
-" don't beep
-set noerrorbells
-" prevent auto indentation when pasting
-" set pastetoggle=<F2>
-nnoremap <F2> :set invpaste paste?<CR>
-" font family & size
-set guifont=PragmataProLiga-Regular:h18
-" use utf-8 everywhere
-set encoding=utf-8
-" minimal lines to kepp above and below screen
+
+" keep a few context lines visible above and below the cursor
 set scrolloff=3
-" display the mode you're in.
-set showmode
-" display incomplete commands.
-set showcmd
-" enhanced completion
-set wildmenu
-" enhanced completion
-set wildmode=list:longest
-" disable folding
+
+" disable code folding by default to reduce UI clutter
 set nofoldenable
-" highlight the line of the cursor
-" set cursorline
-" avoid excessive redraws
-set lazyredraw
-" smooth and fast redrawing
-set ttyfast
-" show line and column info
-set ruler
-" wrap text if longer than window width
-set wrap
-" max text insertion width before breakage
-set textwidth=79
-" description of automatic formatting
-set formatoptions=qrn1
-" auto-save the file on different commands
+
+" automatically write buffers on commands like :next, :make, etc.
 set autowriteall
-" Suffixes that get lower priority when doing tab completion for filenames.
-set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,.pyc,.class,.jar 
-" EOL for current buffer
+
+" default to unix line endings
 set fileformat=unix
-" list of EOL formats to try
+" formats to try when reading files
 set fileformats=unix,dos,mac
-" store history information
-set viminfo=!,'50,\"1000,:150,n~/.vim/viminfo
-" always show signcolumns
+
+" always reserve sign column to avoid text shifting from diagnostics
 set signcolumn=yes
-" better display of messages
-set cmdheight=3
-" smaller updatetime for CursorHold & CursorHoldI
+
+" shorter update time improves CursorHold and diagnostic responsiveness
 set updatetime=300
-" split at the bottom
+
+" horizontal splits open below current window
 set splitbelow
-" some file watching tools will miss an rename and replace
-set backupcopy=yes
 
-" autoread changed files
+" detect file changes on disk when possible
 set autoread
-au FocusGained * :checktime
 
-"" backup/swap/undo
-" enable backups
-set backup
-" backup file directory
-set backupdir=~/.vim/tmp/backup/
-" swap file directory
-set directory=~/.vim/tmp/swap/
-" undo file directory
+" keep terminal color handling in the old path because shady depends on it
+set notermguicolors
+
+" do not highlight the current line
+set nocursorline
+
+" no wrapping globally for code-oriented workflow
+set nowrap
+
+" do not enter paste mode by default
+set nopaste
+
+
+" ---------------------------------------------------------------------------
+" Persistence / recovery
+" ---------------------------------------------------------------------------
+
+" keep swap files in one dedicated location
+set directory=~/.vim/tmp/swap//
+
+" keep persistent undo history if supported
 if exists('+undodir')
-  set undodir=~/.vim/tmp/undo/
+  set undofile
+  set undodir=~/.vim/tmp/undo//
 endif
-" backup before overwritting
-set writebackup
 
-" show status line
+" do not create backup files next to edited files
+set nobackup
+set nowritebackup
+
+
+" ---------------------------------------------------------------------------
+" Status line
+" ---------------------------------------------------------------------------
+
+" always show the statusline
 set laststatus=2
 set statusline=
 
 " file name
-set statusline +=%t
+set statusline+=%t
 " modified flag
-set statusline +=\ %#todo#%m%*
-" right aligned from here
-set statusline +=%=
-" current line/total lines and column
-set statusline +=[%3l/%-3L\|%-2c]
+set statusline+=\ %m
+" right align from here
+set statusline+=%=
+" current line / total lines and column
+set statusline+=[%3l/%-3L\|%-2c]
 " file type
-set statusline +=\ %Y
+set statusline+=\ %Y
 
-" Set python paths explicitly under macOS.
+
+" ---------------------------------------------------------------------------
+" Python host under macOS
+" ---------------------------------------------------------------------------
+
+" Ensure Neovim can find Homebrew tools and the pinned Python host.
 if has('macunix')
   let $PATH = '/opt/homebrew/bin:' . $PATH
-
-  " let g:python2_host_prog = '/usr/local/bin/python'
-  " let g:python3_host_prog = '/usr/local/bin/python3'
-  " let g:python3_host_prog = '/opt/homebrew/bin/python3'
   let g:python3_host_prog = expand('$HOME/.venvs/neovim/bin/python')
 endif
 
-" switch syntax highlighting on, when the terminal has colors
-if &t_Co > 2
-  syntax enable
-  syntax sync fromstart
-endif
 
-" change the mapleader from \ to ,
+" ---------------------------------------------------------------------------
+" Syntax / colors
+" ---------------------------------------------------------------------------
+
+" enable syntax highlighting
+syntax enable
+
+" leader key
 let mapleader=","
 
-" spare extra modifier key for commands
-nnoremap ; :
-
-" quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<cr>
-nmap <silent> <leader>sv :so $MYVIMRC<cr>
-
-" force home row usage
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
-
-" step line by line even when text is wrapped
-nnoremap j gj
-nnoremap k gk
-
-" clear search highlights
-nmap <silent> <leader><space> :nohlsearch<cr>
-
-" use w!! to use sudo after opening
-cmap w!! w !sudo tee % > /dev/null
-
-" prevent vim regex handling
-nnoremap / /\v
-vnoremap / /\v
-
-" shortcut to rapidly toggle `set list`
-nmap <leader>l :set list!<cr>
-
-" remap help file
-inoremap <F1> <ESC>
-" escape from insert mode
-inoremap jk <ESC>
-
-" quickfix navigation
-map <C-n> :lnext<cr>
-map <C-m> :lprevious<cr>
-nnoremap <leader>a :LToggle<cr>
-
-" map make
-nmap <leader>m :make!<cr>
-
-" remember cursor position
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-
-" Per file-type indentation
-au FileType                     haskell         setlocal sts=4 sw=4 expandtab
-au FileType                     elm             setlocal sts=4 sw=4 expandtab
-au FileType                     javascript      setlocal fo=cqt sts=2 sw=2 tw=80 wm=0 expandtab
-au FileType                     css             setlocal ts=2  sw=2 noexpandtab
-au FileType                     go              setlocal ts=4  sw=4 noexpandtab
-au BufNewFile,BufRead,FileType  *.go            setlocal ts=4  sw=4 noexpandtab
-au FileType                     c,cpp,glsl      setlocal ts=8  sw=8 noexpandtab
-au FileType                     lua             setlocal       sw=4 expandtab
-au FileType                     sh,zsh          setlocal ts=2  sw=2 noexpandtab
-au FileType                     vim,ruby        setlocal sts=2 sw=2 expandtab
-au FileType                     help            setlocal ts=4  sw=4 noexpandtab
-au FileType                     txt             setlocal noai nocin nosi inde= wrap linebreak
-au FileType                     pandoc          setlocal nonumber
-au FileType                     markdown        setlocal nonumber
-au FileType                     fountain        setlocal nonumber noai nocin nosi inde= wrap linebreak
-au BufNewFile,BufReadPost       *.md            set filetype=markdown
-au BufNewFile,BufRead           *.tsx,*.jsx     set filetype=typescriptreact
-
-augroup configgroup
-    autocmd!
-
-    "Set Pollen syntax for files with these extensions:
-    au! BufRead,BufNewFile *.p set filetype=pollen
-    au! BufRead,BufNewFile *.pm set filetype=pollen
-    au! BufRead,BufNewFile *.pp set filetype=pollen
-    au! BufRead,BufNewFile *.ptree set filetype=pollen
-
-    " Suggested editor settings:
-    autocmd FileType pollen setlocal wrap      " Soft wrap (don't affect buffer)
-    autocmd FileType pollen setlocal linebreak " Wrap on word-breaks only
-augroup END
-
-" rust.vim sets the filetype for Cargo.toml to cfg, which confuses vim-toml
-au BufNewFile,BufRead *.toml,Gopkg.lock,Cargo.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setf toml
-
-" plugin management with minpac
-function! PackInit() abort
-  packadd minpac
-
-  if exists('*minpac#init')
-    call minpac#init()
-    call minpac#add('k-takata/minpac', {'type': 'opt'})
-
-    " comments
-    call minpac#add('tpope/vim-commentary')
-
-    " git
-    " call minpac#add('mhinz/vim-signify')
-
-    " navigation
-    call minpac#add('cloudhead/neovim-fuzzy')
-    call minpac#add('jremmen/vim-ripgrep')
-
-    " intellisense
-    call minpac#add('Shougo/denite.nvim')
-    call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
-
-    " elm
-    " call minpac#add('w0rp/ale')
-    " call minpac#add('elmcast/elm-vim')
-
-    " toml
-    call minpac#add('cespare/vim-toml')
-
-    " glsl
-    " call minpac#add('tikhomirov/vim-glsl')
-
-    " go
-    " call minpac#add('fatih/vim-go')
-
-    " graphql
-    " call minpac#add('jparise/vim-graphql')
-
-    " latex
-    " call minpac#add('lervag/vimtex')
-
-    " pico8
-    " call minpac#add('justinj/vim-pico8-syntax')
-
-    " purescript
-    " call minpac#add('purescript-contrib/purescript-vim')
-    " call minpac#add('FrigoEU/psc-ide-vim')
-    " call minpac#add('vim-syntastic/syntastic')
-
-    " ocaml/reason
-    " call minpac#add('reasonml-editor/vim-reason-plus')
-    " call minpac#add('sbdchd/neoformat')
-
-    " one
-    " call minpac#add('rakr/vim-one')
-
-    " racket
-    " call minpac#add('otherjoel/vim-pollen')
-    " call minpac#add('wlangstroth/vim-racket')
-
-    " rst
-    call minpac#add('gu-fan/riv.vim')
-
-    " rust
-    call minpac#add('rust-lang/rust.vim')
-
-    " shady
-    call minpac#add('cloudhead/shady.vim')
-
-    " solidity
-    " call minpac#add('tomlion/vim-solidity')
-
-    " svelte
-    call minpac#add('leafgarland/typescript-vim')
-    call minpac#add('evanleck/vim-svelte')
-
-    " terraform
-    " call minpac#add('hashivim/vim-terraform')
-    " call minpac#add('juliosueiras/vim-terraform-completion')
-
-    " typescript
-    call minpac#add('peitalin/vim-jsx-typescript')
-
-    " writer
-    " call minpac#add('junegunn/goyo.vim')
-    " call minpac#add('junegunn/limelight.vim')
-    " call minpac#add('reedes/vim-colors-pencil')
-    " call minpac#add('subnut/vim-iawriter')
-    " call minpac#add('preservim/vim-pencil')
-
-    " move
-    " call minpac#add('rvmelkonian/move.vim')
-
-    " fish
-    call minpac#add('dag/vim-fish')
-
-    " protobuf
-    call minpac#add('uarun/vim-protobuf')
-
-    " d2
-    " call minpac#add('terrastruct/d2-vim')
-
-    " codecopanion
-    call minpac#add('nvim-lua/plenary.nvim')
-    call minpac#add('nvim-treesitter/nvim-treesitter')
-    call minpac#add('olimorris/codecompanion.nvim')
-  endif
-endfunction
-
-command! PackClean call PackInit() | call minpac#clean()
-command! PackStatus call PackInit() | call minpac#status()
-command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
-
-" Plugins need to be added to runtimepath before helptags can be generated.
-packloadall
-" Load all of the helptags now, after plugins have been loaded.
-" Ignore all messages and errors.
-silent! helptags ALL
-
-lua << EOF
-require("codecompanion").setup({
-  adapters = {
-    acp = {
-      codex = function()
-        return require("codecompanion.adapters").extend("codex", {
-          defaults = {
-            auth_method = "chatgpt", -- or "openai-api-key"
-          },
-        })
-      end,
-    },
-  },
-  interactions = {
-    chat = {
-      adapter = "codex",
-    },
-    inline = {
-      adapter = "codex",
-    },
-  },
-})
-EOF
-
-" colors
-
-set notermguicolors
-
+" load shady if available
 try
   colorscheme shady
   set background=dark
 catch
 endtry
 
-" comments
-nmap <C-_> <Plug>CommentaryLine
-xmap <C-_> <Plug>Commentary
 
-" fuzzy
-nnoremap <leader>o :FuzzyOpen<cr>
-nnoremap <leader>f :FuzzyGrep<cr>
+" ---------------------------------------------------------------------------
+" General mappings
+" ---------------------------------------------------------------------------
 
-" vim-commentary
-nmap <C-_> gcc
-xmap <C-_> gc
+" spare an easy key for command-line mode
+nnoremap ; :
 
-" ripgrep
+" quickly edit / reload vimrc
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :source $MYVIMRC<CR>
+
+" force home-row navigation discipline
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" clear search highlight
+nmap <silent> <leader><space> :nohlsearch<CR>
+
+" allow `:w!!` to write with sudo after opening a file normally
+cmap w!! w !sudo tee % > /dev/null
+
+" default searches to very magic regex mode
+nnoremap / /\v
+vnoremap / /\v
+
+" toggle invisible characters
+nmap <leader>l :set list!<CR>
+
+" F1 is more annoying than useful
+inoremap <F1> <ESC>
+
+" quick escape from insert mode
+inoremap jk <ESC>
+
+" preserve wrapped-line movement muscle memory
+" this matters mainly in markdown/text buffers where wrap is enabled locally
+nnoremap j gj
+nnoremap k gk
+
+
+" ---------------------------------------------------------------------------
+" Quickfix / location list
+" ---------------------------------------------------------------------------
+
+" next / previous entry in location list
+nnoremap <C-n> :lnext<CR>
+nnoremap <C-m> :lprevious<CR>
+
+" toggle location list
+nnoremap <leader>a :LToggle<CR>
+
+" keep existing make shortcut
+nmap <leader>m :make!<CR>
+
+
+" ---------------------------------------------------------------------------
+" Plugin management with minpac
+" ---------------------------------------------------------------------------
+
+" Bootstrap minpac itself on a fresh machine.
+if empty(glob('~/.vim/pack/minpac/opt/minpac/autoload/minpac.vim'))
+  echohl WarningMsg
+  echom 'minpac not found: clone https://github.com/k-takata/minpac.git to ~/.vim/pack/minpac/opt/minpac'
+  echohl None
+endif
+
+" Load minpac only if present.
+packadd minpac
+
+function! PackInit() abort
+  if !exists('*minpac#init')
+    return
+  endif
+
+  call minpac#init()
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
+
+  " comments
+  call minpac#add('tpope/vim-commentary')
+
+  " fuzzy navigation / grep
+  call minpac#add('cloudhead/neovim-fuzzy')
+  call minpac#add('jremmen/vim-ripgrep')
+
+  " language intelligence / completion / diagnostics
+  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+
+  " light syntax / filetype support where still useful
+  call minpac#add('cespare/vim-toml')
+  call minpac#add('dag/vim-fish')
+
+  " theme
+  call minpac#add('cloudhead/shady.vim')
+
+  " tree-sitter
+  call minpac#add('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
+endfunction
+
+command! PackClean  call PackInit() | call minpac#clean()
+command! PackStatus call PackInit() | call minpac#status()
+command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
+
+" plugins need to be added to runtimepath before helptags can be generated
+packloadall
+silent! helptags ALL
+
+
+" ---------------------------------------------------------------------------
+" Tree-sitter
+" ---------------------------------------------------------------------------
+
+" Tree-sitter owns syntax parsing and highlighting for primary languages.
+" Guard startup so Neovim still boots before the plugin is installed.
+lua << EOF
+local ok, configs = pcall(require, 'nvim-treesitter.configs')
+if ok then
+  configs.setup {
+    ensure_installed = {
+      "rust",
+      "javascript",
+      "typescript",
+      "tsx",
+      "lua",
+      "vim",
+      "vimdoc",
+      "query",
+      "markdown",
+      "markdown_inline",
+      "toml",
+      "html",
+      "css",
+      "svelte",
+    },
+    sync_install = false,
+    auto_install = false,
+    highlight = {
+      enable = true,
+    },
+  }
+end
+EOF
+
+
+" ---------------------------------------------------------------------------
+" Fuzzy search / grep
+" ---------------------------------------------------------------------------
+
+" fuzzy file open / grep
+nnoremap <leader>o :FuzzyOpen<CR>
+nnoremap <leader>f :FuzzyGrep<CR>
+
+" prefer ripgrep when available
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep
 endif
 
-" ListToggle
-let g:lt_location_list_toggle_map = '<leader>a'
-let g:lt_height = 5
+" TODO helpers
+command! Todo Rg 'TODO'
+command! TodoLocal Rg 'TODO' %
 
-" intellisense
-" Use tab for trigger completion with characters ahead and navigate
-" NOTE: There's always complete item selected by default, you may want to enable
-" no select by `"suggest.noselect": true` in your configuration file
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config
+nnoremap <leader>tg :Todo<CR>
+nnoremap <leader>tl :TodoLocal<CR>
+
+
+" ---------------------------------------------------------------------------
+" Commentary
+" ---------------------------------------------------------------------------
+
+" comment current line / selection
+nmap <C-_> <Plug>CommentaryLine
+xmap <C-_> <Plug>Commentary
+
+
+" ---------------------------------------------------------------------------
+" CoC
+" ---------------------------------------------------------------------------
+
+" helper for tab completion fallback
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
+" use Tab to navigate completion menu, insert tab at whitespace,
+" otherwise trigger completion
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Make <CR> to accept selected completion item or notify coc.nvim to format
-" <C-g>u breaks current undo, please make your own choice
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" reverse direction through completion menu
+inoremap <silent><expr> <S-TAB>
+      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" confirm completion with Enter when popup is visible
+inoremap <silent><expr> <CR>
+      \ coc#pum#visible() ? coc#pum#confirm()
+      \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" use <c-space>for trigger completion
-imap <c-space> coc#refresh()
-" Use <cr> for confirm completion.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" use <c-space>for trigger completion
-imap <c-space> coc#refresh()
+" manual completion trigger
+inoremap <silent><expr> <C-Space> coc#refresh()
 
-" shortcuts for rakcet & pollen
-" imap <C-L> λ
-" imap <C-E> ◊
-
+" close preview window when completion finishes
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" Remap keys for gotos
+" go-to mappings
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Use K for show documentation in preview window
-nnoremap <silent> K :call <sid>show_documentation()<cr>
+" hover / documentation
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" code actions
+nmap <C-a> <Plug>(coc-codeaction)
 
 function! s:show_documentation()
-  if &filetype == 'vim'
-    execute 'h '.expand('<cword>')
+  if &filetype ==# 'vim'
+    execute 'h ' . expand('<cword>')
   else
     call CocAction('doHover')
   endif
 endfunction
 
+" explicit prettier hook if present in workspace
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
-" Show diagnostics of current workspace
-nnoremap <silent> <space>a  :<C-u>Denite coc-diagnostic<cr>
 
-" TODO list
-command! Todo Rg 'TODO'
-command! TodoLocal Rg 'TODO' %
+" show diagnostics list
+nnoremap <silent> <space>a :<C-u>CocList diagnostics<CR>
 
-nnoremap <leader>tg :Todo<cr>
-nnoremap <leader>tl :TodoLocal<cr>
 
-" elm
-" let g:elm_jump_to_error = 1
-" let g:elm_make_show_warnings = 1
-" let g:elm_detailed_complete = 1
-" let g:elm_format_autosave = 1
-" let g:elm_format_fail_silently = 0
-" let g:elm_setup_keybindings = 1
+" ---------------------------------------------------------------------------
+" Filetypes / autocmds
+" ---------------------------------------------------------------------------
 
-" go
-" let g:go_fmt_command = "goimports"
-" let g:go_gopls_enabled = 1
+augroup xla_filetypes
+  autocmd!
 
-" ocaml/reason
-" let g:neoformat_enabled_ocaml = ['ocamlformat']
+  " restore cursor position when reopening a file
+  autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \   normal! g`" |
+        \ endif
 
-" purs
-" let g:psc_ide_syntastic_mode = 1
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
+  " re-check file changes when focus returns or buffer is entered
+  autocmd FocusGained,BufEnter * checktime
 
-" rst
-let g:riv_auto_format_table = 0
-let g:riv_fold_auto_update = 0
+  " explicit filetype guards for formats that benefit from it
+  autocmd BufNewFile,BufRead *.tsx,*.jsx setfiletype typescriptreact
+  autocmd BufNewFile,BufRead *.svelte   setfiletype svelte
+  autocmd BufNewFile,BufRead *.toml,Cargo.lock,Gopkg.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setfiletype toml
 
-" rust
+  " rust uses 4 spaces and no wrap
+  autocmd FileType rust setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab nowrap
+  " cargo check as the local make target for rust buffers
+  autocmd FileType rust setlocal makeprg=cargo\ check
+
+  " lua stays at 2 spaces to match common neovim config style
+  autocmd FileType lua setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+
+  " prose-oriented buffers can wrap and drop line numbers
+  autocmd FileType markdown setlocal wrap linebreak nonumber
+  autocmd FileType text     setlocal wrap linebreak
+augroup END
+
+
+" ---------------------------------------------------------------------------
+" Rust formatting
+" ---------------------------------------------------------------------------
+
+" keep rustfmt available on save through rustfmt binary
+" this can later be moved fully into Coc if desired
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_command = 'rustfmt'
 
-au FileType rust setlocal ts=4 sts=4 sw=4 expandtab nowrap
-au FileType rust setlocal makeprg=cargo\ check
 
-" codecompanion
-nnoremap <leader>cc :CodeCompanionChat<CR>
-nnoremap <leader>ca :CodeCompanion<CR>
-vnoremap <leader>ca :CodeCompanion<CR>
+" ---------------------------------------------------------------------------
+" CoC diagnostic highlighting
+" ---------------------------------------------------------------------------
 
-" terraform
-" let g:terraform_align=1
-" let g:terraform_fmt_on_save=1
+" explicit sign colors
+hi CocErrorSign    ctermfg=red    guibg=black guifg=red
+hi CocWarningSign  ctermfg=yellow guibg=black guifg=yellow
 
-" vimtex
-" let g:vimtex_view_general_viewer = 'mupdf'
-" let g:vimtex_view_general_options
-"     \ = '-reuse-instance -forward-search @tex @line @pdf'
-" let g:vimtex_view_general_options_latexmk = '-reuse-instance'
-" let g:tex_flavor  = 'xelatex'
-" let g:tex_conceal = ''
-" let g:vimtex_fold_manual = 1
-" let g:vimtex_compiler_latexmk = {
-"         \ 'executable' : 'latexmk',
-"         \ 'options' : [
-"         \   '-xelatex',
-"         \   '-file-line-error',
-"         \   '-synctex=1',
-"         \   '-interaction=nonstopmode',
-"         \ ],
-"         \}
-
-" nnoremap <leader>c :VimtexCompile<cr>
-
-" writer
-" let g:pencil_higher_contrast_ui = 1
-
-" custom highlight
-" hi User1 ctermbg=black ctermfg=red guibg=black guifg=red
-hi CocErrorSign ctermfg=red guibg=black guifg=red
-hi CocWarningSign ctermfg=yellow guibg=black guifg=yello
-
-" CoC
+" link virtual text / signs / floats to clearer groups
 hi link CocErrorVirtualText    Error
 hi link CocErrorSign           Error
 hi      CocErrorHighlight      cterm=undercurl guisp=#B03060
@@ -566,41 +456,38 @@ hi link CocWarningVirtualText  Warning
 hi link CocWarningSign         Warning
 hi      CocWarningHighlight    cterm=undercurl guisp=#FFE4B5
 
-hi link CocInfoVirtualText     Alternative
-hi link CocInfoSign            Alternative
+hi link CocInfoVirtualText     Identifier
+hi link CocInfoSign            Identifier
 hi      CocInfoHighlight       cterm=underline guisp=blue
 
-hi link CocHintVirtualText     Alternative
-hi link CocHintSign            Alternative
+hi link CocHintVirtualText     Comment
+hi link CocHintSign            Comment
 hi      CocHintHighlight       cterm=none guisp=blue
 hi      CocUnusedHighlight     ctermfg=246 cterm=strikethrough
 
-hi link CocRustChainingHint    Hint
-" These only use an 'undercurl'. The colors used are
-" 'maroon' and 'moccasin'.
-hi link CocHintSign            Hint
-hi link CocCodeLens            DarkGrey
+hi link CocCodeLens            Comment
 hi link CocFloating            Pmenu
 
-" helper functions
+
+" ---------------------------------------------------------------------------
+" Helper functions
+" ---------------------------------------------------------------------------
+
 command! LToggle call s:LListToggle()
 
 function! s:LListToggle() abort
-    let buffer_count_before = s:BufferCount()
-    " Location list can't be closed if there's cursor in it, so we need
-    " to call lclose twice to move cursor to the main pane
-    silent! lclose
-    silent! lclose
+  let buffer_count_before = s:BufferCount()
 
-    if s:BufferCount() == buffer_count_before
-        execute "silent! lopen 10"
-    endif
+  " location list cannot be closed if the cursor is in it,
+  " so try closing twice
+  silent! lclose
+  silent! lclose
+
+  if s:BufferCount() == buffer_count_before
+    execute "silent! lopen 10"
+  endif
 endfunction
 
 function! s:BufferCount() abort
-    return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+  return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-nmap <c-a> <Plug>(coc-codeaction)
