@@ -60,7 +60,8 @@ set novisualbell
 " don't beep
 set noerrorbells
 " prevent auto indentation when pasting
-set pastetoggle=<F2>
+" set pastetoggle=<F2>
+nnoremap <F2> :set invpaste paste?<CR>
 " font family & size
 set guifont=PragmataProLiga-Regular:h18
 " use utf-8 everywhere
@@ -147,8 +148,12 @@ set statusline +=\ %Y
 
 " Set python paths explicitly under macOS.
 if has('macunix')
-  let g:python2_host_prog = '/usr/local/bin/python'
-  let g:python3_host_prog = '/usr/local/bin/python3'
+  let $PATH = '/opt/homebrew/bin:' . $PATH
+
+  " let g:python2_host_prog = '/usr/local/bin/python'
+  " let g:python3_host_prog = '/usr/local/bin/python3'
+  " let g:python3_host_prog = '/opt/homebrew/bin/python3'
+  let g:python3_host_prog = expand('$HOME/.venvs/neovim/bin/python')
 endif
 
 " switch syntax highlighting on, when the terminal has colors
@@ -265,23 +270,23 @@ function! PackInit() abort
     call minpac#add('neoclide/coc.nvim', {'branch': 'master', 'do': 'call coc#util#install()'})
 
     " elm
-    call minpac#add('w0rp/ale')
-    call minpac#add('elmcast/elm-vim')
+    " call minpac#add('w0rp/ale')
+    " call minpac#add('elmcast/elm-vim')
 
     " toml
     call minpac#add('cespare/vim-toml')
 
     " glsl
-    call minpac#add('tikhomirov/vim-glsl')
+    " call minpac#add('tikhomirov/vim-glsl')
 
     " go
-    call minpac#add('fatih/vim-go')
+    " call minpac#add('fatih/vim-go')
 
     " graphql
-    call minpac#add('jparise/vim-graphql')
+    " call minpac#add('jparise/vim-graphql')
 
     " latex
-    call minpac#add('lervag/vimtex')
+    " call minpac#add('lervag/vimtex')
 
     " pico8
     " call minpac#add('justinj/vim-pico8-syntax')
@@ -292,15 +297,15 @@ function! PackInit() abort
     " call minpac#add('vim-syntastic/syntastic')
 
     " ocaml/reason
-    call minpac#add('reasonml-editor/vim-reason-plus')
-    call minpac#add('sbdchd/neoformat')
+    " call minpac#add('reasonml-editor/vim-reason-plus')
+    " call minpac#add('sbdchd/neoformat')
 
     " one
-    call minpac#add('rakr/vim-one')
+    " call minpac#add('rakr/vim-one')
 
     " racket
-    call minpac#add('otherjoel/vim-pollen')
-    call minpac#add('wlangstroth/vim-racket')
+    " call minpac#add('otherjoel/vim-pollen')
+    " call minpac#add('wlangstroth/vim-racket')
 
     " rst
     call minpac#add('gu-fan/riv.vim')
@@ -312,28 +317,28 @@ function! PackInit() abort
     call minpac#add('cloudhead/shady.vim')
 
     " solidity
-    call minpac#add('tomlion/vim-solidity')
+    " call minpac#add('tomlion/vim-solidity')
 
     " svelte
     call minpac#add('leafgarland/typescript-vim')
     call minpac#add('evanleck/vim-svelte')
 
     " terraform
-    call minpac#add('hashivim/vim-terraform')
+    " call minpac#add('hashivim/vim-terraform')
     " call minpac#add('juliosueiras/vim-terraform-completion')
 
     " typescript
     call minpac#add('peitalin/vim-jsx-typescript')
 
     " writer
-    call minpac#add('junegunn/goyo.vim')
-    call minpac#add('junegunn/limelight.vim')
-    call minpac#add('reedes/vim-colors-pencil')
-    call minpac#add('subnut/vim-iawriter')
-    call minpac#add('preservim/vim-pencil')
+    " call minpac#add('junegunn/goyo.vim')
+    " call minpac#add('junegunn/limelight.vim')
+    " call minpac#add('reedes/vim-colors-pencil')
+    " call minpac#add('subnut/vim-iawriter')
+    " call minpac#add('preservim/vim-pencil')
 
     " move
-    call minpac#add('rvmelkonian/move.vim')
+    " call minpac#add('rvmelkonian/move.vim')
 
     " fish
     call minpac#add('dag/vim-fish')
@@ -342,7 +347,12 @@ function! PackInit() abort
     call minpac#add('uarun/vim-protobuf')
 
     " d2
-    call minpac#add('terrastruct/d2-vim')
+    " call minpac#add('terrastruct/d2-vim')
+
+    " codecopanion
+    call minpac#add('nvim-lua/plenary.nvim')
+    call minpac#add('nvim-treesitter/nvim-treesitter')
+    call minpac#add('olimorris/codecompanion.nvim')
   endif
 endfunction
 
@@ -356,7 +366,34 @@ packloadall
 " Ignore all messages and errors.
 silent! helptags ALL
 
+lua << EOF
+require("codecompanion").setup({
+  adapters = {
+    acp = {
+      codex = function()
+        return require("codecompanion.adapters").extend("codex", {
+          defaults = {
+            auth_method = "chatgpt", -- or "openai-api-key"
+          },
+        })
+      end,
+    },
+  },
+  interactions = {
+    chat = {
+      adapter = "codex",
+    },
+    inline = {
+      adapter = "codex",
+    },
+  },
+})
+EOF
+
 " colors
+
+set notermguicolors
+
 try
   colorscheme shady
   set background=dark
@@ -416,8 +453,8 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 imap <c-space> coc#refresh()
 
 " shortcuts for rakcet & pollen
-imap <C-L> λ
-imap <C-E> ◊
+" imap <C-L> λ
+" imap <C-E> ◊
 
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
@@ -450,25 +487,25 @@ nnoremap <leader>tg :Todo<cr>
 nnoremap <leader>tl :TodoLocal<cr>
 
 " elm
-let g:elm_jump_to_error = 1
-let g:elm_make_show_warnings = 1
-let g:elm_detailed_complete = 1
-let g:elm_format_autosave = 1
-let g:elm_format_fail_silently = 0
-let g:elm_setup_keybindings = 1
+" let g:elm_jump_to_error = 1
+" let g:elm_make_show_warnings = 1
+" let g:elm_detailed_complete = 1
+" let g:elm_format_autosave = 1
+" let g:elm_format_fail_silently = 0
+" let g:elm_setup_keybindings = 1
 
 " go
-let g:go_fmt_command = "goimports"
-let g:go_gopls_enabled = 1
+" let g:go_fmt_command = "goimports"
+" let g:go_gopls_enabled = 1
 
 " ocaml/reason
-let g:neoformat_enabled_ocaml = ['ocamlformat']
+" let g:neoformat_enabled_ocaml = ['ocamlformat']
 
 " purs
-let g:psc_ide_syntastic_mode = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+" let g:psc_ide_syntastic_mode = 1
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
 
 " rst
 let g:riv_auto_format_table = 0
@@ -477,34 +514,42 @@ let g:riv_fold_auto_update = 0
 " rust
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
-let g:rustfmt_command = 'rustfmt +nightly'
+let g:rustfmt_command = 'rustfmt'
+
+au FileType rust setlocal ts=4 sts=4 sw=4 expandtab nowrap
+au FileType rust setlocal makeprg=cargo\ check
+
+" codecompanion
+nnoremap <leader>cc :CodeCompanionChat<CR>
+nnoremap <leader>ca :CodeCompanion<CR>
+vnoremap <leader>ca :CodeCompanion<CR>
 
 " terraform
-let g:terraform_align=1
-let g:terraform_fmt_on_save=1
+" let g:terraform_align=1
+" let g:terraform_fmt_on_save=1
 
 " vimtex
-let g:vimtex_view_general_viewer = 'mupdf'
-let g:vimtex_view_general_options
-    \ = '-reuse-instance -forward-search @tex @line @pdf'
+" let g:vimtex_view_general_viewer = 'mupdf'
+" let g:vimtex_view_general_options
+"     \ = '-reuse-instance -forward-search @tex @line @pdf'
 " let g:vimtex_view_general_options_latexmk = '-reuse-instance'
-let g:tex_flavor  = 'xelatex'
-let g:tex_conceal = ''
-let g:vimtex_fold_manual = 1
-let g:vimtex_compiler_latexmk = {
-        \ 'executable' : 'latexmk',
-        \ 'options' : [
-        \   '-xelatex',
-        \   '-file-line-error',
-        \   '-synctex=1',
-        \   '-interaction=nonstopmode',
-        \ ],
-        \}
+" let g:tex_flavor  = 'xelatex'
+" let g:tex_conceal = ''
+" let g:vimtex_fold_manual = 1
+" let g:vimtex_compiler_latexmk = {
+"         \ 'executable' : 'latexmk',
+"         \ 'options' : [
+"         \   '-xelatex',
+"         \   '-file-line-error',
+"         \   '-synctex=1',
+"         \   '-interaction=nonstopmode',
+"         \ ],
+"         \}
 
-nnoremap <leader>c :VimtexCompile<cr>
+" nnoremap <leader>c :VimtexCompile<cr>
 
 " writer
-let g:pencil_higher_contrast_ui = 1
+" let g:pencil_higher_contrast_ui = 1
 
 " custom highlight
 " hi User1 ctermbg=black ctermfg=red guibg=black guifg=red

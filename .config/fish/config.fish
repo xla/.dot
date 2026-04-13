@@ -21,6 +21,8 @@ set -x RADBIN   $HOME/.radicle/bin
 
 set -x PATH $XDG_BIN_HOME $CARGOBIN $CUDABIN $GEMBIN $GOBIN $NPM $NPMLOCAL $RADBIN $PATH
 
+fish_add_path "/opt/homebrew/bin/"
+
 set -x FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 set -x LESS '-asrRix8'
 

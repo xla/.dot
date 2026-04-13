@@ -1,13 +1,13 @@
 [alias]
 	amend = commit --amend -C HEAD --signoff
-	ci    = commit --signoff
+	ci    = commit
 	co    = checkout
 	l     = log --graph --pretty=format':%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'
 	st    = status -sb
 [apply]
 	whitespace = warn
-[commit]
-  gpgsign = true
+; [commit]
+;   gpgsign = true
 [color]
 	diff    = auto
 	status  = auto
