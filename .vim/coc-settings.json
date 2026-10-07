@@ -1,5 +1,5 @@
 // Required Coc extensions:
-// :CocInstall coc-json coc-eslint coc-prettier coc-yaml coc-tsserver coc-svelte coc-lua coc-rust-analyzer
+// :CocInstall coc-json coc-eslint coc-prettier coc-yaml coc-tsserver coc-svelte coc-lua coc-rust-analyzer coc-go coc-snippets
 //
 // Notes:
 // - coc-settings.json supports JSONC comments. :contentReference[oaicite:0]{index=0}
@@ -96,27 +96,80 @@
   // -------------------------------------------------------------------------
   // Disable code lens entirely.
   "codeLens.enable": false,
+
+  // -------------------------------------------------------------------------
+  // Go
+  // -------------------------------------------------------------------------
+  "[go]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[gomod]": {
+    "coc.preferences.formatOnSave": true
+  },
+
+  "go.goplsPath": "/Users/xla/.local/bin/gopls",
+  // gopls is installed/updated through Go into ~/.local/bin, not coc-go's
+  // private ~/.config/coc/go/bin directory.
+  "go.checkForUpdates": "disabled",
+  "go.goplsUseDaemon": true,
+
+  "go.goplsOptions": {
+    "gofumpt": true,
+    "staticcheck": true,
+    "usePlaceholders": true,
+    "semanticTokens": true,
+
+    "analyses": {
+      "unusedparams": true,
+      "unusedwrite": true,
+      "nilness": true,
+      "shadow": true
+    },
+
+    "hints": {
+      "assignVariableTypes": true,
+      "compositeLiteralFields": true,
+      "compositeLiteralTypes": true,
+      "constantValues": true,
+      "functionTypeParameters": true,
+      "parameterNames": true,
+      "rangeVariableTypes": true
+    },
+
+    "codelenses": {
+      "generate": true,
+      "gc_details": false,
+      "regenerate_cgo": true,
+      "run_govulncheck": true,
+      "tidy": true,
+      "upgrade_dependency": true,
+      "vendor": true
+    }
+  },
+
+  "go.tags": {
+    "tags": "json",
+    "options": "json=omitempty",
+    "transform": "snakecase",
+    "skipUnexported": true
+  },
+
   // -------------------------------------------------------------------------
   // Rust / rust-analyzer
   // -------------------------------------------------------------------------
-
   // Cargo / macro support.
   "rust-analyzer.cargo.autoreload": true,
   "rust-analyzer.cargo.buildScripts.enable": true,
   "rust-analyzer.check.allTargets": true,
   "rust-analyzer.procMacro.enable": true,
-
   // Keep auto import on completion.
   "rust-analyzer.completion.autoimport.enable": true,
-
   // Keep diagnostics enabled.
   "rust-analyzer.diagnostics.enable": true,
-
   // Disable lens-style extras.
   "rust-analyzer.lens.enable": false,
   "rust-analyzer.lens.run.enable": false,
   "rust-analyzer.lens.debug.enable": false,
-
   // Disable inline hints that shift code.
   "rust-analyzer.inlayHints.typeHints.enable": false,
   "rust-analyzer.inlayHints.parameterHints.enable": false,
@@ -126,11 +179,13 @@
   "rust-analyzer.inlayHints.lifetimeElisionHints.enable": "never",
   "rust-analyzer.inlayHints.renderColons": false,
   "rust-analyzer.inlayHints.maxLength": 25,
+
   // -------------------------------------------------------------------------
   // Svelte
   // -------------------------------------------------------------------------
   // Keep TypeScript integration inside Svelte.
   "svelte.enable-ts-plugin": true,
+
   // -------------------------------------------------------------------------
   // Optional language servers
   // -------------------------------------------------------------------------

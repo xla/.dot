@@ -277,6 +277,10 @@ local ok, configs = pcall(require, 'nvim-treesitter.configs')
 if ok then
   configs.setup {
     ensure_installed = {
+      "go",
+      "gomod",
+      "gosum",
+      "gowork",
       "rust",
       "javascript",
       "typescript",
@@ -413,6 +417,15 @@ augroup xla_filetypes
   autocmd BufNewFile,BufRead *.svelte   setfiletype svelte
   autocmd BufNewFile,BufRead *.toml,Cargo.lock,Gopkg.lock,*/.cargo/config,*/.cargo/credentials,Pipfile setfiletype toml
 
+  " Go uses tabs by convention; render them at standard Go width.
+  autocmd FileType go setlocal noexpandtab tabstop=8 shiftwidth=8 softtabstop=0 nowrap
+  autocmd FileType gomod setlocal noexpandtab tabstop=8 shiftwidth=8 softtabstop=0 nowrap
+  autocmd FileType gosum setlocal noexpandtab tabstop=8 shiftwidth=8 softtabstop=0 nowrap
+  autocmd FileType gowork setlocal noexpandtab tabstop=8 shiftwidth=8 softtabstop=0 nowrap
+
+  " Use go test as the default make target for Go buffers.
+  autocmd FileType go setlocal makeprg=go\ test\ ./...
+
   " rust uses 4 spaces and no wrap
   autocmd FileType rust setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab nowrap
   " cargo check as the local make target for rust buffers
@@ -426,11 +439,38 @@ augroup xla_filetypes
   autocmd FileType text     setlocal wrap linebreak
 augroup END
 
+" ---------------------------------------------------------------------------
+" Go
+" ---------------------------------------------------------------------------
+augroup xla_go
+  autocmd!
+
+  " Organize Go imports before writing.
+  autocmd BufWritePre *.go silent! call CocAction('runCommand', 'editor.action.organizeImport')
+
+  " Test navigation / generation
+  autocmd FileType go nnoremap <buffer> <leader>gt :CocCommand go.test.toggle<CR>
+  autocmd FileType go nnoremap <buffer> <leader>gF :CocCommand go.test.generate.file<CR>
+  autocmd FileType go nnoremap <buffer> <leader>gf :CocCommand go.test.generate.function<CR>
+  autocmd FileType go nnoremap <buffer> <leader>gE :CocCommand go.test.generate.exported<CR>
+
+  " Interface implementation
+  autocmd FileType go nnoremap <buffer> <leader>gi :CocCommand go.impl.cursor<CR>
+
+  " Struct tags
+  autocmd FileType go nnoremap <buffer> <leader>gj :CocCommand go.tags.add json<CR>
+  autocmd FileType go nnoremap <buffer> <leader>gy :CocCommand go.tags.add yaml<CR>
+  autocmd FileType go nnoremap <buffer> <leader>gx :CocCommand go.tags.clear<CR>
+
+  " Module maintenance
+  autocmd FileType go nnoremap <buffer> <leader>gm :CocCommand go.gopls.tidy<CR>
+augroup END
+
+command! GoLint !golangci-lint run ./...
 
 " ---------------------------------------------------------------------------
-" Rust formatting
+" Rust
 " ---------------------------------------------------------------------------
-
 " keep rustfmt available on save through rustfmt binary
 " this can later be moved fully into Coc if desired
 let g:rustfmt_autosave = 1
