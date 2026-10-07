@@ -401,9 +401,9 @@ augroup xla_filetypes
 
   " restore cursor position when reopening a file
   autocmd BufReadPost *
-        \ if line("'\"") > 1 && line("'\"") <= line("$") |
-        \   normal! g`" |
-        \ endif
+    \ if line("'\"") > 1 && line("'\"") <= line("$") |
+    \   execute "normal! g`\"" |
+    \ endif
 
   " re-check file changes when focus returns or buffer is entered
   autocmd FocusGained,BufEnter * checktime
