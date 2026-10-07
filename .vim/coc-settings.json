@@ -13,6 +13,12 @@
   "[css]": {
     "coc.preferences.formatOnSave": true
   },
+  "[go]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "[gomod]": {
+    "coc.preferences.formatOnSave": true
+  },
   "[html]": {
     "coc.preferences.formatOnSave": true
   },
@@ -100,13 +106,6 @@
   // -------------------------------------------------------------------------
   // Go
   // -------------------------------------------------------------------------
-  "[go]": {
-    "coc.preferences.formatOnSave": true
-  },
-  "[gomod]": {
-    "coc.preferences.formatOnSave": true
-  },
-
   "go.goplsPath": "/Users/xla/.local/bin/gopls",
   // gopls is installed/updated through Go into ~/.local/bin, not coc-go's
   // private ~/.config/coc/go/bin directory.

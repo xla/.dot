@@ -468,15 +468,6 @@ augroup END
 
 command! GoLint !golangci-lint run ./...
 
-" ---------------------------------------------------------------------------
-" Rust
-" ---------------------------------------------------------------------------
-" keep rustfmt available on save through rustfmt binary
-" this can later be moved fully into Coc if desired
-let g:rustfmt_autosave = 1
-let g:rustfmt_emit_files = 1
-let g:rustfmt_command = 'rustfmt'
-
 
 " ---------------------------------------------------------------------------
 " CoC diagnostic highlighting
