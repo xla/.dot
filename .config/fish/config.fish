@@ -6,8 +6,6 @@ set -x XDG_CONFIG_HOME  $HOME/.config
 set -x XDG_BIN_HOME     $HOME/.local/bin
 set -x XDG_DATA_HOME    $HOME/.local/share
 
-set -x GNUPGHOME  $HOME/.gnupg
-
 set -x npm_config_prefix  $HOME/.node_modules
 
 set -x CARGOBIN $HOME/.cargo/bin
@@ -38,11 +36,6 @@ alias gp 'git push'
 alias l 'ls -lah'
 alias vi vim
 alias vim nvim
-
-set -x GPG_TTY (tty)
-set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-gpgconf --launch gpg-agent
-echo UPDATESTARTUPTTY | gpg-connect-agent -q > /dev/null
 
 setenv SSH_ENV "/tmp/ssh-environment"
 

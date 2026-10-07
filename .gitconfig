@@ -6,8 +6,6 @@
 	st    = status -sb
 [apply]
 	whitespace = warn
-; [commit]
-;   gpgsign = true
 [color]
 	diff    = auto
 	status  = auto
@@ -28,4 +26,3 @@
 [user]
 	name        = xla
 	email       = self@xla.is
-  signingkey  = 4AFF44222AF43F8F
