@@ -1,0 +1,8 @@
+# Optional GUI applications; enable with ./setup-macos.sh --apps.
+cask "ghostty"
+cask "dropbox"
+cask "betterdisplay"
+cask "chatgpt"
+cask "zen"
+cask "brave-browser"
+cask "firefox"

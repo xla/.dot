@@ -14,3 +14,6 @@
 .vim/tmp
 .vim/view
 .vim/viminfo
+
+# Offline setup tests
+__pycache__/
