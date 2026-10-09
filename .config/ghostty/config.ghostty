@@ -1,3 +1,5 @@
 font-family = "PragmataPro Mono Liga"
 
-theme = Ayu
+theme = shady
+
+unfocused-split-opacity = 1

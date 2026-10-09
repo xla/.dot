@@ -1,0 +1,27 @@
+# Ported from .config/kitty/kitty.conf.
+background = #000000
+foreground = #ffffff
+cursor-color = #cd5c5c
+cursor-text = #000000
+
+# Kitty's default selection colors (not overridden in kitty.conf).
+selection-foreground = #000000
+selection-background = #fffacd
+
+# ANSI colors: normal (0-7), bright (8-15).
+palette = 0=#000000
+palette = 1=#b03060
+palette = 2=#66cdaa
+palette = 3=#ffe4b5
+palette = 4=#483d8b
+palette = 5=#663399
+palette = 6=#add8e6
+palette = 7=#bebebe
+palette = 8=#404040
+palette = 9=#b03060
+palette = 10=#7fffd4
+palette = 11=#ffe4b5
+palette = 12=#483d8b
+palette = 13=#663399
+palette = 14=#add8e6
+palette = 15=#ffffff
