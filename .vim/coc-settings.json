@@ -106,7 +106,7 @@
   // -------------------------------------------------------------------------
   // Go
   // -------------------------------------------------------------------------
-  "go.goplsPath": "/Users/xla/.local/bin/gopls",
+  "go.goplsPath": "gopls",
   // gopls is installed/updated through Go into ~/.local/bin, not coc-go's
   // private ~/.config/coc/go/bin directory.
   "go.checkForUpdates": "disabled",
@@ -156,6 +156,9 @@
   // -------------------------------------------------------------------------
   // Rust / rust-analyzer
   // -------------------------------------------------------------------------
+  // Use the rustup-managed server installed by setup, rather than downloading
+  // another copy into CoC's private data directory.
+  "rust-analyzer.server.path": "rust-analyzer",
   // Cargo / macro support.
   "rust-analyzer.cargo.autoreload": true,
   "rust-analyzer.cargo.buildScripts.enable": true,
@@ -186,10 +189,18 @@
   "svelte.enable-ts-plugin": true,
 
   // -------------------------------------------------------------------------
-  // Optional language servers
+  // System-managed language servers
   // -------------------------------------------------------------------------
-  // Keep Terraform only if you still occasionally open it.
+  // Keep coc-lua's settings schema, but use Homebrew's LuaLS instead of the
+  // extension's private download (which otherwise happens on first activation).
+  "lua.enable": false,
   "languageserver": {
+    "lua": {
+      "command": "lua-language-server",
+      "filetypes": ["lua"],
+      "rootPatterns": [".luarc.json", ".luarc.jsonc", ".git"],
+      "settings": {"Lua": {}}
+    },
     "terraform": {
       "command": "terraform-ls",
       "args": [

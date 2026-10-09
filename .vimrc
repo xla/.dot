@@ -134,7 +134,8 @@ set statusline+=\ %Y
 
 " Ensure Neovim can find Homebrew tools and the pinned Python host.
 if has('macunix')
-  let $PATH = '/opt/homebrew/bin:' . $PATH
+  let s:brew_prefix = isdirectory('/opt/homebrew') ? '/opt/homebrew' : '/usr/local'
+  let $PATH = expand('~/.local/bin') . ':' . expand('~/.cargo/bin') . ':' . s:brew_prefix . '/bin:' . $PATH
   let g:python3_host_prog = expand('$HOME/.venvs/neovim/bin/python')
 endif
 
@@ -226,14 +227,16 @@ if empty(glob('~/.vim/pack/minpac/opt/minpac/autoload/minpac.vim'))
 endif
 
 " Load minpac only if present.
-packadd minpac
+silent! packadd minpac
 
 function! PackInit() abort
-  if !exists('*minpac#init')
+  " Autoload functions do not exist until first called; check the file instead.
+  if empty(glob('~/.vim/pack/minpac/opt/minpac/autoload/minpac.vim'))
     return
   endif
 
-  call minpac#init()
+  call minpac#init({'dir': expand('~/.vim'),
+        \ 'progress_open': get(g:, 'dotfiles_bootstrap', 0) ? 'none' : 'horizontal'})
   call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   " comments
@@ -254,7 +257,8 @@ function! PackInit() abort
   call minpac#add('cloudhead/shady.vim')
 
   " tree-sitter
-  call minpac#add('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
+  call minpac#add('nvim-treesitter/nvim-treesitter', {'branch': 'main',
+        \ 'do': get(g:, 'dotfiles_bootstrap', 0) ? '' : ':TSUpdate'})
 endfunction
 
 command! PackClean  call PackInit() | call minpac#clean()
@@ -273,35 +277,25 @@ silent! helptags ALL
 " Tree-sitter owns syntax parsing and highlighting for primary languages.
 " Guard startup so Neovim still boots before the plugin is installed.
 lua << EOF
-local ok, configs = pcall(require, 'nvim-treesitter.configs')
+vim.g.dotfiles_treesitter_languages = {
+  'go', 'gomod', 'gosum', 'gowork', 'rust', 'javascript', 'typescript',
+  'tsx', 'lua', 'vim', 'vimdoc', 'query', 'markdown', 'markdown_inline',
+  'toml', 'html', 'css', 'svelte',
+}
+local ok, treesitter = pcall(require, 'nvim-treesitter')
 if ok then
-  configs.setup {
-    ensure_installed = {
-      "go",
-      "gomod",
-      "gosum",
-      "gowork",
-      "rust",
-      "javascript",
-      "typescript",
-      "tsx",
-      "lua",
-      "vim",
-      "vimdoc",
-      "query",
-      "markdown",
-      "markdown_inline",
-      "toml",
-      "html",
-      "css",
-      "svelte",
-    },
-    sync_install = false,
-    auto_install = false,
-    highlight = {
-      enable = true,
-    },
-  }
+  treesitter.setup {}
+  local group = vim.api.nvim_create_augroup('xla_treesitter', { clear = true })
+  vim.api.nvim_create_autocmd('FileType', {
+    group = group,
+    callback = function(args)
+      local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+      if vim.tbl_contains(vim.g.dotfiles_treesitter_languages, lang) then
+        -- Missing parsers must not break first startup, before setup runs.
+        pcall(vim.treesitter.start, args.buf, lang)
+      end
+    end,
+  })
 end
 EOF
 
@@ -340,6 +334,11 @@ xmap <C-_> <Plug>Commentary
 " ---------------------------------------------------------------------------
 " CoC
 " ---------------------------------------------------------------------------
+
+" Keep this list as the single source of truth for setup and future installs.
+let g:coc_global_extensions = [
+      \ 'coc-json', 'coc-eslint', 'coc-prettier', 'coc-yaml', 'coc-tsserver',
+      \ 'coc-svelte', 'coc-lua', 'coc-rust-analyzer', 'coc-go', 'coc-snippets']
 
 " helper for tab completion fallback
 function! CheckBackspace() abort
