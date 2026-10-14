@@ -145,6 +145,7 @@ link "$ROOT/.vim" "$HOME/.vim"
 # The repository's .config/nvim -> ../.vim is NOT valid when linked directly.
 link "$ROOT/.vim" "$HOME/.config/nvim"
 for file in \
+    git/ignore gh/config.yml \
     fish/config.fish fish/conf.d/rustup.fish \
     fish/functions/fish_prompt.fish fish/functions/fish_title.fish \
     kitty/kitty.conf ghostty/config.ghostty \
@@ -223,12 +224,13 @@ done
 
 log 'Checking fish and toolchain startup'
 run "$BREW_PREFIX/bin/fish" --no-execute "$ROOT/.config/fish/config.fish"
-run "$BREW_PREFIX/bin/fish" -c 'for tool in pi herdr nvim node npm python3 rg fzy fzf tree-sitter terraform-ls lua-language-server gopls goimports gofumpt staticcheck govulncheck dlv gotests gomodifytags impl gotestsum golangci-lint cargo rustc rust-analyzer rustfmt bacon taplo; command -q $tool; or exit 1; end'
+run "$BREW_PREFIX/bin/fish" -c 'for tool in pi herdr gh nvim node npm python3 rg fzy fzf tree-sitter terraform-ls lua-language-server gopls goimports gofumpt staticcheck govulncheck dlv gotests gomodifytags impl gotestsum golangci-lint cargo rustc rust-analyzer rustfmt bacon taplo; command -q $tool; or exit 1; end'
 run "$HOME/.venvs/neovim/bin/python" -c 'import pynvim'
 run "$HOME/.cargo/bin/rust-analyzer" --version
 run "$HOME/.local/bin/gopls" version
 run "$BREW_PREFIX/bin/pi" --version
 run "$BREW_PREFIX/bin/herdr" --version
+run "$BREW_PREFIX/bin/gh" --version
 
 if [ "$CHANGE_SHELL" -eq 1 ]; then
     log 'Registering fish as the login shell (may ask for your password)'

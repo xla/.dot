@@ -1,5 +1,6 @@
 # Shell, editor and native plugin dependencies.
 brew "git"
+brew "gh"
 brew "fish"
 brew "neovim"
 brew "ripgrep"

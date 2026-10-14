@@ -9,6 +9,9 @@
 .local
 .gnupg
 
+# GitHub CLI authentication stays local.
+.config/gh/hosts.yml
+
 .vim/pack
 .vim/sessions
 .vim/tmp

@@ -48,7 +48,7 @@ opens Apple's installer; finish it and rerun setup.
 
 ### What gets installed
 
-- **Homebrew** if missing, plus everything in `Brewfile`: fish, Neovim, Git,
+- **Homebrew** if missing, plus everything in `Brewfile`: fish, Neovim, Git, GitHub CLI (`gh`),
   ripgrep, **fzy** (required by `neovim-fuzzy`), fzf, GNU less, htop, LLVM,
   Tree-sitter CLI, Node/npm, Python, Go, golangci-lint, Terraform LS and LuaLS.
 - **Pi coding agent and Herdr** through Homebrew (`pi-coding-agent` and `herdr`),
@@ -92,6 +92,8 @@ Setup links only the relevant, checked-in macOS configs:
 - `~/.bash_profile`, `~/.gitconfig`, `~/.dircolors`, `~/.vimrc`, and `~/.vim`.
 - `~/.config/nvim` directly to the checkout's `.vim` directory. The shared
   `init.vim` points to `.vimrc`; Vim and Neovim share settings and plugin files.
+- `~/.config/git/ignore` (global ignore rules) and `~/.config/gh/config.yml`
+  (GitHub CLI preferences, including `gh co` for `gh pr checkout`).
 - The tracked fish config, prompt/title functions and rustup startup file.
 - kitty, Ghostty, Alacritty (current TOML and legacy YAML), htop and Karabiner.
 - `~/.cargo/config.toml` (its Linux-only target section has no effect on macOS).
@@ -109,6 +111,9 @@ credentials, fish universal variables and untracked configs are left alone.
 The shared `.vim/pack` plugin checkouts and `.vim/tmp` state live in this checkout
 and are Git-ignored. `~/.gitconfig` contains this repository's Git identity;
 review it if setting up a machine for someone else.
+
+GitHub authentication is not configured by setup. Run `gh auth login` separately;
+existing `~/.config/gh/hosts.yml` and keychain credentials are left untouched.
 
 Fish gets architecture-appropriate Homebrew paths, `~/.local/bin`,
 `~/.cargo/bin`, and `~/.node_modules/bin`. `GOBIN` is `~/.local/bin`, and `GOPATH`

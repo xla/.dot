@@ -27,6 +27,7 @@ class SetupTests(unittest.TestCase):
         sources = set(tracked) | {
             "setup-macos.sh", "Brewfile", "Brewfile.apps",
             ".config/alacritty/alacritty.toml", "scripts/bootstrap-nvim.lua",
+            ".config/git/ignore", ".config/gh/config.yml",
         }
         for relative in filter(None, sources):
             source = ROOT / relative
@@ -82,6 +83,34 @@ class SetupTests(unittest.TestCase):
         self.assertTrue((backup[0] / ".gitconfig").is_symlink())
         self.run_setup("--links-only")
         self.assertEqual(list((self.home / ".dotfiles-backups").iterdir()), backup)
+
+    def test_git_and_gh_configs_preserve_auth_and_back_up_preferences(self):
+        for relative in (".config/git/ignore", ".config/gh/config.yml"):
+            target = self.home / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("old preferences")
+        hosts = self.home / ".config/gh/hosts.yml"
+        hosts.write_text("local authentication state")
+        self.run_setup("--links-only")
+        backups = list((self.home / ".dotfiles-backups").iterdir())
+        self.assertEqual(len(backups), 1)
+        for relative in (".config/git/ignore", ".config/gh/config.yml"):
+            self.assertEqual((self.home / relative).resolve(), self.repo / relative)
+            self.assertEqual((backups[0] / relative).read_text(), "old preferences")
+        self.assertEqual(hosts.read_text(), "local authentication state")
+        self.assertFalse(hosts.is_symlink())
+        self.assertFalse((self.repo / ".config/gh/hosts.yml").exists())
+        self.run_setup("--links-only")
+        self.assertEqual(list((self.home / ".dotfiles-backups").iterdir()), backups)
+        self.assertEqual(hosts.read_text(), "local authentication state")
+
+    def test_gh_is_in_default_installation(self):
+        self.assertIn('brew "gh"', (self.repo / "Brewfile").read_text().splitlines())
+        result = self.run_setup("--dry-run", "--no-shell")
+        self.assertIn("/bin/gh --version", result.stdout)
+        self.assertIn("for tool in pi herdr gh", result.stdout.replace("\\ ", " "))
+        self.assertNotIn("auth login", result.stdout)
+        self.assertEqual(list(self.home.iterdir()), [])
 
     def test_existing_config_symlink_does_not_create_link_loops(self):
         (self.home / ".config").symlink_to(self.repo / ".config")
