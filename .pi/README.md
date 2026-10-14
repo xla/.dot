@@ -6,6 +6,10 @@ Neovim uses `notermguicolors`, so the `cterm` values—not the inherited GUI
 colors—are the reference. Named ANSI colors are resolved through the existing
 Kitty/Ghostty Shady palette in `.config/ghostty/themes/shady`.
 
+[Exposed](../.config/exposed/README.md) is the readable light counterpart.
+The installed setup now automatically chooses **Exposed in light mode and
+Shady in dark mode**; this guide documents the Shady palette.
+
 ## Install and select
 
 From this dotfiles checkout:
@@ -13,11 +17,13 @@ From this dotfiles checkout:
 ```sh
 mkdir -p ~/.pi/agent/themes
 ln -s "$PWD/.pi/agent/themes/shady.json" ~/.pi/agent/themes/shady.json
+ln -s "$PWD/.pi/agent/themes/exposed.json" ~/.pi/agent/themes/exposed.json
 ```
 
 If that destination already exists, inspect it before replacing it. Select
-**shady** in Pi's `/settings`, or set just `"theme": "shady"` in
-`~/.pi/agent/settings.json`, preserving its other settings.
+**exposed/shady** automatic mode in Pi's `/settings`, or set just
+`"theme": "exposed/shady"` in `~/.pi/agent/settings.json`, preserving other
+settings. The order is light/dark. Select `shady` alone to opt out of switching.
 
 Run `/reload` in an already-open Pi session after installation or a manual
 settings change. New sessions use the saved theme automatically. To try it
@@ -117,7 +123,8 @@ PI_OFFLINE=1 node .pi/scripts/validate-shady.mjs "$PI_PACKAGE" --installed --nvi
   local Neovim highlights using a temporary headless session.
 - `--installed`: verify the installed symlink, effective settings, Pi's actual
   theme discovery, absence of theme collisions/errors, unique selector entry,
-  activation without silent fallback, and resolved HTML export colors.
+  activation of the automatic pair's dark branch without silent fallback,
+  and resolved HTML export colors.
 - `--preview`: print the actual 80-column Markdown render for terminal review.
 
 `--nvim` requires this machine's Shady-based Neovim setup; `--installed` requires
@@ -135,7 +142,8 @@ Validated against Pi **1.0.4** and the local live Neovim configuration:
   error and removed-line maroon is intentionally brightened for contrast.
 - Both color modes render Markdown and highlighted code at all three widths.
 - User installation resolves to this repository file; saved effective theme is
-  `shady`; real Pi discovery reports one Shady theme and no theme diagnostics.
+  `exposed/shady`; the dark branch resolves to `shady`; real Pi discovery
+  reports one Shady theme and no theme diagnostics.
 - Pi activation returns success and retains the Shady name (no fallback).
 - HTML colors resolve correctly, including the contrast-adjusted maroon.
 - A real Pi TUI inside Herdr additionally exercises tool calls, diffs, failed

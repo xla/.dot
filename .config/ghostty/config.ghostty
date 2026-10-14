@@ -1,5 +1,10 @@
 font-family = "PragmataPro Mono Liga"
 
-theme = shady
+# Native desktop/system appearance switching, propagated to apps via Mode 2031.
+theme = light:exposed,dark:shady
+window-theme = auto
 
+# Protect arbitrary terminal text too; keep surfaces opaque for audited contrast.
+minimum-contrast = 4.5
+background-opacity = 1
 unfocused-split-opacity = 1

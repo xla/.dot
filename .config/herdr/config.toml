@@ -1,13 +1,17 @@
-# Shady for Herdr 0.9.3. See README.md beside this file.
+# Shady / Exposed for Herdr 0.9.3. See README.md beside this file.
 onboarding = false
 
 [theme]
-# Herdr requires a built-in base name; every color is overridden below.
+# Built-in names are required by Herdr; every token is overridden.
 name = "vesper"
-auto_switch = false
+auto_switch = true
+dark_name = "vesper"
+light_name = "one-light"
 
 [theme.custom]
-# Keep the same neutral surfaces and cterm-derived grays as Pi Shady.
+# Safe Shady fallback until host appearance is known.
+# Shady custom palette. Herdr's valid built-in base remains vesper.
+accent = "#949494"
 panel_bg = "#121212"
 sidebar_bg = "#000000"
 active_row_bg = "#121212"
@@ -15,16 +19,57 @@ selection_bg = "#262626"
 surface0 = "#1c1c1c"
 surface1 = "#262626"
 surface_dim = "#444444"
-text = "#c6c6c6"
-subtext0 = "#949494"
 overlay0 = "#949494"
 overlay1 = "#a8a8a8"
-accent = "#949494"
+text = "#c6c6c6"
+subtext0 = "#949494"
 mauve = "#87afaf"
-# Explicit states: idle/ready, working, attention, unseen/done, warning.
 green = "#7fffd4"
 yellow = "#ffe4b5"
-# Lift Shady's maroon to >= 4.5:1 on every selectable surface.
+red = "#d76b91"
+blue = "#add8e6"
+teal = "#add8e6"
+peach = "#ffe4b5"
+
+[theme.custom.light]
+# Exposed: generated; edit .config/exposed/palette.json.
+accent = "#4e4e4e"
+panel_bg = "#eeeeee"
+sidebar_bg = "#ffffff"
+active_row_bg = "#eeeeee"
+selection_bg = "#dadada"
+surface0 = "#eeeeee"
+surface1 = "#dadada"
+surface_dim = "#585858"
+overlay0 = "#585858"
+overlay1 = "#444444"
+text = "#303030"
+subtext0 = "#585858"
+mauve = "#005f5f"
+green = "#005f00"
+yellow = "#5f5f00"
+red = "#87005f"
+blue = "#005f87"
+teal = "#005f87"
+peach = "#5f5f00"
+
+[theme.custom.dark]
+# Shady custom palette. Herdr's valid built-in base remains vesper.
+accent = "#949494"
+panel_bg = "#121212"
+sidebar_bg = "#000000"
+active_row_bg = "#121212"
+selection_bg = "#262626"
+surface0 = "#1c1c1c"
+surface1 = "#262626"
+surface_dim = "#444444"
+overlay0 = "#949494"
+overlay1 = "#a8a8a8"
+text = "#c6c6c6"
+subtext0 = "#949494"
+mauve = "#87afaf"
+green = "#7fffd4"
+yellow = "#ffe4b5"
 red = "#d76b91"
 blue = "#add8e6"
 teal = "#add8e6"

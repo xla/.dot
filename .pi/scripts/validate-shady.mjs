@@ -69,7 +69,7 @@ if (flags.has('--nvim')) {
     const outputPath = join(temp, 'highlights.json');
     const groups = [...new Set([...Object.values(mappings).map(([group]) => group), 'Error', 'Warning', 'DiffAdd', 'diffRemoved', 'markdownLink'])];
     const lua = `local out={name=vim.g.colors_name,truecolor=vim.o.termguicolors,groups={}}; for _,g in ipairs(vim.json.decode(${JSON.stringify(JSON.stringify(groups))})) do out.groups[g]=vim.api.nvim_get_hl(0,{name=g,link=false}) end; vim.fn.writefile({vim.json.encode(out)},${JSON.stringify(outputPath)})`;
-    execFileSync('nvim', ['--headless', '-c', `lua ${lua}`, '-c', 'qa!'], { timeout: 20000, stdio: 'pipe' });
+    execFileSync('nvim', ['--headless', '--cmd', 'set background=dark', '-c', `lua ${lua}`, '-c', 'qa!'], { timeout: 20000, stdio: 'pipe' });
     const live = JSON.parse(readFileSync(outputPath, 'utf8'));
     assert.equal(live.name, 'shady');
     assert.equal(live.truecolor, false);
@@ -114,7 +114,8 @@ if (flags.has('--installed')) {
   const { SettingsManager } = await load('dist/core/settings-manager.js');
   const { DefaultResourceLoader } = await load('dist/core/resource-loader.js');
   const settingsManager = SettingsManager.create(repo, agentDir);
-  assert.equal(settingsManager.getTheme(), 'shady');
+  assert.equal(settingsManager.getThemeSetting(), 'exposed/shady');
+  assert.equal(pi.resolveThemeSetting(settingsManager.getThemeSetting(), 'dark'), 'shady');
   const loader = new DefaultResourceLoader({ cwd: repo, agentDir, settingsManager, noExtensions: true, noSkills: true, noPromptTemplates: true, noContextFiles: true });
   await loader.reload();
   const result = loader.getThemes();
@@ -122,7 +123,7 @@ if (flags.has('--installed')) {
   assert.equal(result.themes.filter((t) => t.name === 'shady').length, 1);
   pi.setRegisteredThemes(result.themes);
   assert.equal(pi.getAvailableThemes().filter((name) => name === 'shady').length, 1);
-  assert.deepEqual(pi.setTheme(settingsManager.getTheme()), { success: true });
+  assert.deepEqual(pi.setTheme(pi.resolveThemeSetting(settingsManager.getThemeSetting(), 'dark')), { success: true });
   assert.equal(pi.theme.name, 'shady', 'No silent fallback');
   assert.deepEqual(pi.getThemeExportColors('shady'), { pageBg: '#000000', cardBg: '#121212', infoBg: '#262626' });
   const htmlColors = pi.getResolvedThemeColors('shady');

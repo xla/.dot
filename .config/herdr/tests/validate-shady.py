@@ -17,12 +17,14 @@ args = argparse.ArgumentParser(description=__doc__)
 args.add_argument('--run-dir', type=Path)
 args = args.parse_args()
 config = tomllib.loads(CONFIG.read_text())
-colors = config['theme']['custom']
+colors = config['theme']['custom']['dark']
 pi = json.loads((REPO / '.pi/agent/themes/shady.json').read_text())
 required = set('accent panel_bg sidebar_bg active_row_bg selection_bg surface0 surface1 surface_dim overlay0 overlay1 text subtext0 mauve green yellow red blue teal peach'.split())
 assert set(colors) == required, 'Override every Herdr 0.9.3 color; no inherited rainbow roles'
 assert config['theme']['name'] == 'vesper', 'Use a supported base, not an unknown shady name'
-assert config['theme']['auto_switch'] is False
+assert config['theme']['auto_switch'] is True
+assert config['theme']['dark_name'] == 'vesper'
+assert config['theme']['light_name'] == 'one-light'
 assert config['ui']['status_indicators'] == 'symbols'
 assert config['ui']['sidebar']['agents']['rows'][0] == ['state_icon', 'state_text']
 for key, color in colors.items():
@@ -93,7 +95,8 @@ if args.run_dir:
         o = observed[label]
         assert o['theme'] == 'shady'
         assert o['pane']['agent'] == 'pi'
-        assert o['pane']['agent_status'] == status, (label, o['pane']['agent_status'])
+        states = ['idle', 'done'] if label == 'settled' else [status]
+        assert o['pane']['agent_status'] in states, (label, o['pane']['agent_status'])
         assert o['pane']['focused'] is False, 'Do not steal caller focus'
         assert o['pane']['agent_session']['source'] == 'herdr:pi'
     def frame(label):
@@ -112,4 +115,4 @@ if args.run_dir:
     assert [(m['toolName'], m['isError']) for m in results] == [('read', False), ('edit', False), ('bash', True)]
     assert '"shady"' in (run / 'sample.ts').read_text()
     print('PASS real Pi TUI: read, successful edit/diff, deliberate failed tool, Markdown/code/link, actual VT colors, official lifecycle reports, and unchanged focus')
-    print('Observed idle → working → simulated blocked → working → unseen done; no approval interaction')
+    print('Observed idle → working → simulated blocked → working → settled (idle/done depending seen state); no approval interaction')

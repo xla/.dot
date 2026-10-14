@@ -13,6 +13,10 @@ and validation commands.
 [Shady for Herdr](.config/herdr/README.md) gives the session manager matching
 chrome and readable agent-state colors, with a real Pi-in-Herdr session test.
 
+[Exposed](.config/exposed/README.md) is the contrast-audited light counterpart
+for Neovim, Ghostty, Pi, and Herdr. All four follow system-aware terminal
+appearance, choosing Exposed in light mode and Shady in dark mode.
+
 ## Neovim plugins and CoC extensions
 
 Install/update Vim plugins from Neovim:

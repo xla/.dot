@@ -14,6 +14,9 @@ export default function (pi: ExtensionAPI) {
     throw new Error("Fixture requires a disposable SHADY_SESSION_DIR under the system temp directory");
   }
   if (process.env.HERDR_ENV !== "1" || !process.env.HERDR_PANE_ID) throw new Error("Run this fixture inside Herdr");
+  const themeName = process.env.THEME_SESSION_THEME ?? "shady";
+  if (!["shady", "exposed"].includes(themeName)) throw new Error("Unsupported fixture theme");
+  const themeLabel = themeName === "exposed" ? "Exposed" : "Shady";
   const pane = process.env.HERDR_PANE_ID;
   const sample = join(root, "sample.ts");
   writeFileSync(sample, '// Quiet syntax comment\nconst greeting: string = "hello";\nconst count = 42;\n');
@@ -29,7 +32,7 @@ export default function (pi: ExtensionAPI) {
     baseUrl: "http://127.0.0.1/unused",
     apiKey: "offline-fixture-no-network",
     api: "shady-fixture",
-    models: [{ id: "session", name: "Shady offline session", reasoning: true, input: ["text"],
+    models: [{ id: "session", name: `${themeLabel} offline session`, reasoning: true, input: ["text"],
       cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 32000, maxTokens: 4096 }],
     streamSimple(model, _context, options) {
       const stream = createAssistantMessageEventStream();
@@ -47,7 +50,7 @@ export default function (pi: ExtensionAPI) {
             "I’ll inspect the TypeScript example before making a focused change.",
             "The example is readable. I’ll change only the greeting; the edit will show a diff.",
             "Now I’ll exercise an intentional failed check, without running project commands.",
-            "## Shady session complete\n\n- Read TypeScript with comments, strings, types, and numbers.\n- Applied a focused **edit** and rendered its diff.\n- Observed the intentional `fixture check failed` tool error.\n\n```typescript\n// Quiet syntax comment\nconst greeting: string = \"shady\";\nconst count = 42;\n```\n\n[Fixture link](https://example.com) · Ready for input.\n\nThe attention state was simulated; no approval was requested or granted."
+            `## ${themeLabel} session complete\n\n- Read TypeScript with comments, strings, types, and numbers.\n- Applied a focused **edit** and rendered its diff.\n- Observed the intentional \`fixture check failed\` tool error.\n\n\`\`\`typescript\n// Quiet syntax comment\nconst greeting: string = "${themeName}";\nconst count = 42;\n\`\`\`\n\n[Fixture link](https://example.com) · Ready for input.\n\nThe attention state was simulated; no approval was requested or granted.`
           ];
           message.content.push({ type: "text", text: "" });
           stream.push({ type: "text_start", contentIndex: 0, partial: message });
@@ -56,7 +59,7 @@ export default function (pi: ExtensionAPI) {
           stream.push({ type: "text_end", contentIndex: 0, content: message.content[0].text, partial: message });
           const calls = [
             { name: "read", arguments: { path: sample } },
-            { name: "edit", arguments: { path: sample, edits: [{ oldText: '"hello"', newText: '"shady"' }] } },
+            { name: "edit", arguments: { path: sample, edits: [{ oldText: '"hello"', newText: JSON.stringify(themeName) }] } },
             { name: "bash", arguments: { command: "printf 'fixture check failed (intentional)\\n' >&2; exit 1" } },
           ];
           const call = calls[n - 1];
@@ -85,7 +88,7 @@ export default function (pi: ExtensionAPI) {
   pi.on("tool_execution_end", async (event, ctx) => {
     if (event.toolName === "read") {
       // Use the official integration's testable event channel, not an approval dialog.
-      pi.events.emit("herdr:blocked", { active: true, label: "Shady fixture: simulated attention" });
+      pi.events.emit("herdr:blocked", { active: true, label: `${themeLabel} fixture: simulated attention` });
       ctx.ui.setWidget("shady-fixture", [ctx.ui.theme.fg("error", "ATTENTION: simulated test state; no approval needed")]);
       await capture("blocked", ctx);
       pi.events.emit("herdr:blocked", { active: false });

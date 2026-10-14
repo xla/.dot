@@ -149,11 +149,15 @@ syntax enable
 " leader key
 let mapleader=","
 
-" load shady if available
+" Native TUI background detection selects Exposed (light) / Shady (dark).
+" Both local entrypoints honor background, so OSC 11 / Mode 2031 changes reload
+" the correct counterpart rather than forcing the previous appearance back.
 try
-  colorscheme shady
-  set background=dark
+  execute 'colorscheme ' . (&background ==# 'light' ? 'exposed' : 'shady')
 catch
+  echohl WarningMsg
+  echom 'Shady/Exposed unavailable: ' . v:exception
+  echohl None
 endtry
 
 
@@ -473,31 +477,8 @@ command! GoLint !golangci-lint run ./...
 " CoC diagnostic highlighting
 " ---------------------------------------------------------------------------
 
-" explicit sign colors
-hi CocErrorSign    ctermfg=red    guibg=black guifg=red
-hi CocWarningSign  ctermfg=yellow guibg=black guifg=yellow
-
-" link virtual text / signs / floats to clearer groups
-hi link CocErrorVirtualText    Error
-hi link CocErrorSign           Error
-hi      CocErrorHighlight      cterm=undercurl guisp=#B03060
-hi link CocErrorFloat          Error
-
-hi link CocWarningVirtualText  Warning
-hi link CocWarningSign         Warning
-hi      CocWarningHighlight    cterm=undercurl guisp=#FFE4B5
-
-hi link CocInfoVirtualText     Identifier
-hi link CocInfoSign            Identifier
-hi      CocInfoHighlight       cterm=underline guisp=blue
-
-hi link CocHintVirtualText     Comment
-hi link CocHintSign            Comment
-hi      CocHintHighlight       cterm=none guisp=blue
-hi      CocUnusedHighlight     ctermfg=246 cterm=strikethrough
-
-hi link CocCodeLens            Comment
-hi link CocFloating            Pmenu
+" Owned by the selected colorscheme, including undercurl colors and floating
+" panels. Do not overwrite Exposed with dark-only ANSI colors / black surfaces.
 
 
 " ---------------------------------------------------------------------------

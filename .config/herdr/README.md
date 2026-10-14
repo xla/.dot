@@ -1,13 +1,20 @@
-# Shady for Herdr
+# Shady and Exposed for Herdr
 
-`config.toml` brings the [Pi Shady palette](../../.pi/README.md) into Herdr's
-sidebar, tab bar, pane focus, menus, and agent states. Tested with Herdr
-**0.9.3** (client and server) and Pi **1.0.4**.
+`config.toml` brings the [Pi Shady palette](../../.pi/README.md) and its readable
+light counterpart [Exposed](../exposed/README.md) into Herdr's sidebar, tab bar,
+pane focus, menus, and agent states. It now follows the system-aware terminal
+appearance automatically. Tested with Herdr **0.9.3** and Pi **1.0.4**.
+
+This guide documents the dark Shady branch. The Exposed guide documents the
+shared palette generator, contrast guarantees, and light-mode live test.
 
 Herdr 0.9.3 has no named custom-theme files or include mechanism. The theme is
-implemented as all **19** supported `[theme.custom]` overrides on the valid
-`vesper` base. Do not set `name = "shady"`: Herdr diagnoses unknown names and
-falls back. Auto-switch is off, consistent with the dark Neovim/Pi setup.
+implemented as all **19** supported tokens in `[theme.custom.light]` (Exposed)
+and `[theme.custom.dark]` (Shady), with **`auto_switch = true`**. Named palette
+sources live under `themes/`. Valid built-in bases `one-light` / `vesper` are
+fully overridden. Do not set `name = "exposed"` or `name = "shady"`: Herdr
+diagnoses unknown names and falls back. Mode-specific overrides are supported;
+unknown custom base names and includes are not.
 
 ## Install
 
@@ -107,6 +114,8 @@ Pi's auto-discovery directories. It provides a deterministic offline model:
 no external model service or credentials are used. Pi itself runs its real
 interactive UI and real built-in read/edit/bash tools.
 
+For this **Shady** fixture, use a dark host terminal. For the light, automatically
+selected **Exposed** variant, follow the Exposed guide linked above.
 From inside a Herdr pane (`HERDR_ENV=1`), with the official Pi integration
 installed, prepare a disposable run and sibling pane:
 
@@ -131,7 +140,8 @@ python3 .config/herdr/tests/validate-shady.py --run-dir "$RUN"
 The run includes a user prompt, TypeScript read, real edit and colored diff,
 intentional failed bash check, Markdown heading/list/code/link, then a completed
 assistant response. Herdr's official integration reports idle → working →
-**simulated** blocked → working → unseen done. The blocked event tests the
+**simulated** blocked → working → settled (`done` if unseen, otherwise `idle`).
+The blocked event tests the
 attention channel; it is not a real approval and none is granted. The validator
 checks the session transcript and actual ANSI colors read back through Herdr's
 virtual terminal, including brighter removals and the distinct error panel.
