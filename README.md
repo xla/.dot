@@ -4,6 +4,12 @@ This repository contains my shell and editor configuration. Most editor language
 support is configured in `.vimrc` / `.vim/init.vim` and `.vim/coc-settings.json`.
 The Neovim setup uses CoC rather than native LSP.
 
+## Pi theme
+
+[Shady for Pi](.pi/README.md) ports the active Neovim Shady terminal palette and
+highlighting rules. See that guide for installation, role mappings, limitations,
+and validation commands.
+
 ## Neovim plugins and CoC extensions
 
 Install/update Vim plugins from Neovim:
