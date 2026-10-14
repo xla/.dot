@@ -10,6 +10,9 @@ The Neovim setup uses CoC rather than native LSP.
 highlighting rules. See that guide for installation, role mappings, limitations,
 and validation commands.
 
+[Shady for Herdr](.config/herdr/README.md) gives the session manager matching
+chrome and readable agent-state colors, with a real Pi-in-Herdr session test.
+
 ## Neovim plugins and CoC extensions
 
 Install/update Vim plugins from Neovim:

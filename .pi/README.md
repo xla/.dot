@@ -34,9 +34,11 @@ explicitly refreshes it if a symlink target edit is not noticed.
 - Keep the terminal's background (black in the existing terminal setup).
 - Grayscale body text, interface chrome, panels, and thinking-level borders.
 - Reserve blue for identifiers/types and pale green for numbers; no rainbow
-  syntax highlighting or colored success/error panel fills.
-- Use the terminal setup's maroon, aquamarine, moccasin, and light blue for
-  errors, additions/success, warnings, and Markdown links respectively.
+  syntax highlighting or colored success panel fills. Failed tools alone use
+  a subdued `#27131b` background so errors do not look like successful output.
+- Use Shady-family maroon, aquamarine, moccasin, and light blue for errors,
+  additions/success, warnings, and links. Errors and removed lines lift the
+  original maroon to `#d76b91` for readable small text, shared with Herdr.
 - Keep dim comments and structural details dim, as in Shady; this intentionally
   does not brighten every role to a minimum-contrast accessibility palette.
 
@@ -57,7 +59,8 @@ explicitly refreshes it if a symlink target edit is not noticed.
 | Borders / muted borders | `StatusLine`, `VertSplit` | 238 / 236 |
 | Selection | `Visual` | background 235 / `#262626` |
 | User/tool panels | `Pmenu` | background 233 / `#121212` |
-| Error, removed diff lines | `Error`, `diffRemoved` → ANSI 9 | `#b03060` |
+| Error, removed diff lines | `Error`, `diffRemoved` → ANSI 9, brightened for contrast | `#d76b91` |
+| Failed tool panel | Pi-only restrained maroon surface | background `#27131b` |
 | Success, added diff lines | `DiffAdd`, `diffAdded` → ANSI 10 | `#7fffd4` |
 | Warning | `Warning` → ANSI 11 | `#ffe4b5` |
 | Markdown links and URLs | `markdownLink` → ANSI 14 | `#add8e6` |
@@ -65,7 +68,11 @@ explicitly refreshes it if a symlink target edit is not noticed.
 The extended palette uses numeric indices to retain Neovim's exact terminal
 colors. Named ANSI colors use explicit RGB from your terminal palette: otherwise
 Pi's HTML export interprets index 9 as generic bright red rather than your
-maroon. These RGB colors are exact in truecolor terminals and approximate in
+maroon. The original ANSI 9 maroon is retained as the source variable `red`,
+but the `attention` variable brightens errors and removed lines: original
+`#b03060` is only 3.07:1 on tool panels, while `#d76b91` is 5.71:1. The brighter
+color is shared with the [Herdr Shady theme](../.config/herdr/README.md).
+These RGB colors are exact in truecolor terminals and approximate in
 256-color-only terminals. No terminal capability override is installed.
 
 HTML export explicitly uses black pages, `#121212` cards, and `#262626` info
@@ -89,7 +96,8 @@ This is a color-role port, not an editor/highlighter replacement:
   current match. Menu selection uses Shady's `Visual` gray.
 - Pi-only thinking levels use a grayscale brightness progression, and Bash
   mode uses the existing identifier blue. Status labels convey tool state
-  without tinted panel backgrounds.
+  without tinted success/pending backgrounds. Failed panels alone are tinted
+  to distinguish failures from ordinary output.
 
 ## Validation
 
@@ -123,12 +131,15 @@ Validated against Pi **1.0.4** and the local live Neovim configuration:
 
 - All 56 schema roles present and accepted by Pi's real validator.
 - All 20 mapped terminal highlights and 5 ANSI groups match live Neovim.
-- Diagnostic/link RGB values match the existing Shady terminal palette.
+- Success/warning/link RGB values match the existing Shady terminal palette;
+  error and removed-line maroon is intentionally brightened for contrast.
 - Both color modes render Markdown and highlighted code at all three widths.
 - User installation resolves to this repository file; saved effective theme is
   `shady`; real Pi discovery reports one Shady theme and no theme diagnostics.
 - Pi activation returns success and retains the Shady name (no fallback).
-- HTML colors resolve correctly, including the custom maroon error color.
+- HTML colors resolve correctly, including the contrast-adjusted maroon.
+- A real Pi TUI inside Herdr additionally exercises tool calls, diffs, failed
+  tools, code, links, and official lifecycle reports; see the Herdr guide.
 
 An already-running session still needs `/reload` to apply newly saved settings;
 that UI action is not performed by the validation script.

@@ -1,0 +1,40 @@
+# Shady for Herdr 0.9.3. See README.md beside this file.
+onboarding = false
+
+[theme]
+# Herdr requires a built-in base name; every color is overridden below.
+name = "vesper"
+auto_switch = false
+
+[theme.custom]
+# Keep the same neutral surfaces and cterm-derived grays as Pi Shady.
+panel_bg = "#121212"
+sidebar_bg = "#000000"
+active_row_bg = "#121212"
+selection_bg = "#262626"
+surface0 = "#1c1c1c"
+surface1 = "#262626"
+surface_dim = "#444444"
+text = "#c6c6c6"
+subtext0 = "#949494"
+overlay0 = "#949494"
+overlay1 = "#a8a8a8"
+accent = "#949494"
+mauve = "#87afaf"
+# Explicit states: idle/ready, working, attention, unseen/done, warning.
+green = "#7fffd4"
+yellow = "#ffe4b5"
+# Lift Shady's maroon to >= 4.5:1 on every selectable surface.
+red = "#d76b91"
+blue = "#add8e6"
+teal = "#add8e6"
+peach = "#ffe4b5"
+
+[ui]
+agent_panel_sort = "spaces"
+# Shape as well as color conveys state; avoids identical colored dots.
+status_indicators = "symbols"
+
+[ui.sidebar.agents]
+# Keep native contextual coloring; do not override state-token foregrounds.
+rows = [["state_icon", "state_text"], ["agent", "workspace", "tab"]]

@@ -48,13 +48,15 @@ const paletteHex = (index) => {
   assert(match, `Terminal palette color ${index} exists`);
   return match[1].toLowerCase();
 };
-for (const [token, index] of Object.entries({ error: 9, warning: 11, success: 10, toolDiffAdded: 10, toolDiffRemoved: 9, mdLink: 14, mdLinkUrl: 14 })) {
+for (const [token, index] of Object.entries({ warning: 11, success: 10, toolDiffAdded: 10, mdLink: 14, mdLinkUrl: 14 })) {
   assert.equal(colorToHex(colors[token]), paletteHex(index), token);
 }
+assert.equal(colorToHex(colors.error), '#d76b91', 'Readable Shady-family attention color');
+assert.equal(colorToHex(colors.toolDiffRemoved), '#d76b91', 'Removed lines remain readable on tool panels');
 assert.equal(json.colors.customMessageBg, 'terminalBg');
 assert.equal(json.vars.terminalBg, '');
 assert.equal(json.colors.toolPendingBg, json.colors.toolSuccessBg);
-assert.equal(json.colors.toolSuccessBg, json.colors.toolErrorBg);
+assert.equal(colorToHex(colors.toolErrorBg), '#27131b', 'Failed tools have a distinct restrained maroon background');
 for (const token of ['accent', 'border', 'borderAccent', 'borderMuted', 'thinkingOff', 'thinkingMinimal', 'thinkingLow', 'thinkingMedium', 'thinkingHigh', 'thinkingXhigh', 'thinkingMax']) {
   const hex = colorToHex(colors[token]);
   assert.equal(hex.slice(1, 3), hex.slice(3, 5), `${token} is grayscale`);
@@ -125,7 +127,7 @@ if (flags.has('--installed')) {
   assert.deepEqual(pi.getThemeExportColors('shady'), { pageBg: '#000000', cardBg: '#121212', infoBg: '#262626' });
   const htmlColors = pi.getResolvedThemeColors('shady');
   assert.equal(htmlColors.text, '#c6c6c6');
-  assert.equal(htmlColors.error, paletteHex(9));
+  assert.equal(htmlColors.error, '#d76b91');
   assert.equal(htmlColors.mdLink, paletteHex(14));
   console.log('PASS installation, effective settings, real resource discovery, unique selector entry, activation without fallback, and HTML colors');
 }
