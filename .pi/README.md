@@ -12,7 +12,12 @@ Shady in dark mode**; this guide documents the Shady palette.
 
 ## Install and select
 
-From this dotfiles checkout:
+`./setup-macos.sh` (including `--links-only`) links both themes and the
+repository's `.pi/agent/settings.json`, selecting `exposed/shady` automatically.
+Existing settings/theme files are backed up, not merged; the repo takes precedence.
+Credentials and sessions are not replaced. Editing linked settings changes the repo.
+
+For a manual theme-only installation, from this dotfiles checkout:
 
 ```sh
 mkdir -p ~/.pi/agent/themes

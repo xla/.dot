@@ -132,9 +132,17 @@ if [ "$LINKS_ONLY" -eq 0 ]; then
     else
         BREW_PREFIX="${BREW%/bin/brew}"
     fi
-    export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$BREW_PREFIX/opt/llvm/bin:$PATH"
+    export PATH="$BREW_PREFIX/opt/llvm/bin:$BREW_PREFIX/opt/less/bin:$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.node_modules/bin:$PATH"
     run "$BREW" bundle --file="$ROOT/Brewfile"
     if [ "$APPS" -eq 1 ]; then run "$BREW" bundle --file="$ROOT/Brewfile.apps"; fi
+    # Homebrew's unversioned Python commands live in the formula's libexec/bin,
+    # not necessarily in the top-level bin (which may expose only python3.x).
+    if [ "$DRY_RUN" -eq 0 ]; then
+        PYTHON_BIN="$("$BREW" --prefix python)/libexec/bin"
+    else
+        PYTHON_BIN="$BREW_PREFIX/opt/python@3/libexec/bin"
+    fi
+    export PATH="$PYTHON_BIN:$PATH"
 fi
 
 log 'Linking macOS configs (leaving untracked files and Linux configs alone)'
@@ -149,10 +157,15 @@ for file in \
     fish/config.fish fish/conf.d/rustup.fish \
     fish/functions/fish_prompt.fish fish/functions/fish_title.fish \
     kitty/kitty.conf ghostty/config.ghostty \
+    ghostty/themes/exposed ghostty/themes/shady \
+    herdr/config.toml \
     alacritty/alacritty.yml alacritty/alacritty.toml \
     htop/htoprc karabiner/karabiner.json \
     karabiner/assets/complex_modifications/1542039256.json; do
     link "$ROOT/.config/$file" "$HOME/.config/$file"
+done
+for file in settings.json themes/exposed.json themes/shady.json; do
+    link "$ROOT/.pi/agent/$file" "$HOME/.pi/agent/$file"
 done
 link "$ROOT/.cargo/config.toml" "$HOME/.cargo/config.toml"
 # VS Code uses Application Support rather than ~/.config/Code on macOS.
@@ -163,9 +176,13 @@ if [ "$LINKS_ONLY" -eq 1 ]; then
     exit 0
 fi
 
+log 'Herdr configuration and official Pi state integration'
+run "$BREW_PREFIX/bin/herdr" config check
+run env PI_CODING_AGENT_DIR="$HOME/.pi/agent" "$BREW_PREFIX/bin/herdr" integration install pi
+
 log 'Neovim Python provider'
 run mkdir -p "$HOME/.local/bin" "$HOME/.vim/tmp/swap" "$HOME/.vim/tmp/undo"
-run "$BREW_PREFIX/bin/python3" -m venv "$HOME/.venvs/neovim"
+run "$PYTHON_BIN/python3" -m venv "$HOME/.venvs/neovim"
 run "$HOME/.venvs/neovim/bin/python" -m pip install --upgrade pip pynvim
 
 log 'Rust stable toolchain'

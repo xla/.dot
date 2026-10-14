@@ -137,7 +137,6 @@
 
     "codelenses": {
       "generate": true,
-      "gc_details": false,
       "regenerate_cgo": true,
       "run_govulncheck": true,
       "tidy": true,

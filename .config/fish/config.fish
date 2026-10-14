@@ -12,13 +12,18 @@ set -gx CARGOBIN $HOME/.cargo/bin
 set -gx GOBIN $XDG_BIN_HOME
 set -gx GOPATH $HOME/.local/share/go
 
+# Global (not universal) paths avoid accumulating duplicate entries on restarts.
+fish_add_path --global --move $XDG_BIN_HOME $CARGOBIN $HOME/.node_modules/bin
+
 # GUI terminals don't necessarily inherit Homebrew's PATH. Support both Apple
 # Silicon and Intel installations, including Homebrew's share/man directories.
 if test (uname) = Darwin
     for brew_prefix in /opt/homebrew /usr/local
         if test -x $brew_prefix/bin/brew
             eval ($brew_prefix/bin/brew shellenv)
-            fish_add_path --global --move $brew_prefix/opt/llvm/bin $brew_prefix/opt/less/bin
+            fish_add_path --global --move $brew_prefix/opt/llvm/bin \
+                $brew_prefix/opt/less/bin $brew_prefix/opt/python@3/libexec/bin \
+                $brew_prefix/bin $brew_prefix/sbin
             set -gx LDFLAGS "-L$brew_prefix/opt/llvm/lib"
             set -gx CPPFLAGS "-I$brew_prefix/opt/llvm/include"
             break
@@ -26,9 +31,7 @@ if test (uname) = Darwin
     end
 end
 
-# Global (not universal) paths avoid accumulating duplicate entries on restarts.
-fish_add_path --global --move $XDG_BIN_HOME $CARGOBIN $HOME/.node_modules/bin
-
+# Homebrew's managed commands take precedence over older local installations.
 set -gx FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 set -gx LESS '--use-color -R'
 

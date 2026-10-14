@@ -18,7 +18,13 @@ unknown custom base names and includes are not.
 
 ## Install
 
-From this dotfiles checkout, inspect and back up an existing config first:
+`./setup-macos.sh` links this config by default, backing up conflicting settings
+before the repo takes precedence. Full setup validates it and installs the official
+Pi integration; `--links-only` links configs but does not install the integration.
+Sockets, logs, and sessions are left untouched. Reload or restart a running server
+to apply the config.
+
+For manual installation, inspect and back up an existing config first:
 
 ```sh
 mkdir -p ~/.config/herdr

@@ -1,6 +1,8 @@
 """Offline safety checks. Run: python3 -m unittest discover -s tests -v"""
+import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -27,7 +29,7 @@ class SetupTests(unittest.TestCase):
         sources = set(tracked) | {
             "setup-macos.sh", "Brewfile", "Brewfile.apps",
             ".config/alacritty/alacritty.toml", "scripts/bootstrap-nvim.lua",
-            ".config/git/ignore", ".config/gh/config.yml",
+            ".config/git/ignore", ".config/gh/config.yml", ".pi/agent/settings.json",
         }
         for relative in filter(None, sources):
             source = ROOT / relative
@@ -118,6 +120,79 @@ class SetupTests(unittest.TestCase):
         self.assertEqual((self.home / ".config/nvim").resolve(), self.repo / ".vim")
         self.assertFalse((self.repo / ".config/ghostty/config").exists())
         self.run_setup("--links-only")
+
+    def test_ghostty_theme_pair_is_linked_and_backed_up(self):
+        themes = self.home / ".config/ghostty/themes"
+        themes.mkdir(parents=True)
+        (themes / "exposed").write_text("old light theme")
+        (themes / "personal").write_text("keep my theme")
+        self.run_setup("--links-only")
+        for name in ("exposed", "shady"):
+            self.assertEqual((themes / name).resolve(),
+                             self.repo / ".config/ghostty/themes" / name)
+        self.assertEqual((themes / "personal").read_text(), "keep my theme")
+        backups = list((self.home / ".dotfiles-backups").iterdir())
+        self.assertEqual(len(backups), 1)
+        self.assertEqual((backups[0] / ".config/ghostty/themes/exposed").read_text(),
+                         "old light theme")
+        self.run_setup("--links-only")
+        self.assertEqual(list((self.home / ".dotfiles-backups").iterdir()), backups)
+        self.assertTrue((self.home / ".pi/agent/settings.json").is_symlink())
+        self.assertTrue((self.home / ".config/herdr/config.toml").is_symlink())
+
+    def test_repo_agent_configs_override_preferences_but_preserve_state(self):
+        managed = (".pi/agent/settings.json", ".pi/agent/themes/exposed.json",
+                   ".pi/agent/themes/shady.json", ".config/herdr/config.toml")
+        state = (".pi/agent/auth.json", ".pi/agent/sessions/local.jsonl",
+                 ".config/herdr/session.json", ".config/herdr/herdr-server.log")
+        for relative in managed + state:
+            target = self.home / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("old local contents")
+        result = self.run_setup("--links-only")
+        self.assertNotIn("integration install", result.stdout)
+        backups = list((self.home / ".dotfiles-backups").iterdir())
+        self.assertEqual(len(backups), 1)
+        for relative in managed:
+            self.assertEqual((self.home / relative).resolve(), self.repo / relative)
+            self.assertEqual((backups[0] / relative).read_text(), "old local contents")
+        for relative in state:
+            self.assertEqual((self.home / relative).read_text(), "old local contents")
+            self.assertFalse((self.home / relative).is_symlink())
+            self.assertFalse((self.repo / relative).exists())
+        self.assertEqual(json.loads((self.home / ".pi/agent/settings.json").read_text()),
+                         {"theme": "exposed/shady"})
+        self.run_setup("--links-only")
+        self.assertEqual(list((self.home / ".dotfiles-backups").iterdir()), backups)
+        dry = self.run_setup("--dry-run", "--no-shell")
+        self.assertIn("herdr config check", dry.stdout)
+        self.assertIn("herdr integration install pi", dry.stdout)
+
+    @unittest.skipUnless(shutil.which("fish"), "fish not installed")
+    def test_homebrew_node_takes_precedence_over_local_node(self):
+        prefix = next((Path(p) for p in ("/opt/homebrew", "/usr/local")
+                       if (Path(p) / "bin/brew").is_file()), None)
+        if prefix is None or not (prefix / "bin/node").is_file():
+            self.skipTest("Homebrew Node not installed")
+        self.run_setup("--links-only")
+        local_bin = self.home / ".local/bin"
+        local_bin.mkdir(parents=True)
+        node = local_bin / "node"
+        node.write_text("#!/bin/sh\nexit 99\n")
+        node.chmod(0o755)
+        env = dict(self.env, XDG_CONFIG_HOME=str(self.home / ".config"))
+        result = subprocess.run([shutil.which("fish"), "-c", "command -s node"],
+                                env=env, capture_output=True, text=True, timeout=15)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), str(prefix / "bin/node"))
+
+    def test_python_provider_uses_homebrew_unversioned_commands(self):
+        result = self.run_setup("--dry-run", "--no-shell")
+        self.assertIn("/opt/python@3/libexec/bin/python3 -m venv", result.stdout)
+        self.assertNotIn("/homebrew/bin/python3 -m venv", result.stdout)
+        self.assertIn("$brew_prefix/opt/python@3/libexec/bin",
+                      (self.repo / ".config/fish/config.fish").read_text())
+        self.assertEqual(list(self.home.iterdir()), [])
 
     def test_apps_manifest_contains_only_requested_apps(self):
         entries = [line.strip() for line in (self.repo / "Brewfile.apps").read_text().splitlines()
@@ -212,6 +287,23 @@ if not ok then print(err); vim.cmd('cquit 1') else vim.cmd('qall!') end
             env=env, capture_output=True, text=True, timeout=15,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    @unittest.skipUnless(shutil.which("gopls"), "gopls not installed")
+    def test_gopls_settings_match_installed_server_schema(self):
+        api = json.loads(subprocess.check_output(
+            [shutil.which("gopls"), "api-json"], text=True, timeout=15))
+        settings = json.loads(re.sub(
+            r"//[^\n]*", "", (self.repo / ".vim/coc-settings.json").read_text()))
+        configured = settings["go.goplsOptions"]
+        available = {option["Name"] for options in api["Options"].values()
+                     for option in options}
+        self.assertFalse(set(configured) - available)
+        for key, section, field in (("analyses", "Analyzers", "Name"),
+                                    ("hints", "Hints", "Name"),
+                                    ("codelenses", "Lenses", "Lens")):
+            supported = {entry[field] for entry in api[section]}
+            self.assertFalse(set(configured[key]) - supported,
+                             f"Unsupported gopls {key}: {set(configured[key]) - supported}")
 
     def test_unknown_option_and_help_do_not_change_home(self):
         self.run_setup("--unknown", success=False)

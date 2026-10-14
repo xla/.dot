@@ -95,9 +95,15 @@ Setup links only the relevant, checked-in macOS configs:
 - `~/.config/git/ignore` (global ignore rules) and `~/.config/gh/config.yml`
   (GitHub CLI preferences, including `gh co` for `gh pr checkout`).
 - The tracked fish config, prompt/title functions and rustup startup file.
-- kitty, Ghostty, Alacritty (current TOML and legacy YAML), htop and Karabiner.
+- kitty, Ghostty (config and both Exposed/Shady themes), Alacritty (current TOML
+  and legacy YAML), htop and Karabiner.
 - `~/.cargo/config.toml` (its Linux-only target section has no effect on macOS).
 - VS Code settings in `~/Library/Application Support/Code/User/settings.json`.
+
+The repository is authoritative for these managed configs, including Pi's
+`~/.pi/agent/settings.json`, both user themes, and `~/.config/herdr/config.toml`.
+Existing personal preferences in those files are backed up, not merged. Edit the
+checkout to customize them; changing a linked settings file changes the repo.
 
 Existing files, directories and broken symlinks at those destinations are moved
 to `~/.dotfiles-backups/<timestamp>-<pid>/`, preserving their relative paths.
@@ -115,7 +121,8 @@ review it if setting up a machine for someone else.
 GitHub authentication is not configured by setup. Run `gh auth login` separately;
 existing `~/.config/gh/hosts.yml` and keychain credentials are left untouched.
 
-Fish gets architecture-appropriate Homebrew paths, `~/.local/bin`,
+Fish gives Homebrew-managed commands precedence over older local installations,
+with architecture-appropriate Homebrew paths, `~/.local/bin`,
 `~/.cargo/bin`, and `~/.node_modules/bin`. `GOBIN` is `~/.local/bin`, and `GOPATH`
 is `~/.local/share/go`. Startup preserves macOS's launchd SSH agent rather than
 creating one or loading a machine-specific key. Add your own keys explicitly:
@@ -133,8 +140,18 @@ security-related changes). Linux/X11/systemd/browser-profile files are not linke
 
 After setup, run `pi` in a project directory. Use `/login` inside Pi to connect
 your model provider; setup does not configure credentials. Start Herdr with
-`herdr`. Existing Pi credentials/sessions in `~/.pi/agent` and Herdr's local
-configuration/session state in `~/.config/herdr` are left untouched.
+`herdr`. Setup links the repository's Pi settings and themes and Herdr config,
+selecting **Exposed in light mode and Shady in dark mode** by default. Full setup
+also validates Herdr's config and runs `herdr integration install pi` for official
+agent lifecycle reporting. `--links-only` applies the configs without installing
+the integration.
+
+Pi credentials, sessions, other extensions, and Herdr sockets/logs/session state
+are left untouched: setup replaces only the named config/theme files, never the
+whole agent or Herdr directory. Run `/reload` in existing Pi sessions after setup;
+restart Herdr or run `herdr server reload-config` to apply settings to a running
+server. See the [Pi theme guide](.pi/README.md#install-and-select) and
+[Herdr guide](.config/herdr/README.md#install) for details.
 
 Both tools are managed by Homebrew; rerunning setup updates them along with the
 other Homebrew packages. To update only these tools, use:
@@ -176,6 +193,10 @@ can require a nightly toolchain for some projects; stable remains the default.
 Optional nightly support can be added with `rustup toolchain install nightly`.
 
 ## Offline setup tests
+
+Use Homebrew's Python (3.11 or newer for the theme validators). Fish includes
+its unversioned commands on PATH; from another shell you can run
+`"$(brew --prefix python)/libexec/bin/python3"` explicitly.
 
 ```sh
 bash -n setup-macos.sh
