@@ -4,7 +4,8 @@ font-family = "PragmataPro Mono Liga"
 theme = light:exposed,dark:shady
 window-theme = auto
 
-# Protect arbitrary terminal text too; keep surfaces opaque for audited contrast.
-minimum-contrast = 4.5
+# Preserve exact palette/app colors, matching Kitty (no contrast recoloring).
+minimum-contrast = 1
+# Keep surfaces opaque and unfocused panes unfaded.
 background-opacity = 1
 unfocused-split-opacity = 1

@@ -81,10 +81,10 @@ or opacity has been overridden.
   Underlines/undercurls also meet **3:1**. CoC's deliberately invisible cursor
   utility is excluded because it renders no text.
 - All 16 Exposed ANSI foregrounds, cursor text, and selection text are checked.
-- Ghostty's **`minimum-contrast = 4.5`** renderer safeguard also protects arbitrary
-  terminal text, including Shady's historically dim comments. Backgrounds remain
-  opaque; unfocused panes are not faded. Ghostty excludes images/emoji from this
-  safeguard, and other terminals need their own equivalent protection.
+- Ghostty uses **`minimum-contrast = 1`** to preserve exact palette and application
+  colors, matching Kitty rather than recoloring Shady's darker colors. Backgrounds
+  remain opaque; unfocused panes are not faded. Arbitrary terminal text is not
+  guaranteed to meet Exposed's audited contrast floor.
 
 The palette uses exact **extended xterm indices (16–255)** with corresponding
 RGB colors, so light-mode 256color conversion cannot silently lower contrast.
@@ -93,7 +93,7 @@ CoC's built-in fixed Gruvbox ANSI matrix is replaced with readable foregrounds
 on light tints, including otherwise invisible same-color pairs. Arbitrary new
 plugin colors are not silently recolored: rerun the live-highlight audit after
 plugin updates. The original Shady source is retained, not falsely claimed to
-meet Exposed's text contrast floor outside Ghostty's renderer safeguard.
+meet Exposed's text contrast floor.
 
 ### Palette
 

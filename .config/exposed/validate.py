@@ -71,7 +71,7 @@ result = run([ghostty, '+validate-config', '--config-file=' + str(ROOT / '.confi
 assert not result.stderr.strip(), result.stderr
 settings = (ROOT / '.config/ghostty/config.ghostty').read_text()
 assert re.search(r'^theme = light:exposed,dark:shady$', settings, re.M)
-assert re.search(r'^minimum-contrast = 4.5$', settings, re.M)
+assert re.search(r'^minimum-contrast = 1$', settings, re.M)
 assert re.search(r'^background-opacity = 1$', settings, re.M)
 compiled = {}
 for name, expected_bg in [('exposed', '#ffffff'), ('shady', '#000000')]:
@@ -80,7 +80,7 @@ for name, expected_bg in [('exposed', '#ffffff'), ('shady', '#000000')]:
     with tempfile.TemporaryDirectory(prefix='exposed-ghostty-') as temp:
         directory = Path(temp) / 'ghostty'
         directory.mkdir()
-        (directory / 'config.ghostty').write_text(f'theme = {ROOT}/.config/ghostty/themes/{name}\nminimum-contrast = 4.5\n')
+        (directory / 'config.ghostty').write_text(f'theme = {ROOT}/.config/ghostty/themes/{name}\nminimum-contrast = 1\n')
         text = run([ghostty, '+show-config', '--changes-only'], env={**os.environ, 'XDG_CONFIG_HOME': temp}).stdout
     assert f'background = {expected_bg}' in text
     compiled[name] = text
@@ -95,7 +95,7 @@ for fg, bg in [('foreground', 'background'), ('selection-foreground', 'selection
     a = re.search(r'^' + fg + r' = (#[0-9a-f]{6})$', compiled['exposed'], re.M)
     b = re.search(r'^' + bg + r' = (#[0-9a-f]{6})$', compiled['exposed'], re.M)
     assert a and b and contrast(a[1], b[1]) >= 4.5
-print('PASS Ghostty: actual config loader, native system pair, all 16 ANSI foregrounds, selection/cursor, exact extended palette, and 4.5:1 renderer safeguard')
+print('PASS Ghostty: actual config loader, native system pair, all 16 ANSI foregrounds, selection/cursor, exact extended palette, and unmodified palette rendering')
 
 with tempfile.TemporaryDirectory(prefix='exposed-nvim-') as temp:
     path = str(Path(temp) / 'highlights.json')
